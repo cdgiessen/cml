@@ -1,7 +1,6 @@
 #pragma once
 namespace cml {
 
-#pragma once
 
 	class vec2 {
 	public:
