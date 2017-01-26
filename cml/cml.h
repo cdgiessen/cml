@@ -1,7 +1,11 @@
 #pragma once
 namespace cml {
 
+#include <math.h>  
+#pragma once
 
+	//Vector operations add, sub, scalar multiply, scalar division,
+	//Vector functions cross, distance, dot, faceforward, length, normalize, reflect
 	class vec2 {
 	public:
 		float x;
@@ -10,8 +14,6 @@ namespace cml {
 		vec2(float a, float b) :x(a), y(b) {
 
 		}
-
-
 
 		const vec2 &operator +=(const vec2 &val) {
 			x = x + val.x;
@@ -32,6 +34,23 @@ namespace cml {
 		const vec2 &operator-(const vec2 &b) {
 			return vec2(*this) -= b;
 		}
+
+		const float dot(const vec2 &b) {
+			return x*b.x + y*b.y;
+		}
+
+		const float &distance(const vec2 &a, const vec2 &b) {
+			return sqrt((a.x - b.x)*(a.x - b.x) + (a.y - b.y)*(a.y - b.y));
+		}
+
+		const float &length(const vec2 &b) {
+			return sqrt((b.x)*(b.x) + (b.y)*(b.y));
+		}
+
+		const vec2 &normalize(const vec2 &b) {
+			return vec2(b.x / b.length, b.y / b.length);
+		}
+		
 	};
 
 	class vec3 {
