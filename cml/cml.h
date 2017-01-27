@@ -35,23 +35,47 @@ namespace cml {
 			return vec2(*this) -= b;
 		}
 
-		const float dot(const vec2 &b) {
-			return x*b.x + y*b.y;
+		const vec2 &operator*(const float &f) {
+			x = x*f;
+			y = y*f;
+			return *this;
 		}
 
-		const float &distance(const vec2 &a, const vec2 &b) {
-			return sqrt((a.x - b.x)*(a.x - b.x) + (a.y - b.y)*(a.y - b.y));
-		}
-
-		const float &length(const vec2 &b) {
-			return sqrt((b.x)*(b.x) + (b.y)*(b.y));
-		}
-
-		const vec2 &normalize(const vec2 &b) {
-			return vec2(b.x / b.length, b.y / b.length);
+		vec2 &operator/(const float &a) {
+			if (a == 0) {
+				std::cerr << "DIVIDE BY ZERO. DOES NOT COMPUTE" << std::endl;
+				return (*this);
+			}
+			else {
+				x = x / a;
+				y = y / a;
+				return *this;
+			}
 		}
 		
+		const float &length() {
+			return sqrt((x)*(x) + (y)*(y));
+		}
 	};
+
+	const float dot(const vec2 &a, const vec2 &b) {
+		return a.x*b.x + a.y*b.y;
+	}
+
+	const float distance(const vec2 &a, const vec2 &b) {
+		return sqrt((a.x - b.x)*(a.x - b.x) + (a.y - b.y)*(a.y - b.y));
+	}
+
+	const vec2 normalize(const vec2 &a) {
+		return vec2(a.x * (1.0f/ a.length), a.y * (1.0f / a.length));
+	}
+
+	const vec2 &reflect(const vec2 &I, const vec2 &N) {
+		return I - 2.0f*dot(I, N)* N;
+	}
+
+
+	// TODO AFTER I FIGURE OUT VEC2 FIRST
 
 	class vec3 {
 	public:
@@ -84,7 +108,17 @@ namespace cml {
 		const vec3 &operator-(const vec3 &b) {
 			return vec3(*this) -= b;
 		}
+
 	};
+
+	const float dot(const vec3 &a, const vec3 &b) {
+		return a.x*b.x + a.y*b.y + a.z*b.z;
+	}
+
+	const float distance(const vec3 &a, const vec3 &b) {
+		return sqrt((a.x - b.x)*(a.x - b.x) + (a.y - b.y)*(a.y - b.y) + (a.z - b.z)*(a.z - b.z));
+	}
+
 
 	class vec4 {
 	public:
