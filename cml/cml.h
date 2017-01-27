@@ -1,81 +1,257 @@
 #pragma once
-namespace cml {
+
+#ifndef CML_HEADER_FILE
+#define CML_HEADER_FILE
 
 #include <math.h>  
+
+#ifdef CML_NAMESPACE
+namespace cml {
+#endif
+
+#ifndef M_PI
+#define M_PI           3.14159265358979323846  /* pi */
+#endif
+
+#define DEG2RAD(x) ((x * M_PI) / 180.0)
+	//#define EPSILON (4.37114e-07)
+
+const double epsilon = 4.37114e-05;
+#define EPSILON epsilon
+
 #pragma once
 
 	//Vector operations add, sub, scalar multiply, scalar division,
 	//Vector functions cross, distance, dot, faceforward, length, normalize, reflect
+	template<class T>
 	class vec2 {
 	public:
-		float x;
-		float y;
-
-		vec2(float a, float b) :x(a), y(b) {
-
+		union {
+			T x; //world coordinate space
+			T s; //texture coordinate space
+		}
+		union {
+			T y; //world coordinate space
+			T t; //texture coordinate space
 		}
 
-		const vec2 &operator +=(const vec2 &val) {
-			x = x + val.x;
-			y = y + val.y;
+		/* CONSTRUCTORS */
+
+		//Default constructor of (0,0)
+		vec2() : x(0) , y (0){}
+
+		//Constructor with arguments (x,y)
+		vec2(T a, T b) :x(a), y(b) {}
+
+		//Copy constructor
+		vec2(const vec2<T> &src): x(src.x), y(src.y){}
+
+		//Casting copy constructor
+		template<class FromT>
+		vec2(const vec2<FromT>& src): x(static_cast<T>(src.x)), y(static_cast<T>(src.y)) {}
+
+		/* ACCESS OPERATORS */
+
+		//copy casting operator
+		template<class FromT>
+		vec2<T>& operator=(const vec2<FromT>& rhs) {
+			x = static_cast<T>(rhs.x);
+			y = static_cast<T>(rhs.y);
 			return *this;
 		}
 
-		const vec2 &operator -=(const vec2 &val) {
-			x = x - val.x;
-			y = y - val.y;
+		//copy operator
+		vec2<T>& operator=(const vec2<T>& rhs) {
+			x = rhs.x;
+			y = rhs.y;
 			return *this;
 		}
 
-		const vec2 &operator+(const vec2 &b) {
-			return vec2(*this) += b;
+		//array access operator
+		T& operator[](int n) {
+			assert(n >= 0 && n <= 1);
+			if (0 == n)
+				return x;
+			else
+				return y;
 		}
 
-		const vec2 &operator-(const vec2 &b) {
-			return vec2(*this) -= b;
+		//Constant array access operator
+		const T& operator[](int n) const {
+			assert(n >= 0 && n <= 1);
+			if (0 == n)
+				return x;
+			else
+				return y;
 		}
 
-		const vec2 &operator*(const float &f) {
-			x = x*f;
-			y = y*f;
+		/* VECTOR MATH OPERATIONS */
+
+		//addition
+		vec2<T> operator+(const vec2<T>& rhs) const {
+			return vec2<T>(x + rhs.x, y + rhs.y);
+		}
+
+		//subtraction
+		vec2<T> operator-(const vec2<T>& rhs) const {
+			return vec2<T>(x - rhs.x, y - rhs.y);
+		}
+
+		//multiplication
+		vec2<T> operator*(const vec2<T>& rhs) const {
+			return vec2<T>(x * rhs.x, y * rhs.y);
+		}
+
+		//division
+		vec2<T> operator/(const vec2<T>& rhs) const {
+			return vec2<T>(x / rhs.x, y / rhs.y);
+		}
+
+		//more addition 
+		vec2<T> &operator +=(const vec2<T> &rhs) {
+			x += rhs.x;
+			y += rhs.y;
 			return *this;
 		}
 
-		vec2 &operator/(const float &a) {
-			if (a == 0) {
-				std::cerr << "DIVIDE BY ZERO. DOES NOT COMPUTE" << std::endl;
-				return (*this);
-			}
-			else {
-				x = x / a;
-				y = y / a;
-				return *this;
-			}
+		//more subtraction
+		vec2<T> &operator -=(const vec2<T> &rhs) {
+			x -= rhs.x;
+			y -= rhs.y;
+			return *this;
+		}
+
+		//more multiplication
+		vec2<T> &operator *=(const vec2<T> &rhs) {
+			x *= rhs.x;
+			y *= rhs.y;
+			return *this;
+		}
+
+		//more division
+		vec2<T> &operator /=(const vec2<T> &rhs) {
+			x /= rhs.x;
+			y /= rhs.y;
+			return *this;
+		}
+
+		/* SCALAR MATH OPERATIONS */
+
+		//Addition 
+		vec2<T> operator+(const T rhs) const {
+			return vec2<T>(x + rhs, y + rhs);
+		}
+
+		//Subtraction
+		vec2<T> operator-(const T rhs) const {
+			return vec2<T>(x - rhs, y - rhs);
+		}
+
+		//Multiplication
+		vec2<T> operator*(const T rhs) const{
+			return vec2<T>(x * rhs, y * rhs);
+		}
+
+		//Division
+		vec2<T> operator/(const T rhs) const {
+			assert(rhs != 0);
+			return vec2<T>(x / rhs, y / rhs);
+		}
+
+		//More addition
+		vec2<T>& operator+=(T rhs) {
+			x += rhs;
+			y += rhs;
+			return *this;
+		}
+
+		//More subtraction
+		vec2<T>& operator-=(T rhs) {
+			x -= rhs;
+			y -= rhs;
+			return *this;
+		}
+
+		//More multiplication
+		vec2<T>& operator*=(T rhs) {
+			x *= rhs;
+			y *= rhs;
+			return *this;
+		}
+
+		//More division
+		vec2<T>& operator/=(T rhs) {
+			assert(rhs != 0);
+			x /= rhs;
+			y /= rhs;
+			return *this;
+		}
+
+		/* EQUALITY OPERATORS */
+
+		//Equal to
+		bool operator==(const vec2<T>& rhs) const {
+			return std::abs(x - rhs.x) < EPSILON) && (std::abs(y - rhs.y) < EPSILON);
+		}
+
+		//Not equal to
+		bool operator!=(const vec2<T>& rhs) const {
+			return !(*this == rhs);
+		}
+
+		//Negation operator
+		vec2<T> operator-() const {
+			return vec2<T>(-x, -y);
 		}
 		
-		const float &length() {
-			return sqrt((x)*(x) + (y)*(y));
+		/* FUNCTIONAL OPERATORS */
+
+		//Length
+		T length() const {
+			return (T)std:sqrt(x*x + y*y);
 		}
+
+		//Length Squared
+		T lengthSq() const {
+			return x*x + y*y;
+		}
+
+		//Normalize 
+		void normalize() {
+			T s = length();
+			x /= s;
+			y /= s;
+		}
+
+		//Dot product
+		T dot(const vec2<T>& rhs) const {
+			return x*rhs.x + y*rhs.y;
+		}
+
+
+		/*float dot(const vec2 &a, const vec2 &b) {
+			return a.x*b.x + a.y*b.y;
+		}
+
+		float distance(const vec2 &a, const vec2 &b) {
+			return sqrt((a.x - b.x)*(a.x - b.x) + (a.y - b.y)*(a.y - b.y));
+		}
+
+		vec2 reflect(const vec2 &I, const vec2 &N) {
+			return I - 2.0f*dot(I, N)* N;
+		}*/
 	};
 
-	const float dot(const vec2 &a, const vec2 &b) {
-		return a.x*b.x + a.y*b.y;
-	}
+	// Typedef shortcuts for 2D vector
 
-	const float distance(const vec2 &a, const vec2 &b) {
-		return sqrt((a.x - b.x)*(a.x - b.x) + (a.y - b.y)*(a.y - b.y));
-	}
+	// vec2 of floats
+	typedef class vec2<float> Vector2f;
+	// vec2 of doubles
+	typedef class vec2<double> Vector2d;
+	// vec2 of ints
+	typedef class vec2<int> Vector2i;
 
-	const vec2 normalize(const vec2 &a) {
-		return vec2(a.x * (1.0f/ a.length), a.y * (1.0f / a.length));
-	}
-
-	const vec2 &reflect(const vec2 &I, const vec2 &N) {
-		return I - 2.0f*dot(I, N)* N;
-	}
-
-
-	// TODO AFTER I FIGURE OUT VEC2 FIRST
+	
 
 	class vec3 {
 	public:
@@ -159,19 +335,8 @@ namespace cml {
 		}
 	};
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#ifdef CML_NAMESPACE
 }
+#endif // CML_NAMESPACE
+
+#endif // CML_HEADER_FILE
