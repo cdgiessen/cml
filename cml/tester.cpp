@@ -5,13 +5,13 @@
 
 void main() {
 
-	cml::vec2 v1(2.0f, 3.0f);
+	cml::vec2<float> v1(2.0f, 3.0f);
 
 
 	std::cout << "First vector" << std::endl;
 	std::cout << v1.x << " " << v1.y << std::endl;
 
-	cml::vec2 v2(1.0f, 1.0f);
+	cml::vec2<float> v2(1.0f, 1.0f);
 	std::cout << "2nd vector" << std::endl;
 	std::cout << v2.x << " " << v2.y << std::endl;
 
@@ -19,7 +19,7 @@ void main() {
 	std::cout << "reassignment vector" << std::endl;
 	std::cout << v2.x << " " << v2.y << std::endl;
 
-	cml::vec2 v3 = v1 + v2;
+	cml::vec2<float> v3 = v1 + v2;
 	std::cout << "added vector" << std::endl;
 	std::cout << v3.x << " " << v3.y << std::endl;
 
