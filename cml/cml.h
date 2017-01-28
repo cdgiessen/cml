@@ -673,23 +673,23 @@ const double epsilon = 4.37114e-07;
 
 		//Addition 
 		vec4<T> operator+(const T rhs) const {
-			return vec4<T>(x + rhs, y + rhs, z + rhs);
+			return vec4<T>(x + rhs, y + rhs, z + rhs, w + rhs);
 		}
 
 		//Subtraction
 		vec4<T> operator-(const T rhs) const {
-			return vec4<T>(x - rhs, y - rhs, z - rhs);
+			return vec4<T>(x - rhs, y - rhs, z - rhs, w - rhs);
 		}
 
 		//Multiplication
 		vec4<T> operator*(const T rhs) const {
-			return vec4<T>(x * rhs, y * rhs, z * rhs);
+			return vec4<T>(x * rhs, y * rhs, z * rhs, w * rhs);
 		}
 
 		//Division
 		vec4<T> operator/(const T rhs) const {
 			assert(rhs != 0);
-			return vec4<T>(x / rhs, y / rhs, z / rhs);
+			return vec4<T>(x / rhs, y / rhs, z / rhs, w / rhs);
 		}
 
 		//More addition
@@ -697,6 +697,7 @@ const double epsilon = 4.37114e-07;
 			x += rhs;
 			y += rhs;
 			z += rhs;
+			w += rhs;
 			return *this;
 		}
 
@@ -705,6 +706,7 @@ const double epsilon = 4.37114e-07;
 			x -= rhs;
 			y -= rhs;
 			z -= rhs;
+			w -= rhs;
 			return *this;
 		}
 
@@ -713,6 +715,7 @@ const double epsilon = 4.37114e-07;
 			x *= rhs;
 			y *= rhs;
 			z *= rhs;
+			w *= rhs;
 			return *this;
 		}
 
@@ -722,6 +725,7 @@ const double epsilon = 4.37114e-07;
 			x /= rhs;
 			y /= rhs;
 			z /= rhs;
+			w /= rhs;
 			return *this;
 		}
 
@@ -729,7 +733,7 @@ const double epsilon = 4.37114e-07;
 
 		//Equal to
 		bool operator==(const vec4<T>& rhs) const {
-			return std::abs(x - rhs.x) < EPSILON && std::abs(y - rhs.y) < EPSILON && std::abs(z - rhs.z) < EPSILON;
+			return std::abs(x - rhs.x) < EPSILON && std::abs(y - rhs.y) < EPSILON && std::abs(z - rhs.z) < EPSILON && std::abs(w - rhs.w) < EPSILON;
 		}
 
 		//Not equal to
@@ -739,14 +743,14 @@ const double epsilon = 4.37114e-07;
 
 		//Negation operator
 		vec4<T> operator-() const {
-			return vec4<T>(-x, -y, -z);
+			return vec4<T>(-x, -y, -z, -w);
 		}
 
 		/* FUNCTIONAL OPERATORS */
 
 		//Length
 		T length() const {
-			return (T)std:sqrt(x*x + y*y + z*z);
+			return (T)std:sqrt(x*x + y*y + z*z + w*w);
 		}
 
 		//Length Squared
@@ -761,6 +765,7 @@ const double epsilon = 4.37114e-07;
 			x /= s;
 			y /= s;
 			z /= s;
+			w /= s;
 		}
 
 		//Linear interpolation
@@ -771,7 +776,7 @@ const double epsilon = 4.37114e-07;
 		//output to stream operator
 		friend std::ostream& operator<<(std::ostream& lhs, const vec4<T>& rhs)
 		{
-			lhs << "[" << rhs.x << "," << rhs.y << "," << rhs.z << "]";
+			lhs << "[" << rhs.x << "," << rhs.y << "," << rhs.z << "," << rhs.w << "]";
 			return lhs;
 		}
 
@@ -784,6 +789,12 @@ const double epsilon = 4.37114e-07;
 		}
 	};
 
+	// vec4 of floats
+	typedef class vec4<float> vec4f;
+	// vec4 of doubles
+	typedef class vec4<double> vec4d;
+	// vec4 of ints
+	typedef class vec4<int> vec4i;
 
 }
 
