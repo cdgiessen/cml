@@ -138,6 +138,11 @@ const double epsilon = 4.37114e-07;
 			return *this;
 		}
 
+		//Dot product
+		T dot(const vec2<T>& rhs) const {
+			return x*rhs.x + y*rhs.y;
+		}
+
 		/* SCALAR MATH OPERATIONS */
 
 		//Addition 
@@ -226,9 +231,9 @@ const double epsilon = 4.37114e-07;
 			y /= s;
 		}
 
-		//Dot product
-		T dot(const vec2<T>& rhs) const {
-			return x*rhs.x + y*rhs.y;
+		//Linear interpolation
+		vec2<T> lerp(T fact, const vec2<T>& r) const {
+			return (*this) + (r - (*this)) * fact;
 		}
 
 		//output to stream operator
@@ -257,86 +262,525 @@ const double epsilon = 4.37114e-07;
 	typedef class vec2<int> vec2i;
 
 	
-
+	template<class T>
 	class vec3 {
 	public:
-		float x;
-		float y;
-		float z;
+		union {
+			T x; //World coordinate
+			T s; //Texture coordinate
+			T r; //Color
+		};
+		union {
+			T y; //World coordinate
+			T t; //Texture coordinate
+			T g; //Color
+		};
+		union {
+			T z; //World coordinate
+			T u; //Texture coordinate
+			T b; //Color
+		};
 
-		vec3(float a, float b, float c) :x(a), y(b), z(c) {
+		/* CONSTRUCTORS */
 
-		}
+		//Default constructor of (0,0)
+		vec3() : x(0), y(0), z(0) {}
 
-		const vec3 &operator +=(const vec3 &val) {
-			x = x + val.x;
-			y = y + val.y;
-			z = z + val.z;
+		//Constructor with arguments (x,y)
+		vec3(T a, T b, T c) :x(a), y(b), z(c) {}
+
+		//Copy constructor
+		vec3(const vec3<T> &src) : x(src.x), y(src.y), z(src.z) {}
+
+		//Casting copy constructor
+		template<class FromT>
+		vec3(const vec3<FromT>& src) : x(static_cast<T>(src.x)), y(static_cast<T>(src.y)), z(static_cast<T>(src.z)) {}
+
+		/* ACCESS OPERATORS */
+
+		//copy casting operator
+		template<class FromT>
+		vec3<T>& operator=(const vec3<FromT>& rhs) {
+			x = static_cast<T>(rhs.x);
+			y = static_cast<T>(rhs.y);
+			z = static_cast<T>(rhs.z);
 			return *this;
 		}
 
-		const vec3 &operator -=(const vec3 &val) {
-			x = x - val.x;
-			y = y - val.y;
-			z = z - val.z;
+		//copy operator
+		vec3<T>& operator=(const vec3<T>& rhs) {
+			x = rhs.x;
+			y = rhs.y;
+			z = rhs.z;
 			return *this;
 		}
 
-		const vec3 &operator+(const vec3 &b) {
-			return vec3(*this) += b;
+		//array access operator
+		T & operator[](int n) {
+			assert(n >= 0 && n <= 2);
+			if (0 == n)
+				return x;
+			else if (1 == n)
+				return y;
+			else
+				return z;
 		}
 
-		const vec3 &operator-(const vec3 &b) {
-			return vec3(*this) -= b;
+		//Constant array access operator
+		const T& operator[](int n) const {
+			assert(n >= 0 && n <= 2);
+			if (0 == n)
+				return x;
+			else if (1 == n)
+				return y;
+			else
+				return z;
 		}
 
+		/* VECTOR MATH OPERATIONS */
+
+		//addition
+		vec3<T> operator+(const vec3<T>& rhs) const {
+			return vec3<T>(x + rhs.x, y + rhs.y, z + rhs.z);
+		}
+
+		//subtraction
+		vec3<T> operator-(const vec3<T>& rhs) const {
+			return vec3<T>(x - rhs.x, y - rhs.y, z - rhs.z);
+		}
+
+		//multiplication
+		vec3<T> operator*(const vec3<T>& rhs) const {
+			return vec3<T>(x * rhs.x, y * rhs.y, z * rhs.z);
+		}
+
+		//division
+		vec3<T> operator/(const vec3<T>& rhs) const {
+			return vec3<T>(x / rhs.x, y / rhs.y, z / rhs.z);
+		}
+
+		//more addition 
+		vec3<T> &operator +=(const vec3<T> &rhs) {
+			x += rhs.x;
+			y += rhs.y;
+			z += rhs.z;
+			return *this;
+		}
+
+		//more subtraction
+		vec3<T> &operator -=(const vec3<T> &rhs) {
+			x -= rhs.x;
+			y -= rhs.y;
+			z -= rhs.z;
+			return *this;
+		}
+
+		//more multiplication
+		vec3<T> &operator *=(const vec3<T> &rhs) {
+			x *= rhs.x;
+			y *= rhs.y;
+			z *= rhs.z;
+			return *this;
+		}
+
+		//more division
+		vec3<T> &operator /=(const vec3<T> &rhs) {
+			x /= rhs.x;
+			y /= rhs.y;
+			z /= rhs.z;
+			return *this;
+		}
+
+		//Dot product
+		T dot(const vec3<T>& rhs) const {
+			return x * rhs.x + y * rhs.y + z * rhs.z;
+		}
+
+		//Cross product
+		vec3<T> crossProduct(const vec3<T>& rhs) const {
+			return vec3<T>(y * rhs.z - rhs.y * z, z * rhs.x - rhs.z * x, x * rhs.y - rhs.x * y);
+		}
+
+		/* SCALAR MATH OPERATIONS */
+
+		//Addition 
+		vec3<T> operator+(const T rhs) const {
+			return vec3<T>(x + rhs, y + rhs, z + rhs);
+		}
+
+		//Subtraction
+		vec3<T> operator-(const T rhs) const {
+			return vec3<T>(x - rhs, y - rhs, z - rhs);
+		}
+
+		//Multiplication
+		vec3<T> operator*(const T rhs) const {
+			return vec3<T>(x * rhs, y * rhs, z * rhs);
+		}
+
+		//Division
+		vec3<T> operator/(const T rhs) const {
+			assert(rhs != 0);
+			return vec3<T>(x / rhs, y / rhs, z / rhs);
+		}
+
+		//More addition
+		vec3<T>& operator+=(T rhs) {
+			x += rhs;
+			y += rhs;
+			z += rhs;
+			return *this;
+		}
+
+		//More subtraction
+		vec3<T>& operator-=(T rhs) {
+			x -= rhs;
+			y -= rhs;
+			z -= rhs;
+			return *this;
+		}
+
+		//More multiplication
+		vec3<T>& operator*=(T rhs) {
+			x *= rhs;
+			y *= rhs;
+			z *= rhs;
+			return *this;
+		}
+
+		//More division
+		vec3<T>& operator/=(T rhs) {
+			assert(rhs != 0);
+			x /= rhs;
+			y /= rhs;
+			z /= rhs;
+			return *this;
+		}
+
+		/* EQUALITY OPERATORS */
+
+		//Equal to
+		bool operator==(const vec3<T>& rhs) const {
+			return std::abs(x - rhs.x) < EPSILON && std::abs(y - rhs.y) < EPSILON && std::abs(z - rhs.z) < EPSILON;
+		}
+
+		//Not equal to
+		bool operator!=(const vec3<T>& rhs) const {
+			return !(*this == rhs);
+		}
+
+		//Negation operator
+		vec3<T> operator-() const {
+			return vec3<T>(-x, -y, -z);
+		}
+
+		/* FUNCTIONAL OPERATORS */
+
+		//Length
+		T length() const {
+			return (T)std:sqrt(x*x + y*y + z*z);
+		}
+
+		//Length Squared
+		T lengthSq() const {
+			return x*x + y*y + z*z;
+		}
+
+		//Normalize 
+		void normalize() {
+			T s = length();
+			assert(s != 0);
+			x /= s;
+			y /= s;
+			z /= s;
+		}
+
+		//Linear interpolation
+		vec3<T> lerp(T fact, const vec3<T>& r) const {
+			return (*this) + (r - (*this)) * fact;
+		}
+
+		//output to stream operator
+		friend std::ostream& operator<<(std::ostream& lhs, const vec3<T>& rhs)
+		{
+			lhs << "[" << rhs.x << "," << rhs.y << "," << rhs.z <<"]";
+			return lhs;
+		}
+
+		//toString to print
+		std::string toString() const
+		{
+			std::ostringstream oss;
+			oss << *this;
+			return oss.str();
+		}
 	};
 
-	const float dot(const vec3 &a, const vec3 &b) {
-		return a.x*b.x + a.y*b.y + a.z*b.z;
-	}
+	// vec3 of floats
+	typedef class vec3<float> vec3f;
+	// vec3 of doubles
+	typedef class vec3<double> vec3d;
+	// vec3 of ints
+	typedef class vec3<int> vec3i;
 
-	const float distance(const vec3 &a, const vec3 &b) {
-		return sqrt((a.x - b.x)*(a.x - b.x) + (a.y - b.y)*(a.y - b.y) + (a.z - b.z)*(a.z - b.z));
-	}
 
-
+	template<class T>
 	class vec4 {
 	public:
-		float x;
-		float y;
-		float z;
-		float w;
-		vec4(float a, float b, float c, float d) :x(a), y(b), z(c), w(d) {
+		union {
+			T r; //Color 
+			T s; //world coordinate
+		};
+		union {
+			T g; //Color 
+			T y; //world coordinate
+		};
+		union {
+			T b; //Color 
+			T z; //world coordinate
+		};
+		union {
+			T a; //Color 
+			T w; //world coordinate
+		};
 
-		}
+		/* CONSTRUCTORS */
 
-		vec4(float a, float b, float c) :x(a), y(b), z(c) {
+		//Default constructor of (0,0)
+		vec4() : x(0), y(0), z(0), w(0) {}
 
-		}
+		//Constructor with arguments (x,y)
+		vec4(T a, T b, T c, T d) :x(a), y(b), z(c), w(d) {}
 
-		const vec4 &operator +=(const vec4 &val) {
-			x = x + val.x;
-			y = y + val.y;
-			z = z + val.z;
-			w = w + val.w;
+		//Copy constructor
+		vec4(const vec4<T> &src) : x(src.x), y(src.y), z(src.z), w(src.w) {}
+
+		//Casting copy constructor
+		template<class FromT>
+		vec4(const vec4<FromT>& src) : x(static_cast<T>(src.x)), y(static_cast<T>(src.y)), z(static_cast<T>(src.z)), w(static_cast<T>(src.w)) {}
+
+		/* ACCESS OPERATORS */
+
+		//copy casting operator
+		template<class FromT>
+		vec4<T>& operator=(const vec4<FromT>& rhs) {
+			x = static_cast<T>(rhs.x);
+			y = static_cast<T>(rhs.y);
+			z = static_cast<T>(rhs.z);
+			w = static_cast<T>(rhs.w);
 			return *this;
 		}
 
-		const vec4 &operator -=(const vec4 &val) {
-			x = x - val.x;
-			y = y - val.y;
-			z = z - val.z;
-			w = w - val.w;
+		//copy operator
+		vec4<T>& operator=(const vec4<T>& rhs) {
+			x = rhs.x;
+			y = rhs.y;
+			z = rhs.z;
+			w = rhs.w;
 			return *this;
 		}
 
-		const vec4 &operator+(const vec4 &b) {
-			return vec4(*this) += b;
+		//array access operator
+		T & operator[](int n) {
+			assert(n >= 0 && n <= 3);
+			if (0 == n)
+				return x;
+			else if (1 == n)
+				return y;
+			else if (2 == n)
+				return z;
+			else
+				return w;
 		}
 
-		const vec4 &operator-(const vec4 &b) {
-			return vec4(*this) -= b;
+		//Constant array access operator
+		const T& operator[](int n) const {
+			assert(n >= 0 && n <= 3);
+			if (0 == n)
+				return x;
+			else if (1 == n)
+				return y;
+			else if (2 == n)
+				return z;
+			else
+				return w;
+		}
+
+		/* VECTOR MATH OPERATIONS */
+
+		//addition
+		vec4<T> operator+(const vec4<T>& rhs) const {
+			return vec4<T>(x + rhs.x, y + rhs.y, z + rhs.z, w + rhs.w);
+		}
+
+		//subtraction
+		vec4<T> operator-(const vec4<T>& rhs) const {
+			return vec4<T>(x - rhs.x, y - rhs.y, z - rhs.z, w - rhs.w);
+		}
+
+		//multiplication
+		vec4<T> operator*(const vec4<T>& rhs) const {
+			return vec4<T>(x * rhs.x, y * rhs.y, z * rhs.z, w * rhs.w);
+		}
+
+		//division
+		vec4<T> operator/(const vec4<T>& rhs) const {
+			return vec4<T>(x / rhs.x, y / rhs.y, z / rhs.z, w / rhs.w);
+		}
+
+		//more addition 
+		vec4<T> &operator +=(const vec4<T> &rhs) {
+			x += rhs.x;
+			y += rhs.y;
+			z += rhs.z;
+			w += rhs.w;
+			return *this;
+		}
+
+		//more subtraction
+		vec4<T> &operator -=(const vec4<T> &rhs) {
+			x -= rhs.x;
+			y -= rhs.y;
+			z -= rhs.z;
+			w -= rhs.w;
+			return *this;
+		}
+
+		//more multiplication
+		vec4<T> &operator *=(const vec4<T> &rhs) {
+			x *= rhs.x;
+			y *= rhs.y;
+			z *= rhs.z;
+			w *= rhs.w;
+			return *this;
+		}
+
+		//more division
+		vec4<T> &operator /=(const vec4<T> &rhs) {
+			x /= rhs.x;
+			y /= rhs.y;
+			z /= rhs.z;
+			w /= rhs.w;
+			return *this;
+		}
+
+		//Dot product
+		T dot(const vec4<T>& rhs) const {
+			return x * rhs.x + y * rhs.y + z * rhs.z + w * rhs.w;
+		}
+
+		/* SCALAR MATH OPERATIONS */
+
+		//Addition 
+		vec4<T> operator+(const T rhs) const {
+			return vec4<T>(x + rhs, y + rhs, z + rhs);
+		}
+
+		//Subtraction
+		vec4<T> operator-(const T rhs) const {
+			return vec4<T>(x - rhs, y - rhs, z - rhs);
+		}
+
+		//Multiplication
+		vec4<T> operator*(const T rhs) const {
+			return vec4<T>(x * rhs, y * rhs, z * rhs);
+		}
+
+		//Division
+		vec4<T> operator/(const T rhs) const {
+			assert(rhs != 0);
+			return vec4<T>(x / rhs, y / rhs, z / rhs);
+		}
+
+		//More addition
+		vec4<T>& operator+=(T rhs) {
+			x += rhs;
+			y += rhs;
+			z += rhs;
+			return *this;
+		}
+
+		//More subtraction
+		vec4<T>& operator-=(T rhs) {
+			x -= rhs;
+			y -= rhs;
+			z -= rhs;
+			return *this;
+		}
+
+		//More multiplication
+		vec4<T>& operator*=(T rhs) {
+			x *= rhs;
+			y *= rhs;
+			z *= rhs;
+			return *this;
+		}
+
+		//More division
+		vec4<T>& operator/=(T rhs) {
+			assert(rhs != 0);
+			x /= rhs;
+			y /= rhs;
+			z /= rhs;
+			return *this;
+		}
+
+		/* EQUALITY OPERATORS */
+
+		//Equal to
+		bool operator==(const vec4<T>& rhs) const {
+			return std::abs(x - rhs.x) < EPSILON && std::abs(y - rhs.y) < EPSILON && std::abs(z - rhs.z) < EPSILON;
+		}
+
+		//Not equal to
+		bool operator!=(const vec4<T>& rhs) const {
+			return !(*this == rhs);
+		}
+
+		//Negation operator
+		vec4<T> operator-() const {
+			return vec4<T>(-x, -y, -z);
+		}
+
+		/* FUNCTIONAL OPERATORS */
+
+		//Length
+		T length() const {
+			return (T)std:sqrt(x*x + y*y + z*z);
+		}
+
+		//Length Squared
+		T lengthSq() const {
+			return x*x + y*y + z*z;
+		}
+
+		//Normalize 
+		void normalize() {
+			T s = length();
+			assert(s != 0);
+			x /= s;
+			y /= s;
+			z /= s;
+		}
+
+		//Linear interpolation
+		vec4<T> lerp(T fact, const vec4<T>& r) const {
+			return (*this) + (r - (*this)) * fact;
+		}
+
+		//output to stream operator
+		friend std::ostream& operator<<(std::ostream& lhs, const vec4<T>& rhs)
+		{
+			lhs << "[" << rhs.x << "," << rhs.y << "," << rhs.z << "]";
+			return lhs;
+		}
+
+		//toString to print
+		std::string toString() const
+		{
+			std::ostringstream oss;
+			oss << *this;
+			return oss.str();
 		}
 	};
 
