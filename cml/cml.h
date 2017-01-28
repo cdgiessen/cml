@@ -29,6 +29,9 @@ const double epsilon = 4.37114e-07;
 	template<class T>
 	class vec2 {
 	public:
+
+		/* DATA */
+
 		union {
 			T x; //world coordinate space
 			T s; //texture coordinate space
@@ -212,7 +215,7 @@ const double epsilon = 4.37114e-07;
 			return vec2<T>(-x, -y);
 		}
 		
-		/* FUNCTIONAL OPERATORS */
+		/* FUNCTIONS */
 
 		//Length
 		T length() const {
@@ -265,6 +268,9 @@ const double epsilon = 4.37114e-07;
 	template<class T>
 	class vec3 {
 	public:
+
+		/* DATA */
+
 		union {
 			T x; //World coordinate
 			T s; //Texture coordinate
@@ -474,7 +480,7 @@ const double epsilon = 4.37114e-07;
 			return vec3<T>(-x, -y, -z);
 		}
 
-		/* FUNCTIONAL OPERATORS */
+		/* FUNCTIONS */
 
 		//Length
 		T length() const {
@@ -527,6 +533,9 @@ const double epsilon = 4.37114e-07;
 	template<class T>
 	class vec4 {
 	public:
+
+		/* DATA */
+
 		union {
 			T r; //Color 
 			T s; //world coordinate
@@ -746,7 +755,7 @@ const double epsilon = 4.37114e-07;
 			return vec4<T>(-x, -y, -z, -w);
 		}
 
-		/* FUNCTIONAL OPERATORS */
+		/* FUNCTIONS */
 
 		//Length
 		T length() const {
@@ -795,6 +804,216 @@ const double epsilon = 4.37114e-07;
 	typedef class vec4<double> vec4d;
 	// vec4 of ints
 	typedef class vec4<int> vec4i;
+
+
+	template<class T>
+	class Quaternion
+	{
+	public:
+		/* DATA */
+
+		T w; //real part
+
+		vec3<T> v; //imaginary part
+
+		/* CONSTRUCTORS */
+
+		//Empty Constructor
+		Quaternion() : w(0), v(0, 0, 0) {}
+
+		//Copy Constructor
+		Quaternion(const Quaternion<T>& q): w(q.w), v(q.v) {}
+
+		//Copy Casting Constructor
+		template<class FromT>
+		Quaternion(const Quaternion<FromT>& q): w(static_cast<T>(q.w)), v(q.v) {}
+	
+		//Creates quaternion from real part v and imaginary part w
+		Quaternion(T w_, const vec3<T>& v_): w(w_), v(v_) {}
+
+		//Creates a quaternion from the given 4 values. in w, x, y, z order
+		Quaternion(T w_, T x, T y, T z) : w(w_), v(x, y, z) {}
+
+		/* COPY OPERATORS */
+
+		//copy operator
+		Quaternion<T>& operator=(const Quaternion<T>& rhs) {
+			v = rhs.v;
+			w = rhs.w;
+			return *this;
+		}
+
+		//Copy and convert operator
+		template<class FromT>
+		Quaternion<T>& operator=(const Quaternion<FromT>& rhs) {
+			v = rhs.v;
+			w = static_cast<T>(rhs.w);
+			return *this;
+		}
+
+		/* MATH OPERATORS */
+
+		//Addition operator
+		Quaternion<T> operator+(const Quaternion<T>& rhs) const {
+			const Quaternion<T>& lhs = *this;
+			return Quaternion<T>(lhs.w + rhs.w, lhs.v + rhs.v);
+		}
+
+		//Subtraction operator
+		Quaternion<T> operator-(const Quaternion<T>& rhs) const {
+			const Quaternion<T>& lhs = *this;
+			return Quaternion<T>(lhs.w - rhs.w, lhs.v - rhs.v);
+		}
+
+		//Quaternion multiplication operator
+		Quaternion<T> operator*(const Quaternion<T>& rhs) const	{
+			const Quaternion<T>& lhs = *this;
+			return Quaternion<T>(lhs.w * rhs.w - lhs.v.x * rhs.v.x - lhs.v.y * rhs.v.y - lhs.v.z * rhs.v.z,
+				lhs.w * rhs.v.x + lhs.v.x * rhs.w + lhs.v.y * rhs.v.z - lhs.v.z * rhs.v.y,
+				lhs.w * rhs.v.y - lhs.v.x * rhs.v.z + lhs.v.y * rhs.w + lhs.v.z * rhs.v.x,
+				lhs.w * rhs.v.z + lhs.v.x * rhs.v.y - lhs.v.y * rhs.v.x + lhs.v.z * rhs.w);
+		}
+
+		//Scalar multiplication operator
+		Quaternion<T> operator*(T rhs) const {
+			return Quaternion<T>(w * rhs, v * rhs);
+		}
+
+		//Addition operator 
+		Quaternion<T>& operator+=(const Quaternion<T>& rhs) {
+			w += rhs.w;
+			v += rhs.v;
+			return *this;
+		}
+
+		//Subtraction operator
+		Quaternion<T>& operator-=(const Quaternion<T>& rhs) {
+			w -= rhs.w;
+			v -= rhs.v;
+			return *this;
+		}
+
+		//Quaternion multiplication operator
+		Quaternion<T>& operator*=(const Quaternion<T>& rhs)	{
+			Quaternion q = (*this) * rhs;
+			v = q.v;
+			w = q.w;
+			return *this;
+		}
+
+		//Scalar multiplication operator
+		Quaternion<T>& operator*=(T rhs) {
+			w *= rhs;
+			v *= rhs;
+			return *this;
+		}
+
+		/* EQUALITY OPERATORS*/
+
+		//Equality operator
+		bool operator==(const Quaternion<T>& rhs) const {
+			const Quaternion<T>& lhs = *this;
+			return (std::abs(lhs.w - rhs.w) < EPSILON) && lhs.v == rhs.v;
+		}
+
+		//Inequality operator
+		bool operator!=(const Quaternion<T>& rhs) const {
+			return !(*this == rhs);
+		}
+
+		/* UNARY OPERATORS */
+
+		//Negation
+		Quaternion<T> operator-() const	{
+			return Quaternion<T>(-w, -v);
+		}
+
+		//Conjugate
+		Quaternion<T> operator~() const {
+			return Quaternion<T>(w, -v);
+		}
+
+		/* FUNCTIONS */
+
+		//Length
+		T length() const {
+			return (T)std::sqrt(w * w + v.lengthSq());
+		}
+
+		//Normalize
+		void normalize() {
+			T len = length();
+			w /= len;
+			v /= len;
+		}
+
+		//Creates a quaternion from euler angles
+		static Quaternion<T> fromEulerAngles(T x, T y, T z) {
+			Quaternion<T> ret = fromAxisRot(vec2<T>(1, 0, 0), x) * fromAxisRot(vec3<T>(0, 1, 0), y)
+				* fromAxisRot(vec3<T>(0, 0, 1), z);
+			return ret;
+		}
+
+		//Creates a quaternion as rotation around an axis
+		static Quaternion<T> fromAxisRot(vec3<T> axis, float angleDeg) {
+			double angleRad = DEG2RAD(angleDeg);
+			double sa2 = std::sin(angleRad / 2);
+			double ca2 = std::cos(angleRad / 2);
+			return Quaternion<T>(ca2, axis * sa2);
+		}
+
+		//linear interpolation
+		Quaternion<T> lerp(T fact, const Quaternion<T>& rhs) const {
+			return Quaternion<T>((1 - fact) * w + fact * rhs.w, v.lerp(fact, rhs.v));
+		}
+
+		//Spherical interpolation
+		Quaternion<T> slerp(T r, const Quaternion<T>& q2) const	{
+			Quaternion<T> ret;
+			T cosTheta = w * q2.w + v.x * q2.v.x + v.y * q2.v.y + v.z * q2.v.z;
+			T theta = (T)acos(cosTheta);
+			if (std::fabs(theta) < epsilon)
+			{
+				ret = *this;
+			}
+			else
+			{
+				T sinTheta = (T)std::sqrt(1.0 - cosTheta * cosTheta);
+				if (std::fabs(sinTheta) < epsilon)
+				{
+					ret.w = 0.5 * w + 0.5 * q2.w;
+					ret.v = v.lerp(0.5, q2.v);
+				}
+				else
+				{
+					T rA = (T)sin((1.0 - r) * theta) / sinTheta;
+					T rB = (T)sin(r * theta) / sinTheta;
+
+					ret.w = w * rA + q2.w * rB;
+					ret.v.x = v.x * rA + q2.v.x * rB;
+					ret.v.y = v.y * rA + q2.v.y * rB;
+					ret.v.z = v.z * rA + q2.v.z * rB;
+				}
+			}
+			return ret;
+		}
+
+		//Outputs to standard output stream
+		friend std::ostream& operator <<(std::ostream& oss, const Quaternion<T>& q)	{
+			oss << "Re: " << q.w << " Im: " << q.v;
+			return oss;
+		}
+
+		//Gets string representation
+		std::string toString() const {
+			std::ostringstream oss;
+			oss << *this;
+			return oss.str();
+		}
+	};
+
+	typedef Quaternion<float> Quatf;
+	typedef Quaternion<double> Quatd;
 
 }
 
