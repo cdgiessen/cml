@@ -2,7 +2,7 @@
 
 ## Charles Math Library
 
-An indevelopement graphics oriented math library for myself
+An in-developement graphics oriented math library for myself
 
 Currently has vectors, quaternions, and basic functions for each.
 
