@@ -1015,6 +1015,8 @@ const double epsilon = 4.37114e-07;
 	typedef Quaternion<float> Quatf;
 	typedef Quaternion<double> Quatd;
 
+
+
 }
 
 
