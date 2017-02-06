@@ -111,6 +111,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="cml.h" />
+    <ClInclude Include="Matrix3.h" />
+    <ClInclude Include="Matrix4.h" />
+    <ClInclude Include="Quaternion.h" />
+    <ClInclude Include="Vector2.h" />
+    <ClInclude Include="Vector3.h" />
+    <ClInclude Include="Vector4.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="tester.cpp" />
