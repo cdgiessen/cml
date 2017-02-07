@@ -5,7 +5,7 @@
 namespace cml {
 
 	template<typedef T>
-	class Quaternion {
+	class quat {
 	public:
 		T x;
 		T y;

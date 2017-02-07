@@ -5,7 +5,7 @@
 namespace cml {
 
 	template<typename T>
-	class Vector2
+	class vec2
 	{
 	public:
 
@@ -14,10 +14,10 @@ namespace cml {
 		T z;
 
 		//Default Constuctor
-		Vector2() : x(0), y(0), z(0) {}
+		vec2() : x(0), y(0), z(0) {}
 
 		//Initial value constructor
-		Vector2(T xVal, T yVal, T zVal) : x(xVal), y(yVal), z(zVal) {}
+		vec2(T xVal, T yVal, T zVal) : x(xVal), y(yVal), z(zVal) {}
 
 
 
@@ -28,9 +28,9 @@ namespace cml {
 	};
 
 
-	typedef Vector2<float> Vector2f;
-	typedef Vector2<int> Vector2i;
-	typedef Vector2<double> Vector2d;
+	typedef vec2<float> vec2f;
+	typedef vec2<int> vec2i;
+	typedef vec2<double> vec2d;
 
 
 }
