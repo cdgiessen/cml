@@ -1017,6 +1017,65 @@ const double epsilon = 4.37114e-07;
 
 
 
+	template <class T>
+	class matrix44 {
+	public:
+		/* DATA */
+		T data[16];
+
+		/* CONSTRUCTORS */
+
+		//Identity constructor
+		matrix44() {
+			for (int i = 0; i < 16; i++)
+				data[i] = (i % 5) ? 0 : 1;
+		}
+
+		//Copy constructor
+		template<class FromT>
+		Matrix4(const Matrix4<FromT>& src) {
+			for (int i = 0; i < 16; i++)
+			{
+				data[i] = static_cast<T>(src.data[i]);
+			}
+		}
+
+		//Copy constructor
+		Matrix4(const Matrix4<T>& src) {
+			std::memcpy(data, src.data, sizeof(T) * 16);
+		}
+
+		/* FUNCTIONS */
+
+		//Resets it to an identity matrix
+		void identity() {
+			for (int i = 0; i < 16; i++)
+				data[i] = (i % 5) ? 0 : 1;
+		}
+
+		//Get at i,j 
+		const T& at(int x, int y) const {
+			assert(x >= 0 && x < 4);
+			assert(y >= 0 && y < 4);
+			return data[x * 4 + y];
+		}
+
+		//operator overload for at
+		T& operator()(int i, int j)
+		{
+			assert(i >= 1 && i <= 4);
+			assert(j >= 1 && j <= 4);
+			return data[(j - 1) * 4 + i - 1];
+		}
+
+	};
+
+	/// Matrix 4x4 of floats
+	typedef matrix44<float> matrix44f;
+	/// Matrix 4x4 of doubles
+	typedef matrix44<double> matrix44d;
+	/// Matrix 4x4 of int
+	typedef matrix44<int> matrix44i;
 }
 
 
