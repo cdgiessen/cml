@@ -2,10 +2,10 @@
 #include <iostream>
 #include <string>
 #include <cstdio>
-//#include "cml.h"
-#include "vec3.h"
+#include "cml.h"
+#include "cml/vec3.h"
 
-void main() {
+void notmain() {
 
 	cml::vec3f v1(2.0f, 3.0f, 2.5f);	
 	std::cout << "v1 = 2.0f, 3.0f, 2.5f  == " << v1.x << " " << v1.y << " " << v1.z << std::endl;
