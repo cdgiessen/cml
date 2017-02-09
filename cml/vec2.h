@@ -11,22 +11,165 @@ namespace cml {
 
 		T x;
 		T y;
-		T z;
 
 		//Default Constuctor
-		vec2() : x(0), y(0), z(0) {}
+		vec2() : x(0), y(0) {}
 
 		//Initial value constructor
-		vec2(T xVal, T yVal, T zVal) : x(xVal), y(yVal), z(zVal) {}
+		vec2(T xVal, T yVal) : x(xVal), y(yVal) {}
+
+		//Copy from vector
+		vec2(const vec2<T>& val) : x(val.x), y(val.y) {}
+
+		//Set the values explicitely
+		vec2<T> set(const T a, const T b) {
+			x = a;
+			y = b;
+			return (*this);
+		}
+
+		//ADDITIONS
+
+		vec2<T> operator +(const vec2<T> val) {
+			return vec2<T>(x + val.x, y + val.y);
+		}
+
+		vec2<T>& operator +=(const vec2<T> val) {
+			x += val.x;
+			y += val.y;
+			return (*this)
+		}
+
+		//scalar
+		vec2<T> operator + (const T val) {
+			return vec2<T>(x + val, y + val);
+		}
+
+		//SUBTRACTOINS
+
+		vec2<T> operator -(const vec2<T> val) {
+			return vec2<T>(x - val.x, y - val.y);
+		}
+
+		vec2<T>& operator -=(const vec2<T> val) {
+			x -= val.x;
+			y -= val.y;
+			return (*this);
+		}
+
+		//scalar
+		vec2<T> operator - (const T val) {
+			return vec2<T>(x - val, y - val);
+		}
+
+		//MULTIPLICATION
+
+		vec2<T> operator *(const T val) {
+			return vec2<T>(x * val, y * val);
+		}
+
+		vec2<T>& operator *=(const T val) {
+			x *= val;
+			y *= val;
+			return (*this);
+		}
+
+		//DIVISION
+
+		vec2<T> operator /(const T val) {
+			return vec2<T>(x / val, y / val);
+		}
+
+		vec2<T>& operator /=(const T val) {
+			x /= val;
+			y /= val;
+			return (*this);
+		}
+
+		//NEGATION
+
+		vec2<T> operator-() const {
+			return vec2<T>(-x, -y);
+		}
+
+
+		//ARRAY ACCESS
+
+		//array access
+		T & operator[](int n)
+		{
+			assert(n >= 0 && n <= 1);
+			if (0 == n)
+				return x;
+			else if (1 == n)
+				return y;
+		}
+
+		//constant array access
+		const T & operator[](int n) const
+		{
+			assert(n >= 0 && n <= 1);
+			if (0 == n)
+				return x;
+			else if (1 == n)
+				return y;
+		}
 
 
 
+		//EQUALITY
+		bool operator ==(const vec2& val) {
+			return ((x == val.x) && (y == val.y));
+		}
+
+		bool operator !=(const vec2& val) {
+			return !(this == val);
+		}
 
 
-	private:
+		//DOT
+		T dot(const vec2<T>& a, const vec2<T>& b) {
+			return a.x * b.x + a.y * b.y;
+		}
+
+
+		//MAGNITUDE
+		T mag(void) {
+			return std::sqrt(x*x + y*y);
+		}
+
+		T magSqrd(void) {
+			return (x*x + y*y);
+		}
+
+		void SetMag(void) {
+			mag = mag();
+		}
+
+		//NORMALIZE
+
+		void norm() {
+			T mag = mag();
+			x /= mag;
+			y /= mag;
+		}
+
+		//LERP
+		vec2<T> lerp(const T fact, const vec2<T>& val) const
+		{
+			return (*this) + (val - (*this)) * fact;
+		}
 
 	};
 
+	static const vec2<float> ZERO_2(0, 0);
+	static const vec2<float> ONE_2(1, 1);
+	static const vec2<float> RIGHT_2(1, 0);
+	static const vec2<float> LEFT_2(-1, 0);
+	static const vec2<float> UP_2(0, 1);
+	static const vec2<float> DOWN_2(0, -1);
+
+	
 
 	typedef vec2<float> vec2f;
 	typedef vec2<int> vec2i;
