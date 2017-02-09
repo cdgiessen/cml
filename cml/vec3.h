@@ -59,8 +59,11 @@ namespace cml {
 		//Initial value constructor
 		vec3(const T xVal, const T yVal, const T zVal) : x(xVal), y(yVal), z(zVal) {}
 
-		//Copy from vector
+		//Copy from vec3
 		vec3(const vec3<T>& val) : x(val.x), y(val.y), z(val.z) {}
+
+		//Copy from vec2
+		vec3(const vec2<T>& val) : x(val.x), y(val.y), z(0) {}
 
 		//Set the values explicitely
 		vec3<T> set(const T a, const T b, const T c) {
@@ -72,13 +75,14 @@ namespace cml {
 
 		//ADDITIONS
 		
-		vec3<T> operator +(const vec3<T> val) {
-			return vec3<T>(x + val.x, y + val.y, z + val.z);
+		vec3<T> operator +(const vec3<T> rhs) {
+			return vec3<T>(x + rhs.x, y + rhs.y, z + rhs.z);
 		}
 
 		vec3<T>& operator +=(const vec3<T> val) {
 			x += val.x;
 			y += val.y;
+			z += val.z;
 			return (*this)
 		}
 
@@ -96,6 +100,7 @@ namespace cml {
 		vec3<T>& operator -=(const vec3<T> val) {
 			x -= val.x;
 			y -= val.y;
+			z -= val.z;
 			return (*this);
 		}
 
@@ -167,7 +172,7 @@ namespace cml {
 
 		//EQUALITY
 		bool operator ==(const vec3& val){
-			return ((x == val.x) && (y == val.y) && (z == val.z));
+			return ((cmpf(x, val.x) && (cmpf(y, val.y) && (cmpf(z, val.z));
 		}
 
 		bool operator !=(const vec3& val) {
@@ -181,8 +186,8 @@ namespace cml {
 		}
 
 		//CROSS
-		vec3<T> cross(const vec3<T>& a, const vec3<T>& b) {
-			return vec3<T>(a.y * b.z - b.y * a.z, a.z * b.x - b.z * a.x, a.x * b.y - b.x * a.y);
+		vec3<T>& cross(const vec3<T>& a, const vec3<T>& b) {
+			return vec3<T>&(a.y * b.z - b.y * a.z, a.z * b.x - b.z * a.x, a.x * b.y - b.x * a.y);
 		}
 
 		//MAGNITUDE

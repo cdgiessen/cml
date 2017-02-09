@@ -3,6 +3,7 @@
 #include <string>
 #include <cstdio>
 #include "cml.h"
+#include "vec2.h"
 #include "vec3.h"
 
 void notmain() {
@@ -29,7 +30,7 @@ void notmain() {
 	std::cout << "Constant vec3 DOWN " << cml::DOWN.x << " " << cml::DOWN.y << " " << cml::DOWN.z << std::endl;
 	std::cout << "Constant vec3 FOWARD " << cml::FORWARD.x << " " << cml::FORWARD.y << " " << cml::FORWARD.z << std::endl;
 	std::cout << "Constant vec3 BACK " << cml::BACK.x << " " << cml::BACK.y << " " << cml::BACK.z << std::endl;
-
+	
 
 	std::cout << "Press any key to continue..." << std::endl;
 	std::getchar();
