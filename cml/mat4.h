@@ -31,35 +31,133 @@ namespace cml {
 
 	*/
 
-	template<typedef T> 
+	//matrices are column order, 
+	/*
+		so data = { x1, x2, x3, x4, y1, y2, y3, y4, z1, z2, z3, z4, w1, w2, w3, w4 } 
+	*/
+	template<typename T>
 	class mat4 {
 	public:
 		T data[4][4];
 
 		//Identity matrix constructor
-		mat4() {
-			for (int i = 0; i < 4; i++) {
-				for (int j = 0; j < 4; j++) {
-					if (i == j)
-						data[i][j] = 1;
-					else
-						data[i][j] = 0;
-				}
-			}
-		}
+		mat4() : data{ {1,0,0,0 }, {0,1,0,0}, {0,0,1,0}, {0,0,0,1} } {}
+
+		//Copy constructor
+		mat4(const T val[4][4]) : data{ { val[0][0],val[0][1],val[0][2],val[0][3] },{ val[1][0],val[1][1],val[1][2],val[1][3] },{ val[2][0],val[2][1],val[2][2],val[2][3] },{ val[3][0],val[3][1],val[3][2],val[3][3] } } {}
+
 
 		//Resets matrix to identity
 		void identity() {
-			for (int i = 0; i < 4; i++) {
-				for (int j = 0; j < 4; j++) {
-					if (i == j)
-						data[i][j] = 1;
-					else
-						data[i][j] = 0;
-				}
-			}
+			//data = { { 1,0,0,0 },{ 0,1,0,0 },{ 0,0,1,0 },{ 0,0,0,1 } };
+			data[0][0] = 1;	data[0][1] = 0; data[0][2] = 0; data[0][3] = 0;
+			data[1][0] = 0; data[1][1] = 1; data[1][2] = 0; data[1][3] = 0;
+			data[2][0] = 0; data[2][1] = 0;	data[2][2] = 1; data[2][3] = 0;
+			data[3][0] = 0; data[3][1] = 0; data[3][2] = 0; data[3][3] = 1;
 		}
 
+		void zero() {
+			//data = { {0,0,0,0}, {0,0,0,0}, {0,0,0,0}, {0,0,0,0} };
+			data[0][0] = 0;	data[0][1] = 0; data[0][2] = 0; data[0][3] = 0;
+			data[1][0] = 0; data[1][1] = 0; data[1][2] = 0; data[1][3] = 0;
+			data[2][0] = 0; data[2][1] = 0;	data[2][2] = 0; data[2][3] = 0;
+			data[3][0] = 0; data[3][1] = 0; data[3][2] = 0; data[3][3] = 0;
+		}
+
+		//get at
+		T& at(int x, int y) {
+			return data[x][y];
+		}
+
+		//TRANSLATION
+
+		void setTranslation(const vec3<T>& trans){
+			at(3,0) = trans.x;
+			at(3,1) = trans.y;
+			at(3,2) = trans.z;
+			at(3,3) = 1;
+		}
+
+		vec3<T> getTranslation() {
+			return vec3<T>(at(3,0), at(3,1), at(3,2));
+		}
+
+
+		//SCALE
+
+		void setScale(const T scale) {
+			at(0,0) = at(1,1) = at(2,2) = scale;
+		}
+
+		void setScale(const vec3<T> scale) {
+			at(0, 0) = scale.x;
+			at(1, 1) = scale.y;
+			at(2, 2) = scale.z;
+		}
+
+		vec3<T> getScale() {
+ 			return vec3<T>(data[0][0], data[1][1], data[2][2]);
+		}
+		
+		//MATRIX ADDITION
+
+		mat4<T> operator+(const mat4<T>& val) {
+			mat4<T> out;
+			for (int i = 0; i < 4; i++)
+				for (int j = 0; j < 4; j++)
+					out.data[i][j] = data[i][j] + val.data[i][j];
+			return out;
+		}
+
+		//SCALAR ADDITION
+		mat4<T> operator+(const T val) {
+			mat4<T> out;
+			for (int i = 0; i < 4; i++)
+				for (int j = 0; j < 4; j++)
+					out.data[i][j] = data[i][j] + val;
+			return out;
+		}
+
+		//MATRIX SUBTRACTION
+
+		mat4<T> operator-(const mat4<T>& val) {
+			mat4<T> out;
+			for (int i = 0; i < 4; i++)
+				for (int j = 0; j < 4; j++)
+					out.data[i][j] = data[i][j] - val.data[i][j];
+			return out;
+		}
+
+		//SCALAR SUBTRACTION
+		mat4<T> operator-(const T val) {
+			mat4<T> out;
+			for (int i = 0; i < 4; i++)
+				for (int j = 0; j < 4; j++)
+					out.data[i][j] = data[i][j] - val;
+			return out;
+		}
+
+		//SCALAR MULTIPLICATION
+		mat4<T> operator*(const T val) {
+			mat4<T> out;
+			for (int i = 0; i < 4; i++)
+				for (int j = 0; j < 4; j++)
+					out.data[i][j] = data[i][j] * val;
+			return out;
+		}
+
+		//MATRIX MULTIPLICATION
+
+
+		//SCALAR DIVISION
+		//SCALAR ADDITION
+		mat4<T> operator/(const T val) {
+			mat4<T> out;
+			for (int i = 0; i < 4; i++)
+				for (int j = 0; j < 4; j++)
+					out.data[i][j] = data[i][j] /val;
+			return out;
+		}
 	};
 
 

@@ -3,10 +3,8 @@
 #include <string>
 #include <cstdio>
 #include "cml.h"
-#include "vec2.h"
-#include "vec3.h"
 
-void notmain() {
+int main() {
 
 	cml::vec3f v1(2.0f, 3.0f, 2.5f);	
 	std::cout << "v1 = 2.0f, 3.0f, 2.5f  == " << v1.x << " " << v1.y << " " << v1.z << std::endl;
@@ -34,5 +32,5 @@ void notmain() {
 
 	std::cout << "Press any key to continue..." << std::endl;
 	std::getchar();
-
+	return 0;
 }

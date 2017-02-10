@@ -28,7 +28,7 @@ Operators
 
 namespace cml {
 
-	template<typedef T>
+	template<typename T>
 	class quat {
 	public:
 		T x;

@@ -1,10 +1,14 @@
 #pragma once
 
+
 #ifndef VECTOR4_HEADER
+
+#include <cmath>
+#include <cassert>
 
 namespace cml {
 
-	template<typename T>
+	template<typename T = float>
 	class vec4
 	{
 	public:
@@ -23,8 +27,8 @@ namespace cml {
 		//Copy from vec4
 		vec4(const vec4<T>& val) : x(val.x), y(val.y), z(val.z), w(val.z) {}
 
-		//Copy from vec3
-		vec4(const vec2<T>& val) : x(val.x), y(val.y), z(val.z), w(0) {}
+		//Copy from vec4
+		vec4(const vec3<T>& val) : x(val.x), y(val.y), z(val.z), w(0) {}
 
 		//Set the values explicitely
 		vec4<T> set(const T a, const T b, const T c, const T d) {
@@ -37,7 +41,7 @@ namespace cml {
 
 		//ADDITIONS
 
-		vec4<T> operator +(const vec4<T> rhs) {
+		vec4<T> operator +(const vec4<T> rhs) const {
 			return vec4<T>(x + rhs.x, y + rhs.y, z + rhs.z, w + rhs.w);
 		}
 
@@ -46,17 +50,17 @@ namespace cml {
 			y += val.y;
 			z += val.z;
 			w += val.w;
-			return (*this)
+			return (*this);
 		}
 
 		//scalar
-		vec4<T> operator + (const T val) {
+		vec4<T> operator + (const T val) const {
 			return vec4<T>(x + val, y + val, z + val, w + val);
 		}
 
 		//SUBTRACTOINS
 
-		vec4<T> operator -(const vec4<T> val) {
+		vec4<T> operator -(const vec4<T> val) const {
 			return vec4<T>(x - val.x, y - val.y, z - val.z, w - val.w);
 		}
 
@@ -69,13 +73,13 @@ namespace cml {
 		}
 
 		//scalar
-		vec4<T> operator - (const T val) {
+		vec4<T> operator - (const T val) const {
 			return vec4<T>(x - val, y - val, z - val, w - val);
 		}
 
 		//MULTIPLICATION
 
-		vec4<T> operator *(const T val) {
+		vec4<T> operator *(const T val) const {
 			return vec4<T>(x * val, y * val, z * val, w * val);
 		}
 
@@ -89,7 +93,7 @@ namespace cml {
 
 		//DIVISION
 
-		vec4<T> operator /(const T val) {
+		vec4<T> operator /(const T val) const {
 			return vec4<T>(x / val, y / val, z / val, w/val);
 		}
 
@@ -141,42 +145,37 @@ namespace cml {
 
 
 		//EQUALITY
-		bool operator ==(const vec4& val) {
+		bool operator ==(const vec4& val) const {
 			return (cmpf(x, val.x) && cmpf(y, val.y) && cmpf(z, val.z) && cmpf(w, val.w));
 		}
 
-		bool operator !=(const vec4& val) {
-			return !(this == val);
+		bool operator !=(const vec4& val) const {
+			return !(*this == val);
 		}
 
 
 		//DOT
-		T dot(const vec4<T>& a, const vec4<T>& b) {
+		T dot(const vec4<T>& a, const vec4<T>& b) const {
 			return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
 		}
 
 		//MAGNITUDE
-		T mag(void) {
-			return std::sqrt(x*x + y*y + z*z + w*w);
+		T mag(void) const {
+			return (T) std::sqrt(x*x + y*y + z*z + w*w);
 		}
 
-		T magSqrd(void) {
+		T magSqrd(void) const {
 			return (x*x + y*y + z*z + w * w);
-		}
-
-		void SetMag(void) {
-			mag = mag();
 		}
 
 		//NORMALIZE
 
 		void norm() {
-			T mag = mag();
-			if (mag != 0) {
-				x /= mag;
-				y /= mag;
-				z /= mag;
-				w /= mag;
+			if (mag() != 0) {
+				x /= mag();
+				y /= mag();
+				z /= mag();
+				w /= mag();
 			}
 		}
 
@@ -184,6 +183,16 @@ namespace cml {
 		vec4<T> lerp(const T fact, const vec4<T>& val) const
 		{
 			return (*this) + (val - (*this)) * fact;
+		}
+
+		//PROJECTION
+		vec4<T> proj(const vec4<T>& p, const vec4<T>& q) const {
+			return vec4<T>(q*(dot(p, q) / q.magSqrd()));
+		}
+
+		//PERPINDICULAR
+		vec4<T> perp(const vec4<T>& p, const vec4<T>& q) const {
+			return vec4<T>(p - proj(p, q));
 		}
 
 	};

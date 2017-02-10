@@ -2,6 +2,8 @@
 
 #ifndef VECTOR3_HEADER
 
+#include <cmath>
+#include <cassert>
 
 /*
 Constructors
@@ -25,7 +27,9 @@ operations
 
  #constants right, left, forward, back, up, down, one, zero
 
- projection
+ #projection
+
+ #perpindicular
 
  toString
 
@@ -75,7 +79,7 @@ namespace cml {
 
 		//ADDITIONS
 		
-		vec3<T> operator +(const vec3<T> rhs) {
+		vec3<T> operator +(const vec3<T> rhs) const {
 			return vec3<T>(x + rhs.x, y + rhs.y, z + rhs.z);
 		}
 
@@ -83,17 +87,17 @@ namespace cml {
 			x += val.x;
 			y += val.y;
 			z += val.z;
-			return (*this)
+			return (*this);
 		}
 
 		//scalar
-		vec3<T> operator + (const T val) {
+		vec3<T> operator + (const T val) const {
 			return vec3<T>(x + val, y + val, z + val);
 		}
 
 		//SUBTRACTOINS
 
-		vec3<T> operator -(const vec3<T> val) {
+		vec3<T> operator -(const vec3<T> val) const {
 			return vec3<T>(x - val.x, y - val.y, z - val.z);
 		}
 
@@ -105,13 +109,13 @@ namespace cml {
 		}
 
 		//scalar
-		vec3<T> operator - (const T val) {
+		vec3<T> operator - (const T val) const {
 			return vec3<T>(x - val, y - val, z - val);
 		}
 
 		//MULTIPLICATION
 
-		vec3<T> operator *(const T val) {
+		vec3<T> operator *(const T val) const {
 			return vec3<T>(x * val, y * val, z * val);
 		}
 
@@ -124,7 +128,7 @@ namespace cml {
 
 		//DIVISION
 		
-		vec3<T> operator /(const T val) {
+		vec3<T> operator /(const T val) const {
 			return vec3<T>(x / val, y / val, z / val);
 		}
 
@@ -171,45 +175,49 @@ namespace cml {
 
 
 		//EQUALITY
-		bool operator ==(const vec3& val){
-			return ((cmpf(x, val.x) && (cmpf(y, val.y) && (cmpf(z, val.z));
+		bool operator ==(const vec3& val) const{
+			return (cmpf(x, val.x) && cmpf(y, val.y) && cmpf(z, val.z));
 		}
 
-		bool operator !=(const vec3& val) {
-			return !(this == val);
+		bool operator !=(const vec3& val) const{
+			return !(*this == val);
 		}
 
 
 		//DOT
-		T dot(const vec3<T>& a, const vec3<T>& b) {
+		T dot(const vec3<T>& a, const vec3<T>& b) const{
 			return a.x * b.x + a.y * b.y + a.z * b.z;
 		}
 
 		//CROSS
-		vec3<T>& cross(const vec3<T>& a, const vec3<T>& b) {
-			return vec3<T>&(a.y * b.z - b.y * a.z, a.z * b.x - b.z * a.x, a.x * b.y - b.x * a.y);
+		vec3<T> cross(const vec3<T>& a, const vec3<T>& b) const {
+			return vec3<T>(a.y * b.z - b.y * a.z, a.z * b.x - b.z * a.x, a.x * b.y - b.x * a.y);
 		}
 
 		//MAGNITUDE
-		T mag(void) {
-			return std::sqrt(x*x + y*y + z*z);
+		T mag(void) const {
+			return (T)std::sqrt(x*x + y*y + z*z);
 		}
 
-		T magSqrd(void) {
+		T magSqrd(void) const{
 			return (x*x + y*y + z*z);
-		}
-
-		void SetMag(void) {
-			mag = mag();
 		}
 
 		//NORMALIZE
 
+		//normalizes this vector
 		void norm() {
-			T mag = mag();
-			x /= mag;
-			y /= mag;
-			z /= mag;
+			x /= mag();
+			y /= mag();
+			z /= mag();
+		}
+
+		//normalizes a given vector
+		vec3<T>& norm(vec3<T>& val) const {
+			val.x /= mag(); 
+			val.y /= mag(); 
+			val.z /= mag();
+			return (val);
 		}
 
 		//LERP
@@ -217,6 +225,21 @@ namespace cml {
 		{
 			return (*this) + (val - (*this)) * fact;
 		}
+
+		//PROJECTION
+		vec3<T> proj(const vec3<T>& p, const vec3<T>& q) const {
+			return vec3<T>(q * (dot(p, q) / q.magSqrd()));
+		}
+
+		//PERPINDICULAR
+		vec3<T> perp(const vec3<T>& p, const vec3<T>& q) const {
+			return vec3<T>(p - proj(p, q));
+		}
+
+		//ANGLE between p and q
+		//T angle(const vec3<T>& p, const vec3<T>& q) const {
+		//	return acos(dot(norm(p), norm(q)));
+		//}
 	
 	};
 	static const vec3<float> ZERO(0, 0, 0);
