@@ -69,18 +69,42 @@ namespace cml {
 			return data[x][y];
 		}
 
+		//const get at
+		const &T at(int x, int y) const {
+			return data[x][y];
+		}
+
+
+
 		//TRANSLATION
 
-		void setTranslation(const vec3<T>& trans){
+		void setAsTranslation(const vec3<T>& trans){
 			at(3,0) = trans.x;
 			at(3,1) = trans.y;
 			at(3,2) = trans.z;
 			at(3,3) = 1;
 		}
 
+		//adds the translation vector
+		void addTranslation(const vec3<T> & trans) {
+			at(3, 0) += trans.x;
+			at(3, 1) += trans.y;
+			at(3, 2) += trans.z;
+			at(3, 3) = 1;
+		}
+
+		//adds the translation vector
+		void addTranslation(const T trans) {
+			at(3, 0) += trans;
+			at(3, 1) += trans;
+			at(3, 2) += trans;
+			at(3, 3) = 1;
+		}
+
 		vec3<T> getTranslation() {
 			return vec3<T>(at(3,0), at(3,1), at(3,2));
 		}
+
 
 
 		//SCALE
