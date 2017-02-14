@@ -1,5 +1,8 @@
 #pragma once
 
+#include <string>
+
+
 #ifndef MATRIX44_HEADER
 
 namespace cml {
@@ -65,40 +68,17 @@ namespace cml {
 		}
 
 		//get at
-		T& at(int x, int y) {
+		T at(int x, int y) {
 			return data[x][y];
 		}
-
-		//const get at
-		const &T at(int x, int y) const {
-			return data[x][y];
-		}
-
-
 
 		//TRANSLATION
 
-		void setAsTranslation(const vec3<T>& trans){
-			at(3,0) = trans.x;
-			at(3,1) = trans.y;
-			at(3,2) = trans.z;
-			at(3,3) = 1;
-		}
-
-		//adds the translation vector
-		void addTranslation(const vec3<T> & trans) {
-			at(3, 0) += trans.x;
-			at(3, 1) += trans.y;
-			at(3, 2) += trans.z;
-			at(3, 3) = 1;
-		}
-
-		//adds the translation vector
-		void addTranslation(const T trans) {
-			at(3, 0) += trans;
-			at(3, 1) += trans;
-			at(3, 2) += trans;
-			at(3, 3) = 1;
+		void setTranslation(const vec3<T>& trans){
+			data[3][0] = trans.x;
+			data[3][1] = trans.y;
+			data[3][2] = trans.z;
+			data[3][3] = 1;
 		}
 
 		vec3<T> getTranslation() {
@@ -106,17 +86,18 @@ namespace cml {
 		}
 
 
-
 		//SCALE
 
 		void setScale(const T scale) {
-			at(0,0) = at(1,1) = at(2,2) = scale;
+			data[0][ 0] = scale;
+			data[1][ 1] = scale;
+			data[2][2] = scale;
 		}
 
 		void setScale(const vec3<T> scale) {
-			at(0, 0) = scale.x;
-			at(1, 1) = scale.y;
-			at(2, 2) = scale.z;
+			data[0][0] = scale.x;
+			data[1][1] = scale.y;
+			data[2][2] = scale.z;
 		}
 
 		vec3<T> getScale() {
@@ -182,6 +163,7 @@ namespace cml {
 					out.data[i][j] = data[i][j] /val;
 			return out;
 		}
+
 	};
 
 
