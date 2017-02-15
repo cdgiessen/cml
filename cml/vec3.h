@@ -185,12 +185,12 @@ namespace cml {
 
 
 		//DOT
-		T dot(const vec3<T>& a, const vec3<T>& b) const{
+		static T dot(const vec3<T>& a, const vec3<T>& b){
 			return a.x * b.x + a.y * b.y + a.z * b.z;
 		}
 
 		//CROSS
-		vec3<T> cross(const vec3<T>& a, const vec3<T>& b) const {
+		static vec3<T> cross(const vec3<T>& a, const vec3<T>& b) {
 			return vec3<T>(a.y * b.z - b.y * a.z, a.z * b.x - b.z * a.x, a.x * b.y - b.x * a.y);
 		}
 
