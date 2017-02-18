@@ -91,7 +91,7 @@ namespace cml {
 		}
 
 		//scalar
-		vec3<T> operator + (const T val) const {
+		vec3<T> operator +(const T val) const {
 			return vec3<T>(x + val, y + val, z + val);
 		}
 

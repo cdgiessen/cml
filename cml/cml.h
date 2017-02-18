@@ -30,6 +30,16 @@ namespace cml {
 		return (fabs(A - B) < epsilon);
 	}
 
+	template<typename T = float>
+	static inline T degToRad(T val) {
+		return ((val * M_PI) / 180.0);
+	}
+	
+	template<typename T = float>
+	static inline T radToDeg(T val) {
+		return ((180.0 * val) / M_PI);
+	}
+
 	template class vec2<float>;
 	template class vec2<int>;
 	template class vec2<double>;
