@@ -7,23 +7,23 @@
 int main() {
 
 	cml::vec3f v1(2.0f, 3.0f, 2.5f);	
-	std::cout << "v1 = 2.0f, 3.0f, 2.5f  == " << v1.x << ", " << v1.y << ", " << v1.z << std::endl;
+	std::cout << "v1 = 2.0f, 3.0f, 2.5f  == "<< v1 << std::endl;
 
 	cml::vec3f v2(1.0f, 1.0f, 1.0f);
-	std::cout << "v2 = 1.0f, 1.0f, 1.0f  == " << v2.x << ", " << v2.y << ", " << v2.z << std::endl;
+	std::cout << "v2 = 1.0f, 1.0f, 1.0f  == " << v2 << std::endl;
 
 	v2 = v1;
-	std::cout << "v2 = v1 "<< v2.x << ", " << v2.y << ", "<< v2.z << std::endl;
+	std::cout << "v2 = v1 "<< v2 << std::endl;
 
 	cml::vec3f v3 = v1 + v2;
-	std::cout << "v3 = v1 + v2  == " << v3.x << ", " << v3.y << ", " << v3.z << std::endl;
+	std::cout << "v3 = v1 + v2  == " << v3 << std::endl;
 
 	v3 = cml::ZERO;
-	std::cout << "reset v3 to ZERO v3 = " << v3.x << ", " << v3.y << ", " << v3.z << std::endl;
+	std::cout << "reset v3 to ZERO v3 = " << v3 << std::endl;
 
 
 	cml::vec3f v4 = cml::vec3<float>::cross(cml::RIGHT, cml::UP);
-	std::cout << "v4 = v3 * v2 ==" << v4.x << " " << v4.y << " " << v4.z << std::endl;
+	std::cout << "v4 = v3 * v2 ==" << v4 << std::endl;
 
 	cml::mat4<float> matA;
 	matA.setScaleFactor(5);
@@ -39,41 +39,20 @@ int main() {
 
 	matD = matC - matD;
 
-	std::cout << "matA" << std::endl;
-
-	std::cout << matA.at(0, 0) << ",	" << matA.at(1, 0) << ",	" << matA.at(2, 0) << ",	" << matA.at(3, 0) << std::endl;
-	std::cout << matA.at(0, 1) << ",	" << matA.at(1, 1) << ",	" << matA.at(2, 1) << ",	" << matA.at(3, 1) << std::endl;
-	std::cout << matA.at(0, 2) << ",	" << matA.at(1, 2) << ",	" << matA.at(2, 2) << ",	" << matA.at(3, 2) << std::endl;
-	std::cout << matA.at(0, 3) << ",	" << matA.at(1, 3) << ",	" << matA.at(2, 3) << ",	" << matA.at(3, 3) << std::endl;
+	std::cout << "matA" << matA <<std::endl;
 															
-	std::cout << "matB" << std::endl;
+	std::cout << "matB" << matB << std::endl;
 															
-	std::cout << matB.at(0, 0) << ",	" << matB.at(1, 0) << ",	" << matB.at(2, 0) << ",	" << matB.at(3, 0) << std::endl;
-	std::cout << matB.at(0, 1) << ",	" << matB.at(1, 1) << ",	" << matB.at(2, 1) << ",	" << matB.at(3, 1) << std::endl;
-	std::cout << matB.at(0, 2) << ",	" << matB.at(1, 2) << ",	" << matB.at(2, 2) << ",	" << matB.at(3, 2) << std::endl;
-	std::cout << matB.at(0, 3) << ",	" << matB.at(1, 3) << ",	" << matB.at(2, 3) << ",	" << matB.at(3, 3) << std::endl;
+	std::cout << "matC" << matC << std::endl;
 															
-	std::cout << "matC" << std::endl;
-															
-	std::cout << matC.at(0, 0) << ",	" << matC.at(1, 0) << ",	" << matC.at(2, 0) << ",	" << matC.at(3, 0) << std::endl;
-	std::cout << matC.at(0, 1) << ",	" << matC.at(1, 1) << ",	" << matC.at(2, 1) << ",	" << matC.at(3, 1) << std::endl;
-	std::cout << matC.at(0, 2) << ",	" << matC.at(1, 2) << ",	" << matC.at(2, 2) << ",	" << matC.at(3, 2) << std::endl;
-	std::cout << matC.at(0, 3) << ",	" << matC.at(1, 3) << ",	" << matC.at(2, 3) << ",	" << matC.at(3, 3) << std::endl;
-															
-	std::cout << "matD" << std::endl;						
-															
-	std::cout << matD.at(0, 0) << ",	" << matD.at(1, 0) << ",	" << matD.at(2, 0) << ",	" << matD.at(3, 0) << std::endl;
-	std::cout << matD.at(0, 1) << ",	" << matD.at(1, 1) << ",	" << matD.at(2, 1) << ",	" << matD.at(3, 1) << std::endl;
-	std::cout << matD.at(0, 2) << ",	" << matD.at(1, 2) << ",	" << matD.at(2, 2) << ",	" << matD.at(3, 2) << std::endl;
-	std::cout << matD.at(0, 3) << ",	" << matD.at(1, 3) << ",	" << matD.at(2, 3) << ",	" << matD.at(3, 3) << std::endl;
-
+	std::cout << "matD" << matD << std::endl;						
+													
 	std::cout << "matDet det = " << matDet.det() << std::endl;
 
-	cml::vec4<float> ACol = matA.getCol(2);
-	std::cout << "matA get col 2  == " << ACol.x << ", " << ACol.y << ", " << ACol.z << ", " << ACol.w << std::endl;
 
-	cml::vec4<float> ARow = matA.getRow(3);
-	std::cout << "matA get row 3  == " << ARow.x << ", " << ARow.y << ", " << ARow.z << ", " << ARow.w << std::endl;
+	std::cout << "matA get col 2  == " << matA.getCol(2) << std::endl;
+
+	std::cout << "matA get row 3  == " << matA.getRow(3) << std::endl;
 
 	//cml::mat4<float> matIden;
 	//std::cout << "is matrix an identity matrix == " << matIden.isIdentity() << std::endl;

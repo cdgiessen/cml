@@ -75,6 +75,15 @@ namespace cml {
 			return data[x * 3 + y];
 		}
 
+
+
+
+		//put to output
+		friend std::ostream& operator<<(std::ostream &strm, const mat3<T> &m) {
+			return strm << "[[ " << m.data[0] << ", " << m.data[1] << ", " << m.data[2] << "],	"
+				<< "[ " << m.data[3] << ", " << m.data[4] << ", " << m.data[5] << "],	"
+				<< "[ " << m.data[6] << ", " << m.data[7] << ", " << m.data[8] << "]]";
+		}
 	};
 
 	typedef mat3<float> mat3f;

@@ -41,7 +41,10 @@ namespace cml {
 	private:
 
 
-
+		//put to output
+		friend std::ostream& operator<<(std::ostream &strm, const quat<T> &q) {
+			return strm << "[" << q.x << ", " << q.y << ", " << q.z << ", " << q.w << "]";
+		}
 	};
 
 	typedef quat<float> quatf;

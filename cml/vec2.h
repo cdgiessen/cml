@@ -172,6 +172,10 @@ namespace cml {
 			return vec2<T>(p - proj(p, q));
 		}
 
+		//put to output
+		friend std::ostream& operator<<(std::ostream &strm, const vec2<T> &v) {
+			return strm << "[" << v.x << ", " << v.y << "]";
+		}
 	};
 
 	static const vec2<float> ZERO_2(0, 0);

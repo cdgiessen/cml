@@ -195,6 +195,10 @@ namespace cml {
 			return vec4<T>(p - proj(p, q));
 		}
 
+		//put to output
+		friend std::ostream& operator<<(std::ostream &strm, const vec4<T> &v) {
+			return strm << "[" << v.x << ", " << v.y << ", " << v.z << ", " << v.w << "]";
+		}
 	};
 
 
