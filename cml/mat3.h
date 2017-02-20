@@ -73,8 +73,74 @@ namespace cml {
 		//Const get at
 		const T& at(int x, int y) const {
 			return data[x * 3 + y];
+		} 
+
+		//EQUALITY CHECK
+		bool operator==(const mat3<T>& val) const {
+			for (int i = 0; i < 9; i++)
+			{
+				if (!cml::cmpf(data[i], val.data[i]))
+					return false;
+			}
+			return true;
 		}
 
+		bool operator!=(const mat3<T>& val) const {
+			return !(*this == val);
+		}
+
+		//Creates a rotation matrix with specified values in degrees
+		static mat3<T> createRotationMatrix(const T xRot, const T yRot, const T zRot) {
+			T xRad = cml::degToRad(xRot);
+			T yRad = cml::degToRad(yRot);
+			T zRad = cml::degToRad(zRot);
+
+			mat3<T> ma, mb, mc;
+			float ac = cos(xRad);
+			float as = sin(xRad);
+			float bc = cos(yRad);
+			float bs = sin(yRad);
+			float cc = cos(zRad);
+			float cs = sin(zRad);
+
+			ma.at(1, 1) = ac;
+			ma.at(2, 1) = as;
+			ma.at(1, 2) = -as;
+			ma.at(2, 2) = ac;
+
+			mb.at(0, 0) = bc;
+			mb.at(2, 0) = -bs;
+			mb.at(0, 2) = bs;
+			mb.at(2, 2) = bc;
+
+			mc.at(0, 0) = cc;
+			mc.at(1, 0) = cs;
+			mc.at(0, 1) = -cs;
+			mc.at(1, 1) = cc;
+
+			return ma * mb * mc;
+		}
+
+		//VECTOR MULTIPLICATION
+		vec3<T> operator*(const vec3<T>& val) {
+			return vec3<T>(data[0] * val.x + data[1] * val.y + data[2] * val.z,
+						   data[3] * val.x + data[4] * val.y + data[5] * val.z,
+						   data[6] * val.x + data[7] * val.y + data[8] * val.z);
+		}
+
+		//MATRIX MULTIPLICATION
+		mat3<T> operator*(const mat3<T> val) const {
+			mat3<T> w;
+			for (int i = 0; i < 3; i++) {
+				for (int j = 0; j < 3; j++) {
+					T n = 0;
+					for (int k = 0; k < 3; k++)
+						n += val.at(i, k) * at(k, j);
+					w.at(i, j) = n;
+				}
+			}
+			return w;
+		}
 
 
 
@@ -83,6 +149,13 @@ namespace cml {
 			return strm << "[[ " << m.data[0] << ", " << m.data[1] << ", " << m.data[2] << "],	"
 				<< "[ " << m.data[3] << ", " << m.data[4] << ", " << m.data[5] << "],	"
 				<< "[ " << m.data[6] << ", " << m.data[7] << ", " << m.data[8] << "]]";
+		}
+
+		//To string
+		std::string toString() const {
+			std::ostringstream stream;
+			stream << *this;
+			return stream.str();
 		}
 	};
 

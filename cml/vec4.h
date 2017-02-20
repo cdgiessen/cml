@@ -199,6 +199,13 @@ namespace cml {
 		friend std::ostream& operator<<(std::ostream &strm, const vec4<T> &v) {
 			return strm << "[" << v.x << ", " << v.y << ", " << v.z << ", " << v.w << "]";
 		}
+
+		//To string
+		std::string toString() const {
+			std::ostringstream stream;
+			stream << *this;
+			return stream.str();
+		}
 	};
 
 

@@ -4,7 +4,7 @@
 #include <cstdio>
 #include "cml.h"
 
-int main() {
+void main() {
 
 	cml::vec3f v1(2.0f, 3.0f, 2.5f);	
 	std::cout << "v1 = 2.0f, 3.0f, 2.5f  == "<< v1 << std::endl;
@@ -28,27 +28,30 @@ int main() {
 	cml::mat4<float> matA;
 	matA.setScaleFactor(5);
 	matA.setToTranslation(cml::vec3<float>(1, 2, 3));
+	std::cout << "matA" << matA <<std::endl;
 
 	cml::mat4<float> matB;
 	matB.addTranslation(cml::vec3<float>(0.5f, 0.1f, 1.5f));
-	matB = matA + matB;
+	std::cout << "matB" << matA + matB << std::endl;
 
-	cml::mat4<float> matC(1,1,2,2,2,2,1,1,1,1,2,2,2,2,1,1);
-	cml::mat4<float> matD(2, 1, 1, 2, 2, 1, 1, 2, 1, 2, 2, 1, 1, 2, 2, 1);
+	matA = cml::mat4f(4, 5, 1, 8, 0, 3, 6, 1, 3, 5, 0, 9, 2, 4, 6, 1);
+	matB = cml::mat4f(1, 5, 1, 0, 0, 3, 6, 1, 3, 5, 7, 2, 2, 0, 6, 1);
+
+	std::cout << "matA * matB = " << matA*matB << std::endl; // should equal [[23,40,89,15],[20,39,66,16],[21,30,87,14],[22,52,74,17]]
+
+	cml::mat4f matC(1,1,2,2,2,2,1,1,1,1,2,2,2,2,1,1);
+	cml::mat4f matD(2, 1, 1, 2, 2, 1, 1, 2, 1, 2, 2, 1, 1, 2, 2, 1);
 	cml::mat4<int> matDet(3, 2, -1, 4, 2, 1, 5, 7, 0, 5, 2, -6, -1, 2, 1, 0); //determinate should be -418
 
 	matD = matC - matD;
 
-	std::cout << "matA" << matA <<std::endl;
-															
-	std::cout << "matB" << matB << std::endl;
-															
 	std::cout << "matC" << matC << std::endl;
 															
 	std::cout << "matD" << matD << std::endl;						
 													
 	std::cout << "matDet det = " << matDet.det() << std::endl;
 
+	std::cout << "matC * v1 = " << matC*v1 << std::endl;
 
 	std::cout << "matA get col 2  == " << matA.getCol(2) << std::endl;
 
@@ -75,6 +78,5 @@ int main() {
 	
 
 	std::cout << "Press any key to continue..." << std::endl;
-	std::getchar();
-	return 0;
+	std::getchar();	
 }

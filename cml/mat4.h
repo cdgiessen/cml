@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-
+#include <sstream>
 
 #ifndef MATRIX44_HEADER
 
@@ -114,12 +114,12 @@ namespace cml {
 			T zRad = cml::degToRad(zRot);
 
 			mat4<T> ma, mb, mc;
-			float ac = cos(xRad);
-			float as = sin(xRad);
-			float bc = cos(yRad);
-			float bs = sin(yRad);
-			float cc = cos(zRad);
-			float cs = sin(zRad);
+			double ac = cos(xRad);
+			double as = sin(xRad);
+			double bc = cos(yRad);
+			double bs = sin(yRad);
+			double cc = cos(zRad);
+			double cs = sin(zRad);
 
 			ma.at(1, 1) = ac;
 			ma.at(2, 1) = as;
@@ -244,6 +244,21 @@ namespace cml {
 			return out;
 		}
 
+		//VECTOR MULTIPLICATION
+		vec3<T> operator*(const vec3<T>& val){
+			return vec3<T>(data[0] * val.x + data[1] * val.y + data[2] * val.z,
+				data[4] * val.x + data[5] * val.y + data[6] * val.z,
+				data[8] * val.x + data[9] * val.y + data[10] * val.z);
+		}
+
+		//vec4 multiplication
+		vec4<T> operator*(const vec4<T>& val) {
+			return vec4<T>(data[0] * val.x + data[1] * val.y + data[2] * val.z + data[3] * val.w,
+							  data[4] * val.x + data[5] * val.y + data[6] * val.z + data[7] * val.w,
+							  data[8] * val.x + data[9] * val.y + data[10] * val.z + data[11] * val.w,
+							  data[12] * val.x + data[13] * val.y + data[14] * val.z + data[15] * val.w);
+		}
+
 		//MATRIX MULTIPLICATION
 		mat4<T> operator*(const mat4<T>& val) {
 			mat4<T> out;
@@ -252,7 +267,7 @@ namespace cml {
 					T n = 0;
 					for (int k = 0; k < 4; k++)
 					{
-						n += val.at(i, k) * at(k, j);
+						n += at(i, k) * val.at(k, j);
 					}
 					out.at(i, j) = n;
 				}
@@ -267,6 +282,20 @@ namespace cml {
 			for (int i = 0; i < 16; i++)
 				out.data[i] = data[i] /val;
 			return out;
+		}
+
+		//EQUALITY CHECK
+		bool operator==(const mat4<T>& val) const {
+			for (int i = 0; i < 16; i++)
+			{
+				if (!cml::cmpf(data[i], val.data[i]))
+					return false;
+			}
+			return true;
+		}
+
+		bool operator!=(const mat4<T>& val) const {
+			return !(*this == val);
 		}
 
 		//TRANSPOSE
@@ -362,7 +391,18 @@ namespace cml {
 						<< "[" << m.data[8] << ", " << m.data[9] << ", " << m.data[10] << ", " << m.data[11] << "],	"
 						<< "[" << m.data[12] << ", " << m.data[13] << ", " << m.data[14] << ", " << m.data[15] << "]]";
 		}
+
+		//To string
+		std::string toString() const{
+			std::ostringstream stream;
+			stream << *this;
+			return stream.str();
+		}
 	};
+
+
+	typedef mat4<float> mat4f;
+	typedef mat4<double> mat4d;
 
 
 }

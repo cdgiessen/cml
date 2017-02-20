@@ -247,6 +247,13 @@ namespace cml {
 			return strm << "[" << v.x << ", " << v.y << ", " << v.z << "]";
 		}
 
+		//To string
+		std::string toString() const {
+			std::ostringstream stream;
+			stream << *this;
+			return stream.str();
+		}
+
 	};
 	static const vec3<float> ZERO(0, 0, 0);
 	static const vec3<float> ONE(1, 1, 1);

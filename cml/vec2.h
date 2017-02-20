@@ -176,6 +176,13 @@ namespace cml {
 		friend std::ostream& operator<<(std::ostream &strm, const vec2<T> &v) {
 			return strm << "[" << v.x << ", " << v.y << "]";
 		}
+
+		//To string
+		std::string toString() const {
+			std::ostringstream stream;
+			stream << *this;
+			return stream.str();
+		}
 	};
 
 	static const vec2<float> ZERO_2(0, 0);

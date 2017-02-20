@@ -45,6 +45,13 @@ namespace cml {
 		friend std::ostream& operator<<(std::ostream &strm, const quat<T> &q) {
 			return strm << "[" << q.x << ", " << q.y << ", " << q.z << ", " << q.w << "]";
 		}
+
+		//To string
+		std::string toString() const {
+			std::ostringstream stream;
+			stream << *this;
+			return stream.str();
+		}
 	};
 
 	typedef quat<float> quatf;

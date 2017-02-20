@@ -24,18 +24,19 @@ namespace cml {
 
 	const double epsilon = 4.37114e-05;
 
-	template<typename T = float>
+	//compares floating point numbers, returns true is "equal" and false if not
+	template<typename T = double>
 	bool cmpf(T A, T B)
 	{
 		return (fabs(A - B) < epsilon);
 	}
 
-	template<typename T = float>
+	template<typename T = double>
 	static inline T degToRad(T val) {
 		return ((val * M_PI) / 180.0);
 	}
 	
-	template<typename T = float>
+	template<typename T = double>
 	static inline T radToDeg(T val) {
 		return ((180.0 * val) / M_PI);
 	}
