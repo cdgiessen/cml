@@ -254,9 +254,9 @@ namespace cml {
 		//vec4 multiplication
 		vec4<T> operator*(const vec4<T>& val) {
 			return vec4<T>(data[0] * val.x + data[1] * val.y + data[2] * val.z + data[3] * val.w,
-							  data[4] * val.x + data[5] * val.y + data[6] * val.z + data[7] * val.w,
-							  data[8] * val.x + data[9] * val.y + data[10] * val.z + data[11] * val.w,
-							  data[12] * val.x + data[13] * val.y + data[14] * val.z + data[15] * val.w);
+						   data[4] * val.x + data[5] * val.y + data[6] * val.z + data[7] * val.w,
+						   data[8] * val.x + data[9] * val.y + data[10] * val.z + data[11] * val.w,
+						   data[12] * val.x + data[13] * val.y + data[14] * val.z + data[15] * val.w);
 		}
 
 		//MATRIX MULTIPLICATION
