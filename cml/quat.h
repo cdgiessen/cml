@@ -6,17 +6,18 @@
 return euler angle representation (vec3)
 
 look rotation - Creates a rotation with the specified forward and upwards directions.
-euler - Returns a rotation that rotates z degrees around the z axis, x degrees around the x axis, and y degrees around the y axis (in that order).
+#euler - Returns a rotation that rotates z degrees around the z axis, x degrees around the x axis, and y degrees around the y axis (in that order).
 slerp - Spherically interpolates between a and b by t. The parameter t is clamped to the range [0, 1].
 fromToRotation - Creates a rotation which rotates from fromDirection to toDirection.
-identity - static var
+#identity - static var
+#other constant ones 
 
 set (x,y,z,w)
 set From To Rotation - creates a rotation from FromRotation to ToRotation
 ToAngleAxis 	Converts a rotation to angle-axis representation (angles in degrees).
 angle - Returns the angle in degrees between two rotations a and b.
 
-axisangles - Creates a rotation which rotates angle degrees around axis.
+#axisangles - Creates a rotation which rotates angle degrees around axis.
 dot - The dot product between two rotations.
 #inverse - Returns the Inverse of rotation.
 rotate towards - 	Rotates a rotation from towards to.
@@ -59,6 +60,22 @@ namespace cml {
 		//REturns the real part of a quaternion
 		T getReal() {
 			return w;
+		}
+
+		//Sets the quaternion to given values -- not sure if useful
+		void SetValues(T valX, T valY, T valZ, T valW) {
+			x = valX;
+			y = valY;
+			z = valZ;
+			w = valW;
+		}
+
+		//Sets the quaternion to vector and value
+		void SetValues(vec3<T> imagVal, T realVal) {
+			x = imagVal.x;
+			y = imagVal.y;
+			z = imagVal.z;
+			w = realVal;
 		}
 
 		//OPERATORS
@@ -157,6 +174,22 @@ namespace cml {
 			return quat<T>(-x / mag, -y / mag, -z / mag, w / mag);
 		}
 
+
+		//axisangles - Creates a rotation which rotates angle degrees around axis.
+		static quat<T> axisAngles(vec3<T> axis, T degrees) {
+			double angleRad = degToRad(degrees);
+			double sin_anlge_div2 = std::sin(angleRad / 2);
+			double cos_anlge_div2 = std::cos(angleRad / 2);
+			return quat<T>(axis*sin_anlge_div2, cos_anlge_div2);
+		}
+
+		//Returns a rotation that rotates z degrees around the z axis, x degrees around the x axis, and y degrees around the y axis(in that order).
+		static quat<T> fromEulerAngles(T x, T y, T z) {
+			return quat<T>(axisAngles(vec3<T>(1,0,0), x) * axisAngles(vec3<T>(0, 1, 0), y) * axisAngles(vec3<T>(0, 0, 1), z));
+		}
+
+
+
 		//Lerp TODO
 		//quat<T> lerp(T factor, const quat<T>& val) const
 		//{
@@ -181,17 +214,17 @@ namespace cml {
 
 	static const quat<float> IDENTITY(0, 0, 0, 1);
 
-	static const quat<float> QUAT_ABOUT_X_90(std::sqrt(0.5), 0, 0, std::sqrt(0.5));
-	static const quat<float> QUAT_ABOUT_X_180(1, 0, 0, 0);
-	static const quat<float> QUAT_ABOUT_X_270(-std::sqrt(0.5), 0, 0, std::sqrt(0.5));
+	static const quat<float> QUAT_X_90(std::sqrt(0.5), 0, 0, std::sqrt(0.5));
+	static const quat<float> QUAT_X_180(1, 0, 0, 0);
+	static const quat<float> QUAT_X_270(-std::sqrt(0.5), 0, 0, std::sqrt(0.5));
 
-	static const quat<float> QUAT_ABOUT_Y_90(0, std::sqrt(0.5), 0, std::sqrt(0.5));
-	static const quat<float> QUAT_ABOUT_Y_180(0, 1, 0, 0);
-	static const quat<float> QUAT_ABOUT_Y_270(0, -std::sqrt(0.5), 0, std::sqrt(0.5));
+	static const quat<float> QUAT_Y_90(0, std::sqrt(0.5), 0, std::sqrt(0.5));
+	static const quat<float> QUAT_Y_180(0, 1, 0, 0);
+	static const quat<float> QUAT_Y_270(0, -std::sqrt(0.5), 0, std::sqrt(0.5));
 
-	static const quat<float> QUAT_ABOUT_Z_90(0, 0, std::sqrt(0.5), std::sqrt(0.5));
-	static const quat<float> QUAT_ABOUT_Z_180(0, 0, 1, 0);
-	static const quat<float> QUAT_ABOUT_Z_270(0, 0, -std::sqrt(0.5), std::sqrt(0.5));
+	static const quat<float> QUAT_Z_90(0, 0, std::sqrt(0.5), std::sqrt(0.5));
+	static const quat<float> QUAT_Z_180(0, 0, 1, 0);
+	static const quat<float> QUAT_Z_270(0, 0, -std::sqrt(0.5), std::sqrt(0.5));
 
 }
 
