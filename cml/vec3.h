@@ -257,14 +257,14 @@ namespace cml {
 		}
 
 	};
-	static const vec3<float> ZERO(0, 0, 0);
-	static const vec3<float> ONE(1, 1, 1);
-	static const vec3<float> RIGHT(1, 0, 0);
-	static const vec3<float> LEFT(-1, 0, 0);
-	static const vec3<float> UP(0, 1, 0);
-	static const vec3<float> DOWN(0, -1, 0);
-	static const vec3<float> FORWARD(0, 0, 1);
-	static const vec3<float> BACK(0, 0, -1);
+	static const vec3<float> VEC3_ZERO(0, 0, 0);
+	static const vec3<float> VEC3_ONE(1, 1, 1);
+	static const vec3<float> VEC3_RIGHT(1, 0, 0);
+	static const vec3<float> VEC3_LEFT(-1, 0, 0);
+	static const vec3<float> VEC3_UP(0, 1, 0);
+	static const vec3<float> VEC3_DOWN(0, -1, 0);
+	static const vec3<float> VEC3_FORWARD(0, 0, 1);
+	static const vec3<float> VEC3_BACK(0, 0, -1);
 
 	typedef vec3<float> vec3f;
 	typedef vec3<int> vec3i;

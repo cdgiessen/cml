@@ -187,12 +187,12 @@ namespace cml {
 		}
 	};
 
-	static const vec2<float> ZERO_2(0, 0);
-	static const vec2<float> ONE_2(1, 1);
-	static const vec2<float> RIGHT_2(1, 0);
-	static const vec2<float> LEFT_2(-1, 0);
-	static const vec2<float> UP_2(0, 1);
-	static const vec2<float> DOWN_2(0, -1);
+	static const vec2<float> VEC2_ZERO_2(0, 0);
+	static const vec2<float> VEC2_ONE_2(1, 1);
+	static const vec2<float> VEC2_RIGHT_2(1, 0);
+	static const vec2<float> VEC2_LEFT_2(-1, 0);
+	static const vec2<float> VEC2_UP_2(0, 1);
+	static const vec2<float> VEC2_DOWN_2(0, -1);
 
 	
 

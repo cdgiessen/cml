@@ -50,7 +50,7 @@ namespace cml {
 		quat(const quat<T>& copy) : x(copy.x), y(copy.y), z(copy.z), w(copy.w) {}
 
 		//Constructor from vector and real part
-		quat(const vec3<T> imagVec, const T realVal) : x(imagVec.x), y(imagVec.y), z(imagVec.z), w(realVal) {}
+		quat(const vec3<T>& imagVec, const T realVal) : x(imagVec.x), y(imagVec.y), z(imagVec.z), w(realVal) {}
 
 		//Returns a vector of the imaginary part of a quaternion
 		vec3<T> getImag() {
@@ -174,6 +174,10 @@ namespace cml {
 			return quat<T>(-x / mag, -y / mag, -z / mag, w / mag);
 		}
 
+		vec3<T> rotate(const vec3<T> vecIN, quat<T> quatIN) {
+						
+			return ((quatIN*quat<T>(vecIN, 0)) * quatIN.inverse()).getImag();
+		}
 
 		//axisangles - Creates a rotation which rotates angle degrees around axis.
 		static quat<T> axisAngles(vec3<T> axis, T degrees) {
@@ -181,6 +185,10 @@ namespace cml {
 			double sin_anlge_div2 = std::sin(angleRad / 2);
 			double cos_anlge_div2 = std::cos(angleRad / 2);
 			return quat<T>(axis*sin_anlge_div2, cos_anlge_div2);
+		}
+
+		static quat<T> axisAngles(T x, T y, T z, T degrees) {
+			return axisAngles(vec3<T>(x,y,z) , degrees);
 		}
 
 		//Returns a rotation that rotates z degrees around the z axis, x degrees around the x axis, and y degrees around the y axis(in that order).
@@ -212,7 +220,7 @@ namespace cml {
 	typedef quat<float> quatf;
 	typedef quat<double> quatd;
 
-	static const quat<float> IDENTITY(0, 0, 0, 1);
+	static const quat<float> QUAT_IDENTITY(0, 0, 0, 1);
 
 	static const quat<float> QUAT_X_90(std::sqrt(0.5), 0, 0, std::sqrt(0.5));
 	static const quat<float> QUAT_X_180(1, 0, 0, 0);
