@@ -147,13 +147,15 @@ namespace cml {
 		//NORMALIZE
 
 		void norm() {
-			x /= mag();
-			y /= mag();
+			T mag = (*this).mag();
+			x /= mag;
+			y /= mag;
 		}
 
 		void norm(vec2<T>& val) const {
-			val.x /= val.mag();
-			val.y /= val.mag();
+			T mag = val.mag();
+			val.x /= mag;
+			val.y /= mag;
 		}
 
 		//LERP

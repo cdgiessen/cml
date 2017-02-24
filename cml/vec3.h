@@ -207,16 +207,18 @@ namespace cml {
 
 		//normalizes this vector
 		void norm() {
-			x /= mag();
-			y /= mag();
-			z /= mag();
+			T mag = (*this).mag();
+			x /= mag;
+			y /= mag;
+			z /= mag;
 		}
 
 		//normalizes a given vector
 		vec3<T>& norm(vec3<T>& val) const {
-			val.x /= mag(); 
-			val.y /= mag(); 
-			val.z /= mag();
+			T mag = val.mag();
+			val.x /= mag; 
+			val.y /= mag; 
+			val.z /= mag;
 			return (val);
 		}
 

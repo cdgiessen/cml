@@ -25,6 +25,8 @@ void main() {
 	cml::vec3f v4 = cml::vec3<float>::cross(cml::RIGHT, cml::UP);
 	std::cout << "v4 = v3 * v2 ==" << v4 << std::endl;
 
+	std::cout << std::endl;
+
 	cml::mat4<float> matA;
 	matA.setScaleFactor(5);
 	matA.setToTranslation(cml::vec3<float>(1, 2, 3));

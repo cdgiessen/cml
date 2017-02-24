@@ -145,11 +145,11 @@ namespace cml {
 
 
 		//EQUALITY
-		bool operator ==(const vec4& val) const {
+		bool operator ==(const vec4<T>& val) const {
 			return (cmpf(x, val.x) && cmpf(y, val.y) && cmpf(z, val.z) && cmpf(w, val.w));
 		}
 
-		bool operator !=(const vec4& val) const {
+		bool operator !=(const vec4<T>& val) const {
 			return !(*this == val);
 		}
 
@@ -172,11 +172,22 @@ namespace cml {
 
 		void norm() {
 			if (mag() != 0) {
-				x /= mag();
-				y /= mag();
-				z /= mag();
-				w /= mag();
+				T mag = (*this).mag();
+				x /= mag;
+				y /= mag;
+				z /= mag;
+				w /= mag;
 			}
+		}
+
+		//normalizes a given vector
+		vec4<T>& norm(vec4<T>& val) const {
+			T mag = val.mag();
+			val.x /= mag;
+			val.y /= mag;
+			val.z /= mag;
+			val.w /= mag;
+			return (val);
 		}
 
 		//LERP
