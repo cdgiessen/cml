@@ -8,6 +8,8 @@ Place for general functions that are outside of the other header files
 
 */
 #include <cassert>
+#include <string>
+#include <ostream>
 
 #include "vec2.h"
 #include "vec3.h"

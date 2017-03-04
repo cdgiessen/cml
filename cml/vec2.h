@@ -4,6 +4,8 @@
 
 #include <cmath>
 #include <cassert>
+#include <string>
+#include <ostream>
 
 namespace cml {
 

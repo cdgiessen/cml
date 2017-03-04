@@ -28,6 +28,9 @@ Operators
 # == != *(combine lhs with rhs)
 */
 
+#include <string>
+#include <ostream>
+
 namespace cml {
 
 	template<typename T>

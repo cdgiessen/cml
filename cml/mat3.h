@@ -2,6 +2,8 @@
 
 #ifndef MATRIX3_HEADER
 
+#include <string>
+#include <ostream>
 
 /* stuff to do.
 
