@@ -384,6 +384,75 @@ namespace cml {
 			return out / det();
 		}
 
+		static Matrix4<T> createFrustum(T left, T right, T bottom, T top, T zNear, T zFar)
+		{
+			/*
+			*
+			2 zNear
+			------------       0              A              0
+			right - left
+
+			2 zNear
+			0         ------------        B              0
+			top - bottom
+
+			0              0              C              D
+
+			0              0              -1             0
+
+			A = (right + left) / (right - left)
+
+			B = (top + bottom) / (top - bottom)
+
+			C = - (zFar + zNear) / (zFar - zNear)
+
+			D = - (2 zFar zNear) / (zFar - zNear)
+			*
+			*/
+			mat4<T> ret;
+
+			const T invWidth = 1.0 / (right - left);
+			const T invHeight = 1.0 / (top - bottom);
+			const T invDepth = 1.0 / (zFar - zNear);
+
+			const T twoZNear = 2 * zNear;
+
+			ret.at(0, 0) = twoZNear * invWidth;
+			ret.at(1, 1) = twoZNear * invHeight;
+
+			ret.at(0, 2) = (right + left) * invWidth;
+			ret.at(1, 2) = (top + bottom) * invHeight;
+			ret.at(2, 2) = -(zFar + zNear) * invDepth;
+			ret.at(3, 2) = -1;
+
+			ret.at(2, 3) = -twoZNear * zFar * invDepth;
+
+			return ret;
+		}
+
+		void flip() {
+			mat4<T> copy = *this;
+			copy[0][1] = data[1][0];
+			copy[0][2] = data[2][0];
+			copy[0][3] = data[3][0];
+
+			copy[1][0] = data[0][1];
+			copy[1][2] = data[2][1];
+			copy[1][3] = data[3][1];
+
+			copy[2][0] = data[0][2];
+			copy[2][1] = data[1][2];
+			copy[2][3] = data[3][2];
+
+			copy[3][0] = data[0][3];
+			copy[3][1] = data[1][3];
+			copy[3][2] = data[2][3];
+		}
+
+		T const * value_ptr() {
+			return *data;
+		}
+
 		//put to output
 		friend std::ostream& operator<<(std::ostream &strm, const mat4<T> &m) {
 			return strm << "[[" << m.data[0] << ", " << m.data[1] << ", " << m.data[2] << ", " << m.data[3] << "],	"
