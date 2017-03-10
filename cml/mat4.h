@@ -384,7 +384,7 @@ namespace cml {
 			return out / det();
 		}
 
-		static Matrix4<T> createFrustum(T left, T right, T bottom, T top, T zNear, T zFar)
+		static mat4<T> createFrustum(T left, T right, T bottom, T top, T zNear, T zFar)
 		{
 			/*
 			*
