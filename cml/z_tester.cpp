@@ -36,10 +36,10 @@ void main() {
 	matB.addTranslation(cml::vec3<float>(0.5f, 0.1f, 1.5f));
 	std::cout << "matB" << matA + matB << std::endl;
 
-	matA = cml::mat4f(4, 5, 1, 8, 0, 3, 6, 1, 3, 5, 0, 9, 2, 4, 6, 1);
-	matB = cml::mat4f(1, 5, 1, 0, 0, 3, 6, 1, 3, 5, 7, 2, 2, 0, 6, 1);
+	matA = cml::mat4f(4, 0, 3, 2, 5, 3, 5, 4, 1, 6, 0, 6, 8, 1, 9, 1);
+	matB = cml::mat4f(1, 0, 3, 2, 5, 3, 5, 0, 1, 6, 7, 6, 0, 1, 2, 1);
 
-	std::cout << "matA * matB = " << matA*matB << std::endl; // should equal [[23,40,89,15],[20,39,66,16],[21,30,87,14],[22,52,74,17]]
+	std::cout << "matA * matB = " << matA*matB << std::endl; // should equal [[23,40,89,15],[20,39,66,16],[21,30,87,14],[22,52,74,17]] (row format)
 
 	cml::mat4f matC(1,1,2,2,2,2,1,1,1,1,2,2,2,2,1,1);
 	cml::mat4f matD(2, 1, 1, 2, 2, 1, 1, 2, 1, 2, 2, 1, 1, 2, 2, 1);
