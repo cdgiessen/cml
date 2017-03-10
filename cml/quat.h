@@ -55,6 +55,11 @@ namespace cml {
 		//Constructor from vector and real part
 		quat(const vec3<T>& imagVec, const T realVal) : x(imagVec.x), y(imagVec.y), z(imagVec.z), w(realVal) {}
 
+		//returns constant address to the data
+		static T const * value_ptr(quat<T> const & vec) {
+			return &(vec.x);
+		}
+
 		//Returns a vector of the imaginary part of a quaternion
 		vec3<T> getImag() {
 			return vec3<T>(x, y, z);
@@ -177,7 +182,12 @@ namespace cml {
 			return quat<T>(-x / mag, -y / mag, -z / mag, w / mag);
 		}
 
-		vec3<T> rotate(const vec3<T> vecIN, quat<T> quatIN) {
+		vec3<T> rotate(const vec3<T> vecIN) {
+
+			return (((*this)*quat<T>(vecIN, 0)) * inverse()).getImag();
+		}
+
+		static vec3<T> rotate(const vec3<T> vecIN, quat<T> quatIN) {
 						
 			return ((quatIN*quat<T>(vecIN, 0)) * quatIN.inverse()).getImag();
 		}

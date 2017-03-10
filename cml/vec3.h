@@ -79,6 +79,11 @@ namespace cml {
 			return (*this);
 		}
 
+		//returns constant address to the data
+		static T const * value_ptr(vec3<T> const & vec) {
+			return &(vec.x);
+		}
+
 		//ADDITIONS
 		
 		vec3<T> operator +(const vec3<T> rhs) const {

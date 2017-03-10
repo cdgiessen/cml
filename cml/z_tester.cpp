@@ -72,6 +72,7 @@ void main() {
 	//std::cout << "Constant vec3 DOWN "<< std::endl;
 	//std::cout << "Constant vec3 FOWARD " << std::endl;
 	//std::cout << "Constant vec3 BACK "  << std::endl;
+
 	std::cout << std::endl;
 	std::cout << "Quaternion identity" << cml::QUAT_IDENTITY << std::endl;
 
@@ -81,6 +82,9 @@ void main() {
 
 	cml::vec3f vecToRotate(1, 0, 0);
 
+	cml::vec3f vec1 = cml::VEC3_FORWARD;
+
+	std::cout << "vector " << vec1 << " rotated around " << cml::QUAT_X_90 << " is " << cml::quatf::rotate(vec1, cml::QUAT_X_90) << std::endl;
 
 	std::cout << "Press any key to continue..." << std::endl;
 	std::getchar();	

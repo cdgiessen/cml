@@ -53,6 +53,11 @@ namespace cml {
 		mat3(const T v00, const T v01, const T v02, const T v10, const T v11, const T v12, const T v20, const T v21, const T v22) : 
 			data{ v00,v01,v02,v10,v11,v12,v20,v21,v22 } {}
 
+		//returns constant address to the data
+		static T const * value_ptr(mat3<T> const & mat) {
+			return &(mat.data[0]);
+		}
+
 		//Resets matrix to identity
 		void identity() {
 			for (int i = 0; i < 9; i++)
