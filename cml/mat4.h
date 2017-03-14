@@ -179,7 +179,7 @@ namespace cml {
 		}
 
 		vec3<T> getTranslation() {
-			return vec3<T>(at(0, 3), at(1, 3), at(2, 3));
+			return vec3<T>(at(3, 0), at(3, 1), at(3, 2));
 		}
 
 
@@ -399,38 +399,72 @@ namespace cml {
 			return out / det();
 		}
 
-		static mat4<T> createLookAt(const vec3<T>& eyePos, const vec3<T>& centerPos, const vec3<T>& upDir)
+		static mat4<T> createLookAt(const vec3<T>& eyePos, const vec3<T>& centerPos, vec3<T>& upDir)
 		{
-			vec3<T> forward, side, up;
-			mat4<T> m;
+			//vec3<T> forward, side, up;
+			//mat4<T> m;
+			//
+			//forward = centerPos - eyePos;
+			//forward.norm();
+			//up = upDir;
+			//
+			//
+			//// Side = forward x up
+			//side = vec3<T>::cross(forward, up);
+			//side.norm();
+			//
+			//// Recompute up as: up = side x forward
+			//up = vec3<T>::cross(side, forward);
+			//
+			//m.at(0, 0) = side.x;
+			//m.at(1, 0) = side.y;
+			//m.at(2, 0) = side.z;
+			//
+			//m.at(0, 1) = up.x;
+			//m.at(1, 1) = up.y;
+			//m.at(2, 1) = up.z;
+			//
+			//m.at(0, 2) = -forward.x;
+			//m.at(1, 2) = -forward.y;
+			//m.at(2, 2) = -forward.z;
+			//
+			//m.at(3, 0) = -vec3<T>::dot(side, eyePos);
+			//m.at(3, 1) = -vec3<T>::dot(up, eyePos);
+			//m.at(3, 2) = vec3<T>::dot(forward, eyePos);
+			//
+			//return m;
 
-			forward = centerPos - eyePos;
-			up = upDir;
 
-			forward.norm();
+			vec3<T> zAxis = eyePos - centerPos;
+			zAxis.norm();
+			upDir.norm();
+			vec3<T> xAxis = vec3<T>::cross(upDir, zAxis);
+			xAxis.norm();
+			vec3<T> yAxis = vec3<T>::cross(zAxis, xAxis);
 
-			// Side = forward x up
-			side = vec3<T>::cross(forward, up);
-			side.norm();
+			cml::mat4<T> translation; // Identity matrix by default
+			translation.at(3, 0) = -eyePos.x; // Third column, first row
+			translation.at(3, 1) = -eyePos.y;
+			translation.at(3, 2) = -eyePos.z;
+			cml::mat4<T> rotation;
+			rotation.at(0, 0) = xAxis.x; // First column, first row
+			rotation.at(1, 0) = xAxis.y;
+			rotation.at(2, 0) = xAxis.z;
+			rotation.at(0, 1) = yAxis.x; // First column, second row
+			rotation.at(1, 1) = yAxis.y;
+			rotation.at(2, 1) = yAxis.z;
+			rotation.at(0, 2) = zAxis.x; // First column, third row
+			rotation.at(1, 2) = zAxis.y;
+			rotation.at(2, 2) = zAxis.z;
 
-			// Recompute up as: up = side x forward
-			up = vec3<T>::cross(side, forward);
-
-			m.at(0, 0) = side.x;
-			m.at(1, 0) = side.y;
-			m.at(2, 0) = side.z;
-
-			m.at(0, 1) = up.x;
-			m.at(1, 1) = up.y;
-			m.at(2, 1) = up.z;
-
-			m.at(0, 2) = -forward.x;
-			m.at(1, 2) = -forward.y;
-			m.at(2, 2) = -forward.z;
-
-			m = m * mat4<T>::createTranslationMatrix(-eyePos.x, -eyePos.y, -eyePos.z);
-			return m;
+			return rotation * translation;
 		}
+
+		//static mat4<T> createLookAt(const vec3<T>& eyePos, const vec3<T>& centerPos, const vec3<T>& upDir) {
+		//	mat4<T> out;
+		//
+		//	return out;
+		//}
 
 		static mat4<T> createFrustum(T left, T right, T bottom, T top, T zNear, T zFar)
 		{
@@ -478,19 +512,65 @@ namespace cml {
 			return ret;
 		}
 
+		//static mat4<T> createPerspective(T fovy, T aspect, T zNear, T zFar)
+		//{
+		//	//assert(abs(aspect - std::numeric_limits<T>::epsilon()) > static_cast<T>(0));
+
+		//	T const tanHalfFovy = tan(fovy / static_cast<T>(2));
+
+		//	mat4<T> out;
+		//	out.at(0, 0) = static_cast<T>(1) / (aspect * tanHalfFovy);
+		//	out.at(1, 1) = static_cast<T>(1) / (tanHalfFovy);
+		//	out.at(2, 3) = -static_cast<T>(1);
+
+		//	out.at(2, 2) = zFar / (zFar - zNear);
+		//	out.at(3, 2) = -(zFar * zNear) / (zFar - zNear);
+
+		//	return out;
+		//}
+
 		static mat4<T> createPerspective(T fovy, T aspect, T zNear, T zFar)
 		{
+			//mat4<T> out;
+			//
+			//T const top = zNear*tan(fovy);
+			//T const right = top*aspect;
+			//
+			//out.at(0, 0) = zNear / right;
+			//
+			//out.at(1, 1) = zNear / top;
+			//
+			//out.at(2, 2) = (-zFar + zNear)/ (zFar - zNear);
+			//out.at(3, 2) = (-2.0f * zFar*zNear) / (zFar - zNear);
+			//
+			//out.at(2, 3) = -1;
+			//return out;
+
+
 			//assert(abs(aspect - std::numeric_limits<T>::epsilon()) > static_cast<T>(0));
 
+
 			T const tanHalfFovy = tan(fovy / static_cast<T>(2));
-
 			mat4<T> out;
-			out.at(0, 0) = static_cast<T>(1) / (aspect * tanHalfFovy);
+			out.at(0, 0) = static_cast<T>(1) / (tanHalfFovy * aspect);
 			out.at(1, 1) = static_cast<T>(1) / (tanHalfFovy);
-			out.at(2, 3) = -static_cast<T>(1);
+			out.at(3, 2) = -(static_cast<T>(1));
 
-			out.at(2, 2) = zFar / (zFar - zNear);
-			out.at(3, 2) = -(zFar * zNear) / (zFar - zNear);
+			out.at(2, 2) = -(zFar + zNear) / (zFar - zNear);
+			out.at(2, 3) = -(static_cast<T>(2) * zFar * zNear) / (zFar - zNear);
+			//out.at(3, 3) = 0;
+			return out;
+		}
+		static mat4<T> createOrtho(T left, T right, T bottom, T top, T near, T far) {
+			mat4<T> out;
+
+			out.at(0, 0) = 2 / (right - left);
+			out.at(1, 1) = 2 / (top - bottom);
+			out.at(2, 2) = -2 / (far - near);
+
+			out.at(3, 0) = -(left + right) / (right - left);
+			out.at(3, 1) = -(top + bottom) / (top - bottom);
+			out.at(3, 2) = -(far + near) / (far - near);
 
 			return out;
 		}
