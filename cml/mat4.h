@@ -4,6 +4,7 @@
 #include <sstream>
 
 #ifndef MATRIX44_HEADER
+#define MATRIX44_HEADER
 
 namespace cml {
 
@@ -489,10 +490,13 @@ namespace cml {
 			out.at(1, 1) = static_cast<T>(1) / (tanHalfFovy);
 			out.at(2, 3) = -static_cast<T>(1);
 
-			out.at(2, 2) = zFar / (zFar - zNear);
+			out.at(2, 2) = zFar / (zNear - zFar);
 			out.at(3, 2) = -(zFar * zNear) / (zFar - zNear);
 
-			return out;
+
+			out.at(0, 0) = 2 * zNear;
+			out.at(2, 0) =
+				return out;
 		}
 
 		//put to output
