@@ -46,11 +46,11 @@ namespace cml {
 		mat4() : data{ 1,0,0,0,	0,1,0,0,	0,0,1,0,	0,0,0,1 } {}
 
 		//Copy from array
-		mat4(const T val[16]) : data{ val[0], val[1], val[2],  val[3],	val[4],  val[5],  val[6],  val[7] ,
-			val[8], val[9], val[10], val[11],	val[12], val[13], val[14], val[15] } {}
+		mat4(const T val[16]) : data{ val[0], val[1], val[2],  val[3],		val[4],  val[5],  val[6],  val[7] ,
+			val[8], val[9], val[10], val[11],		val[12], val[13], val[14], val[15] } {}
 		//Copy constructor
-		mat4(const mat4<T>& val) : data{ val.at(0,0), val.at(1,0), val.at(2,0), val.at(3, 0),	 val.at(0, 1), val.at(1,1),val.at(2,1),val.at(3,1) ,
-			val.at(0,2), val.at(1,2),val.at(2,2),val.at(3,2), val.at(0,3), val.at(1,3),val.at(2,3),val.at(3,3) } {}
+		mat4(const mat4<T>& val) : data{ val.at(0,0), val.at(0,1), val.at(0,2), val.at(0, 3),	 val.at(1, 0), val.at(1,1),val.at(1,2),val.at(1,3) ,
+			val.at(2,0), val.at(2, 1),val.at(2,2),val.at(2,3), val.at(3,0), val.at(3,1),val.at(3,2),val.at(3,3) } {}
 
 		//Constructor from values
 		mat4(const T n00, const T n10, const T n20, const T n30, const T n01, const T n11, const T n21, const T n31,
@@ -154,28 +154,62 @@ namespace cml {
 
 		}
 
-		vec4<T> getCol(const int i) {
+		vec4<T> getRow(const int i) {
 			return vec4<T>(at(0, i), at(1, i), at(2, i), at(3, i));
 		}
 
-		vec4<T> getRow(const int i) {
+		void setRow(const int i, const vec4<T>& val) {
+			at(0, i) = val.x;
+			at(1, i) = val.y;
+			at(2, i) = val.z;
+			at(3, i) = val.w;
+		}
+
+		void setRow(const int i, const vec3<T>& val) {
+			at(0, i) = val.x;
+			at(1, i) = val.y;
+			at(2, i) = val.z;
+		}
+
+		vec4<T> getCol(const int i) {
 			return vec4<T>(at(i, 0), at(i, 1), at(i, 2), at(i, 3));
+		}
+
+		void setCol(const int i, const vec4<T>& val) {
+			at(i, 0) = val.x;
+			at(i, 1) = val.y;
+			at(i, 2) = val.z;
+			at(i, 3) = val.w;
+		}
+
+		void setCol(const int i, const vec3<T>& val) {
+			at(i, 0) = val.x;
+			at(i, 1) = val.y;
+			at(i, 2) = val.z;
 		}
 
 		//TRANSLATION
 
 		void setToTranslation(const vec3<T>& trans) {
-			at(3, 0) = trans.x;
-			at(3, 1) = trans.y;
-			at(3, 2) = trans.z;
-			at(3, 3) = 1;
+			setCol(3, trans);
+		}
+
+		void setToTranslation(const T trans) {
+			at(3, 0) = trans;
+			at(3, 1) = trans;
+			at(3, 2) = trans;
 		}
 
 		void addTranslation(const vec3<T>& trans) {
 			at(3, 0) += trans.x;
 			at(3, 1) += trans.y;
 			at(3, 2) += trans.z;
-			at(3, 3) = 1;
+		}
+
+		void addTranslation(const T& trans) {
+			at(3, 0) += trans;
+			at(3, 1) += trans;
+			at(3, 2) += trans;
 		}
 
 		vec3<T> getTranslation() {
@@ -279,8 +313,7 @@ namespace cml {
 			for (int i = 0; i < 4; i++) {
 				for (int j = 0; j < 4; j++) {
 					T n = 0;
-					for (int k = 0; k < 4; k++)
-					{
+					for (int k = 0; k < 4; k++) {
 						n += val.at(i, k) * at(k, j);
 					}
 					out.at(i, j) = n;
@@ -327,19 +360,12 @@ namespace cml {
 		T det() {
 			return
 				at(0, 0)*at(1, 1)*at(2, 2)*at(3, 3) + at(0, 0)*at(2, 1)*at(3, 2)*at(1, 3) + at(0, 0)*at(3, 1)*at(1, 2)*at(2, 3) +
-
 				at(1, 0)*at(0, 1)*at(3, 2)*at(2, 3) + at(1, 0)*at(2, 1)*at(0, 2)*at(3, 3) + at(1, 0)*at(3, 1)*at(2, 2)*at(0, 3) +
-
 				at(2, 0)*at(0, 1)*at(1, 2)*at(3, 3) + at(2, 0)*at(1, 1)*at(3, 2)*at(0, 3) + at(2, 0)*at(3, 1)*at(0, 2)*at(1, 3) +
-
 				at(3, 0)*at(0, 1)*at(2, 2)*at(1, 3) + at(3, 0)*at(1, 1)*at(0, 2)*at(2, 3) + at(3, 0)*at(2, 1)*at(1, 2)*at(0, 3) -
-
 				at(0, 0)*at(1, 1)*at(3, 2)*at(2, 3) - at(0, 0)*at(2, 1)*at(1, 2)*at(3, 3) - at(0, 0)*at(3, 1)*at(2, 2)*at(1, 3) -
-
 				at(1, 0)*at(0, 1)*at(2, 2)*at(3, 3) - at(1, 0)*at(2, 1)*at(3, 2)*at(0, 3) - at(1, 0)*at(3, 1)*at(0, 2)*at(2, 3) -
-
 				at(2, 0)*at(0, 1)*at(3, 2)*at(1, 3) - at(2, 0)*at(1, 1)*at(0, 2)*at(3, 3) - at(2, 0)*at(3, 1)*at(1, 2)*at(0, 3) -
-
 				at(3, 0)*at(0, 1)*at(1, 2)*at(2, 3) - at(3, 0)*at(1, 1)*at(2, 2)*at(0, 3) - at(3, 0)*at(2, 1)*at(0, 2)*at(1, 3);
 		}
 
@@ -401,58 +427,55 @@ namespace cml {
 
 		static mat4<T> createLookAt(const vec3<T>& eyePos, const vec3<T>& centerPos, vec3<T>& upDir)
 		{
+			//mat4<T> m;
+			//vec3<T> x, y, z;
+			//z = eyePos - centerPos;
+			//z.norm();
+			//y = upDir;
+			//x = vec3<T>::cross(y, z);
+			//y = vec3<T>::cross(z, x);
+			//
+			//x.norm();
+			//y.norm();
+			//
+			//m.at(0, 0) = x.x;
+			//m.at(0, 1) = x.y;
+			//m.at(0, 2) = x.z;
+			//m.at(0, 3) = -vec3<T>::dot(x, eyePos);
+			//m.at(1, 0) = y.x;
+			//m.at(1, 1) = y.y;
+			//m.at(1, 2) = y.z;
+			//m.at(1, 3) = -vec3<T>::dot(y, eyePos);
+			//m.at(2, 0) = z.x;
+			//m.at(2, 1) = z.y;
+			//m.at(2, 2) = z.z;
+			//m.at(2, 3) = -vec3<T>::dot(z, eyePos);
+			//return m;
+
 			mat4<T> m;
-			vec3<T> x, y, z;
-			z = eyePos - centerPos;
-			z.norm();
-			y = upDir;
-			x = vec3<T>::cross(y, z);
-			y = vec3<T>::cross(z, x);
-
-			x.norm();
-			y.norm();
-
-			m.at(0, 0) = x.x;
-			m.at(0, 1) = x.y;
-			m.at(0, 2) = x.z;
-			m.at(0, 3) = -vec3<T>::dot(x, eyePos);
-			m.at(1, 0) = y.x;
-			m.at(1, 1) = y.y;
-			m.at(1, 2) = y.z;
-			m.at(1, 3) = -vec3<T>::dot(y, eyePos);
-			m.at(2, 0) = z.x;
-			m.at(2, 1) = z.y;
-			m.at(2, 2) = z.z;
-			m.at(2, 3) = -vec3<T>::dot(z, eyePos);
-
+			vec3<T> forward, side, up;
+			forward = (centerPos - eyePos).norm();
+			side = vec3<T>::cross(forward, upDir).norm();
+			up = vec3<T>::cross(side, forward);
+			
+			m.at(0, 0) = side.x;
+			m.at(1, 0) = side.y;
+			m.at(2, 0) = side.z;
+			m.at(0, 1) = up.x;
+			m.at(1, 1) = up.y;
+			m.at(2, 1) = up.z;
+			m.at(0, 2) = -forward.x;
+			m.at(1, 2) = -forward.y;
+			m.at(2, 2) = -forward.z;
+			m.at(3, 0) = -vec3<T>::dot(side, eyePos);
+			m.at(3, 1) = -vec3<T>::dot(up, eyePos);
+			m.at(3, 2) = vec3<T>::dot(forward, eyePos);
+			
 			return m;
 		}
 
 		static mat4<T> createFrustum(T left, T right, T bottom, T top, T zNear, T zFar)
 		{
-			/*
-			*
-			2 zNear
-			------------       0              A              0
-			right - left
-
-			2 zNear
-			0         ------------        B              0
-			top - bottom
-
-			0              0              C              D
-
-			0              0              -1             0
-
-			A = (right + left) / (right - left)
-
-			B = (top + bottom) / (top - bottom)
-
-			C = - (zFar + zNear) / (zFar - zNear)
-
-			D = - (2 zFar zNear) / (zFar - zNear)
-			*
-			*/
 			mat4<T> ret;
 
 			const T invWidth = 1.0 / (right - left);
@@ -486,7 +509,7 @@ namespace cml {
 
 			out.at(2, 2) = -(zFar + zNear) / (zFar - zNear);
 			out.at(2, 3) = -(static_cast<T>(2) * zFar * zNear) / (zFar - zNear);
-			//out.at(3, 3) = 0;
+			
 			return out;
 		}
 
@@ -506,10 +529,11 @@ namespace cml {
 
 		//put to output
 		friend std::ostream& operator<<(std::ostream &strm, const mat4<T> &m) {
-			return strm << std::endl << "[[" << m.data[0] << ", " << m.data[4] << ", " << m.data[8] << ", " << m.data[12] << "],	" << std::endl
-				<< "[" << m.data[1] << ", " << m.data[5] << ", " << m.data[9] << ", " << m.data[13] << "],	" << std::endl
-				<< "[" << m.data[2] << ", " << m.data[6] << ", " << m.data[10] << ", " << m.data[14] << "],	" << std::endl
-				<< "[" << m.data[3] << ", " << m.data[7] << ", " << m.data[11] << ", " << m.data[15] << "]]" << std::endl;
+			return strm << std::endl 
+				<< "[[" << m.data[0] << ", " << m.data[4] << ", " << m.data[8] << ", " << m.data[12] << "],	" << std::endl
+				 << "[" << m.data[1] << ", " << m.data[5] << ", " << m.data[9] << ", " << m.data[13] << "],	" << std::endl
+				 << "[" << m.data[2] << ", " << m.data[6] << ", " << m.data[10] << ", " << m.data[14] << "], " << std::endl
+				 << "[" << m.data[3] << ", " << m.data[7] << ", " << m.data[11] << ", " << m.data[15] << "]]" << std::endl;
 		}
 
 		//To string

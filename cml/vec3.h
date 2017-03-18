@@ -213,11 +213,12 @@ namespace cml {
 		//NORMALIZE
 
 		//normalizes this vector
-		void norm() {
+		vec3<T> norm() {
 			T mag = (*this).mag();
 			x /= mag;
 			y /= mag;
 			z /= mag;
+			return *this;
 		}
 
 		//normalizes a given vector
