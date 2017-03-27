@@ -53,9 +53,9 @@ namespace cml {
 			val.at(2,0), val.at(2, 1),val.at(2,2),val.at(2,3), val.at(3,0), val.at(3,1),val.at(3,2),val.at(3,3) } {}
 
 		//Constructor from values
-		mat4(const T n00, const T n10, const T n20, const T n30, const T n01, const T n11, const T n21, const T n31,
-			const T n02, const T n12, const T n22, const T n32, const T n03, const T n13, const T n23, const T n33) : data
-		{ n00,n10,n20,n30,  n01,n11,n21,n31,	 n02,n12,n22,n32,  n03,n13,n23,n33 } {}
+		mat4(const T n00, const T n01, const T n02, const T n03, const T n10, const T n11, const T n12, const T n13,
+			const T n20, const T n21, const T n22, const T n23, const T n30, const T n31, const T n32, const T n33) : data
+		{ n00,n01,n02,n03,  n10,n11,n12,n13,	 n20,n21,n22,n23,  n30,n31,n32,n33 } {}
 
 		//returns constant address to the data
 		static T const * value_ptr(mat4<T> const & mat) {
@@ -247,8 +247,87 @@ namespace cml {
 			return vec3<T>(at(0, 0), at(1, 1), at(2, 2));
 		}
 
+		void translate(vec3<T> v) {
+			setCol(3, getCol(0) * v.x + getCol(1) * v.y + getCol(2) * v.z + getCol(3));
+			//Result[3] = m[0] * v[0] + m[1] * v[1] + m[2] * v[2] + m[3];
+			//return Result;
+		}
+
+		void scale(vec3<T> v) {
+			setCol(0, getCol(0) * v.x);
+			setCol(1, getCol(1) * v.y);
+			setCol(2, getCol(2) * v.z);
+			setCol(3, getCol(3));	
+		}
+
+		void rotate(vec3<T> v, T angle) {
+			T const a = angle;
+			T const c = cos(a);
+			T const s = sin(a);
+		
+			v.norm();
+			vec3<T> axis;
+			axis = v;
+			vec3<T> temp;
+			temp = axis*(T(1) - c);
+		
+			mat4<T> Rotate;
+			Rotate.at(0,0) = c + temp.x * axis.x;
+			Rotate.at(0,1) = temp.x * axis.y + s * axis.z;
+			Rotate.at(0,2) = temp.x * axis.z - s * axis.y;
+				  
+			Rotate.at(1,0) = temp.y * axis.x - s * axis.z;
+			Rotate.at(1,1) = c + temp.y * axis.y;
+			Rotate.at(1,2) = temp.y * axis.z + s * axis.x;
+				  
+			Rotate.at(2,0) = temp.z * axis.x + s * axis.y;
+			Rotate.at(2,1) = temp.z * axis.y - s * axis.x;
+			Rotate.at(2,2) = c + temp.z * axis.z;
+		
+			mat4<T> Result;
+			Result.setCol(0, getCol(0) * Rotate.at(0,0) + getCol(1) * Rotate.at(0,1) + getCol(2) * Rotate.at(0,2));
+			Result.setCol(1, getCol(0) * Rotate.at(1,0) + getCol(1) * Rotate.at(1,1) + getCol(2) * Rotate.at(1,2));
+			Result.setCol(2, getCol(0) * Rotate.at(2,0) + getCol(1) * Rotate.at(2,1) + getCol(2) * Rotate.at(2,2));
+			Result.setCol(3, getCol(3));
+			*this = Result;
+		}
+
 		//ROTATION 
-		//TODO!!!
+		void setRotation(const vec3<T> rot) {
+
+			T xRad = cml::degToRad(rot.x);
+			T yRad = cml::degToRad(rot.y);
+			T zRad = cml::degToRad(rot.z);
+
+			mat4<T> ma, mb, mc;
+			double ac = cos(xRad);
+			double as = sin(xRad);
+			double bc = cos(yRad);
+			double bs = sin(yRad);
+			double cc = cos(zRad);
+			double cs = sin(zRad);
+
+			ma.at(1, 1) = ac;
+			ma.at(2, 1) = as;
+			ma.at(1, 2) = -as;
+			ma.at(2, 2) = ac;
+
+			mb.at(0, 0) = bc;
+			mb.at(2, 0) = -bs;
+			mb.at(0, 2) = bs;
+			mb.at(2, 2) = bc;
+
+			mc.at(0, 0) = cc;
+			mc.at(1, 0) = cs;
+			mc.at(0, 1) = -cs;
+			mc.at(1, 1) = cc;
+
+			*this = ma * mb * mc;
+		}
+
+		void addRotation(vec3<T> rot) {
+
+		}
 
 		//MATRIX ADDITION
 
@@ -427,36 +506,11 @@ namespace cml {
 
 		static mat4<T> createLookAt(const vec3<T>& eyePos, const vec3<T>& centerPos, vec3<T>& upDir)
 		{
-			//mat4<T> m;
-			//vec3<T> x, y, z;
-			//z = eyePos - centerPos;
-			//z.norm();
-			//y = upDir;
-			//x = vec3<T>::cross(y, z);
-			//y = vec3<T>::cross(z, x);
-			//
-			//x.norm();
-			//y.norm();
-			//
-			//m.at(0, 0) = x.x;
-			//m.at(0, 1) = x.y;
-			//m.at(0, 2) = x.z;
-			//m.at(0, 3) = -vec3<T>::dot(x, eyePos);
-			//m.at(1, 0) = y.x;
-			//m.at(1, 1) = y.y;
-			//m.at(1, 2) = y.z;
-			//m.at(1, 3) = -vec3<T>::dot(y, eyePos);
-			//m.at(2, 0) = z.x;
-			//m.at(2, 1) = z.y;
-			//m.at(2, 2) = z.z;
-			//m.at(2, 3) = -vec3<T>::dot(z, eyePos);
-			//return m;
 
 			mat4<T> m;
-			vec3<T> forward, side, up;
-			forward = (centerPos - eyePos).norm();
-			side = vec3<T>::cross(forward, upDir).norm();
-			up = vec3<T>::cross(side, forward);
+			vec3<T> forward = (centerPos - eyePos).norm();
+			vec3<T> side = vec3<T>::cross(forward, upDir).norm();
+			vec3<T> up = vec3<T>::cross(side, forward);
 			
 			m.at(0, 0) = side.x;
 			m.at(1, 0) = side.y;
@@ -469,7 +523,7 @@ namespace cml {
 			m.at(2, 2) = -forward.z;
 			m.at(3, 0) = -vec3<T>::dot(side, eyePos);
 			m.at(3, 1) = -vec3<T>::dot(up, eyePos);
-			m.at(3, 2) = vec3<T>::dot(forward, eyePos);
+			m.at(3, 2) =  vec3<T>::dot(forward, eyePos);
 			
 			return m;
 		}
@@ -503,13 +557,13 @@ namespace cml {
 
 			T const tanHalfFovy = tan(fovy / static_cast<T>(2));
 			mat4<T> out;
-			out.at(0, 0) = static_cast<T>(1) / (tanHalfFovy * aspect);
-			out.at(1, 1) = static_cast<T>(1) / (tanHalfFovy);
-			out.at(3, 2) = -(static_cast<T>(1));
+			out.at(0, 0) = tanHalfFovy / (aspect);
+			out.at(1, 1) =  (tanHalfFovy);
+			out.at(2, 3) = -(static_cast<T>(1));
 
-			out.at(2, 2) = -(zFar + zNear) / (zFar - zNear);
-			out.at(2, 3) = -(static_cast<T>(2) * zFar * zNear) / (zFar - zNear);
-			
+			out.at(2, 2) = (zFar + zNear) / (zNear - zFar);
+			out.at(3, 2) = -(static_cast<T>(2) * zFar * zNear) / (zNear - zFar);
+
 			return out;
 		}
 
@@ -529,11 +583,11 @@ namespace cml {
 
 		//put to output
 		friend std::ostream& operator<<(std::ostream &strm, const mat4<T> &m) {
-			return strm << std::endl 
+			return strm << std::endl
 				<< "[[" << m.data[0] << ", " << m.data[4] << ", " << m.data[8] << ", " << m.data[12] << "],	" << std::endl
-				 << "[" << m.data[1] << ", " << m.data[5] << ", " << m.data[9] << ", " << m.data[13] << "],	" << std::endl
-				 << "[" << m.data[2] << ", " << m.data[6] << ", " << m.data[10] << ", " << m.data[14] << "], " << std::endl
-				 << "[" << m.data[3] << ", " << m.data[7] << ", " << m.data[11] << ", " << m.data[15] << "]]" << std::endl;
+				<< "[" << m.data[1] << ", " << m.data[5] << ", " << m.data[9] << ", " << m.data[13] << "],	" << std::endl
+				<< "[" << m.data[2] << ", " << m.data[6] << ", " << m.data[10] << ", " << m.data[14] << "], " << std::endl
+				<< "[" << m.data[3] << ", " << m.data[7] << ", " << m.data[11] << ", " << m.data[15] << "]]" << std::endl;
 		}
 
 		//To string
