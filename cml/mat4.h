@@ -4,7 +4,7 @@
 #include <sstream>
 
 #ifndef MATRIX44_HEADER
-
+#define MATRIX44_HEADER
 namespace cml {
 
 	/* stuff to do.
