@@ -133,6 +133,12 @@ namespace cml {
 			return (*this);
 		}
 
+		vec3<T> operator*(const mat4<T>& val) {
+			return vec3<T>(val.data[0] * x + val.data[4] * y + val.data[8] * z,
+				val.data[1] * x + val.data[5] * y + val.data[9] * z,
+				val.data[2] * x + val.data[6] * y + val.data[10] * z);
+		}
+
 		//DIVISION
 		
 		vec3<T> operator /(const T val) const {
