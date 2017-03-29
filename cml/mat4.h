@@ -257,37 +257,37 @@ namespace cml {
 			setCol(0, getCol(0) * v.x);
 			setCol(1, getCol(1) * v.y);
 			setCol(2, getCol(2) * v.z);
-			setCol(3, getCol(3));	
+			setCol(3, getCol(3));
 		}
 
 		void rotate(vec3<T> v, T angle) {
 			T const a = angle;
 			T const c = cos(a);
 			T const s = sin(a);
-		
+
 			v.norm();
 			vec3<T> axis;
 			axis = v;
 			vec3<T> temp;
 			temp = axis*(T(1) - c);
-		
+
 			mat4<T> Rotate;
-			Rotate.at(0,0) = c + temp.x * axis.x;
-			Rotate.at(0,1) = temp.x * axis.y + s * axis.z;
-			Rotate.at(0,2) = temp.x * axis.z - s * axis.y;
-				  
-			Rotate.at(1,0) = temp.y * axis.x - s * axis.z;
-			Rotate.at(1,1) = c + temp.y * axis.y;
-			Rotate.at(1,2) = temp.y * axis.z + s * axis.x;
-				  
-			Rotate.at(2,0) = temp.z * axis.x + s * axis.y;
-			Rotate.at(2,1) = temp.z * axis.y - s * axis.x;
-			Rotate.at(2,2) = c + temp.z * axis.z;
-		
+			Rotate.at(0, 0) = c + temp.x * axis.x;
+			Rotate.at(0, 1) = temp.x * axis.y + s * axis.z;
+			Rotate.at(0, 2) = temp.x * axis.z - s * axis.y;
+
+			Rotate.at(1, 0) = temp.y * axis.x - s * axis.z;
+			Rotate.at(1, 1) = c + temp.y * axis.y;
+			Rotate.at(1, 2) = temp.y * axis.z + s * axis.x;
+
+			Rotate.at(2, 0) = temp.z * axis.x + s * axis.y;
+			Rotate.at(2, 1) = temp.z * axis.y - s * axis.x;
+			Rotate.at(2, 2) = c + temp.z * axis.z;
+
 			mat4<T> Result;
-			Result.setCol(0, getCol(0) * Rotate.at(0,0) + getCol(1) * Rotate.at(0,1) + getCol(2) * Rotate.at(0,2));
-			Result.setCol(1, getCol(0) * Rotate.at(1,0) + getCol(1) * Rotate.at(1,1) + getCol(2) * Rotate.at(1,2));
-			Result.setCol(2, getCol(0) * Rotate.at(2,0) + getCol(1) * Rotate.at(2,1) + getCol(2) * Rotate.at(2,2));
+			Result.setCol(0, getCol(0) * Rotate.at(0, 0) + getCol(1) * Rotate.at(0, 1) + getCol(2) * Rotate.at(0, 2));
+			Result.setCol(1, getCol(0) * Rotate.at(1, 0) + getCol(1) * Rotate.at(1, 1) + getCol(2) * Rotate.at(1, 2));
+			Result.setCol(2, getCol(0) * Rotate.at(2, 0) + getCol(1) * Rotate.at(2, 1) + getCol(2) * Rotate.at(2, 2));
 			Result.setCol(3, getCol(3));
 			*this = Result;
 		}
@@ -511,7 +511,7 @@ namespace cml {
 			vec3<T> forward = (centerPos - eyePos).norm();
 			vec3<T> side = vec3<T>::cross(forward, upDir).norm();
 			vec3<T> up = vec3<T>::cross(side, forward);
-			
+
 			m.at(0, 0) = side.x;
 			m.at(1, 0) = side.y;
 			m.at(2, 0) = side.z;
@@ -523,8 +523,8 @@ namespace cml {
 			m.at(2, 2) = -forward.z;
 			m.at(3, 0) = -vec3<T>::dot(side, eyePos);
 			m.at(3, 1) = -vec3<T>::dot(up, eyePos);
-			m.at(3, 2) =  vec3<T>::dot(forward, eyePos);
-			
+			m.at(3, 2) = vec3<T>::dot(forward, eyePos);
+
 			return m;
 		}
 
@@ -557,12 +557,13 @@ namespace cml {
 
 			T const tanHalfFovy = tan(fovy / static_cast<T>(2));
 			mat4<T> out;
-			out.at(0, 0) = tanHalfFovy / (aspect);
-			out.at(1, 1) =  (tanHalfFovy);
-			out.at(2, 3) = -(static_cast<T>(1));
+			out.at(0, 0) = static_cast<T>(1) / (aspect * tanHalfFovy);
+			out.at(1, 1) = static_cast<T>(1) / (tanHalfFovy);
+			out.at(2, 3) = -static_cast<T>(1);
 
-			out.at(2, 2) = (zFar + zNear) / (zNear - zFar);
-			out.at(3, 2) = -(static_cast<T>(2) * zFar * zNear) / (zNear - zFar);
+			out.at(2, 2) = -(zFar + zNear) / (zFar - zNear);
+			out.at(3, 2) = -(static_cast<T>(2) * zFar * zNear) / (zFar - zNear);
+			out.at(3, 3) = 0;
 
 			return out;
 		}
