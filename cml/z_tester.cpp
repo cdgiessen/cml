@@ -21,9 +21,9 @@ void main() {
 	v3 = cml::VEC3_ZERO;
 	std::cout << "reset v3 to ZERO v3 = " << v3 << std::endl;
 
-
-	cml::vec3f v4 = cml::vec3<float>::cross(cml::VEC3_RIGHT, cml::VEC3_UP);
-	std::cout << "v4 = v3 * v2 ==" << v4 << std::endl;
+	std::cout << "Cross of " << cml::vec3f(3, -3, 1) << " and " << cml::vec3f(4, 9, 2) << " == " 
+		<< cml::vec3f::cross(cml::vec3f(3, -3, 1), cml::vec3f(4, 9, 2)) << std::endl;
+	std::cout << "Should equal [-15, -2, 39]" << std::endl;
 
 	std::cout << std::endl;
 
