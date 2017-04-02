@@ -209,7 +209,14 @@ namespace cml {
 			return quat<T>(axisAngles(vec3<T>(1,0,0), x) * axisAngles(vec3<T>(0, 1, 0), y) * axisAngles(vec3<T>(0, 0, 1), z));
 		}
 
-
+		static vec3<T> axis(quat<T> const & x)
+		{
+			T tmp1 = static_cast<T>(1) - x.w * x.w;
+			if (tmp1 <= static_cast<T>(0))
+				return vec3<T>(0, 0, 1);
+			T tmp2 = static_cast<T>(1) / sqrt(tmp1);
+			return vec3<T>(x.x * tmp2, x.y * tmp2, x.z * tmp2);
+		}
 
 		//Lerp TODO
 		//quat<T> lerp(T factor, const quat<T>& val) const

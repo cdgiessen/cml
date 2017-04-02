@@ -36,6 +36,10 @@ void main() {
 	matB.addTranslation(cml::vec3<float>(0.5f, 0.1f, 1.5f));
 	std::cout << "matB" << matA + matB << std::endl;
 
+	cml::vec3f vec3val(1,2,3);
+	std::cout << "matA*vec3val" << matA * vec3val << std::endl;
+	//std::cout << "vec3val * matA" << vec3val * matA << std::endl;
+
 	matA = cml::mat4f(4, 0, 3, 2, 5, 3, 5, 4, 1, 6, 0, 6, 8, 1, 9, 1);
 	matB = cml::mat4f(1, 0, 3, 2, 5, 3, 5, 0, 1, 6, 7, 6, 0, 1, 2, 1);
 	std::cout << "Following should equal [[23,40,89,15],[20,39,66,16],[21,30,87,14],[22,52,74,17]] " << std::endl;

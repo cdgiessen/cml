@@ -133,6 +133,8 @@ namespace cml {
 			return (*this);
 		}
 
+		
+
 		//DIVISION
 		
 		vec3<T> operator /(const T val) const {
