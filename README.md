@@ -2,11 +2,10 @@
 
 ## Charles Math Library
 
-An in-developement graphics oriented math library for myself
+A basic graphics oriented math library for myself
 
-Currently has vectors, quaternions, and basic functions for each.
+Currently has vectors, matrices, quaternions, as well as common matrix functions (translate, scale, rotate, ortho, perspective).
 
-Matrices as well as common functions will be added later on.
-
+Uses function templates.
 
 
