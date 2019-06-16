@@ -9,3 +9,4 @@ target_include_directories(cml INTERFACE "${PROJECT_SOURCE_DIR}/src")
 add_executable(cml-tests test/test.cpp)
 
 target_link_libraries(cml-tests cml)
+target_include_directories(cml-tests PRIVATE "${PROJECT_SOURCE_DIR}/src")
