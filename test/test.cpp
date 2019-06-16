@@ -5,7 +5,7 @@
 #include <iostream>
 #include <string>
 
-void main ()
+int main ()
 {
 
 	cml::vec3f v1 (2.0f, 3.0f, 2.5f);
