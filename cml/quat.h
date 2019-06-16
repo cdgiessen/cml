@@ -1,16 +1,13 @@
 #pragma once
 
-#ifndef QUATERNION_HEADER
-
 /*
 return euler angle representation (vec3)
 
 look rotation - Creates a rotation with the specified forward and upwards directions.
-#euler - Returns a rotation that rotates z degrees around the z axis, x degrees around the x axis, and y degrees around the y axis (in that order).
-slerp - Spherically interpolates between a and b by t. The parameter t is clamped to the range [0, 1].
-fromToRotation - Creates a rotation which rotates from fromDirection to toDirection.
-#identity - static var
-#other constant ones 
+#euler - Returns a rotation that rotates z degrees around the z axis, x degrees around the x axis,
+and y degrees around the y axis (in that order). slerp - Spherically interpolates between a and b by
+t. The parameter t is clamped to the range [0, 1]. fromToRotation - Creates a rotation which rotates
+from fromDirection to toDirection. #identity - static var #other constant ones
 
 set (x,y,z,w)
 set From To Rotation - creates a rotation from FromRotation to ToRotation
@@ -24,236 +21,179 @@ rotate towards - 	Rotates a rotation from towards to.
 
 
 Operators
-# + += - -= * 
+# + += - -= *
 # == != *(combine lhs with rhs)
 */
 
-#include <string>
-#include <ostream>
+#include "vec3.h"
 
-namespace cml {
+namespace cml
+{
 
-	template<typename T>
-	class quat {
+template <typename T> class alignas (sizeof (T) * 4) quat
+{
+	private:
+	vec3<T> imag;
+	T real = 1.f; // Real Part
+
 	public:
-		T x; // Imaginary x
-		T y; // Imaginary y
-		T z; // Imaginary z
-		T w; // Real Part
+	constexpr quat () : imag{}, real (1.f) {}
 
-		//CONSTRUCTORS
+	constexpr quat (const vec3<T>& imag, const T real) : imag (imag), real (real) {}
 
-		//Default constructor
-		quat() : x(0), y(0), z(0), w(0) {}
+	// returns pointer to the data
+	static T const* ptr (quat<T> const& vec) { return &(vec.x); }
 
-		//Constructor from arguments
-		quat(T a, T b, T c, T d) : x(a), y(b), z(c), w(d) {}
+	T const* ptr () { return &x; }
 
-		//Copy constructor
-		quat(const quat<T>& copy) : x(copy.x), y(copy.y), z(copy.z), w(copy.w) {}
+	// Returns a vector of the imaginary part of a quaternion
+	vec3<T> getImag () { return vec3<T> (x, y, z); }
 
-		//Constructor from vector and real part
-		quat(const vec3<T>& imagVec, const T realVal) : x(imagVec.x), y(imagVec.y), z(imagVec.z), w(realVal) {}
+	T getReal (){ return w };
 
-		//returns constant address to the data
-		static T const * value_ptr(quat<T> const & vec) {
-			return &(vec.x);
-		}
+	// OPERATORS
 
-		//Returns a vector of the imaginary part of a quaternion
-		vec3<T> getImag() {
-			return vec3<T>(x, y, z);
-		}
+	// Quaternion Addition
+	quat<T> operator+ (const quat<T> val) const
+	{
+		return quat<T> (x + val.x, y + val.y, z + val.z, w + val.w);
+	}
 
-		//REturns the real part of a quaternion
-		T getReal() {
-			return w;
-		}
+	// Addition
+	void operator+= (const quat<T> val)
+	{
+		x += val.x;
+		y += val.y;
+		z += val.z;
+		w += val.w;
+	}
 
-		//Sets the quaternion to given values -- not sure if useful
-		void SetValues(T valX, T valY, T valZ, T valW) {
-			x = valX;
-			y = valY;
-			z = valZ;
-			w = valW;
-		}
+	// Quaternion Subtraction
+	quat<T> operator- (const quat<T> val) const
+	{
+		return quat<T> (x - val.x, y - val.y, z - val.z, w - val.w);
+	}
 
-		//Sets the quaternion to vector and value
-		void SetValues(vec3<T> imagVal, T realVal) {
-			x = imagVal.x;
-			y = imagVal.y;
-			z = imagVal.z;
-			w = realVal;
-		}
+	// Subtraction
+	void operator-= (const quat<T> val)
+	{
+		x -= val.x;
+		y -= val.y;
+		z -= val.z;
+		w -= val.w;
+	}
 
-		//OPERATORS
+	// Scalar Multiplication
+	quat<T> operator* (const T val) const { return quat<T> (val * x, val * y, val * z, val * w); }
 
-		//Quaternion Addition
-		quat<T> operator+ (const quat<T> val) const {
-			return quat<T>(x + val.x, y + val.y, z + val.z, w + val.w);
-		}
+	// Quaternion multiplication
+	quat<T> operator* (const quat<T> val) const
+	{
+		return quat<T> (w * val.x - x * val.w + y * val.z - z * val.y,
+		    w * val.y - x * val.z + y * val.w + z * val.x,
+		    w * val.z + x * val.y - y * val.x + z * val.w,
+		    w * val.w - x * val.x - y * val.y - z * val.z);
+	}
 
-		//Addition
-		quat<T>& operator+= (const quat<T> val) {
-			x += val.x;
-			y += val.y;
-			z += val.z;
-			w += val.w;
-			return *this;
-		}
+	// EQUALITY
+	bool operator== (const quat<T>& val) const
+	{
+		return x == val.x && y == val.y && z == val.z && w == val.w;
+	}
 
-		//Quaternion Subtraction
-		quat<T> operator- (const quat<T> val) const {
-			return quat<T>(x - val.x, y - val.y, z - val.z, w - val.w);
-		}
+	bool operator!= (const quat<T>& val) const { return !(*this == val); }
 
-		//Subtraction
-		quat<T>& operator-= (const quat<T> val) {
-			x -= val.x;
-			y -= val.y;
-			z -= val.z;
-			w -= val.w;
-			return *this;
-		}
+	// Negation
+	quat<T> operator- () const { return quat<T> (-x, -y, -z, -w); }
 
-		//Scalar Multiplication
-		quat<T> operator *(const T val) const {
-			return quat<T>(val * x, val * y, val * z, val * w);
-		}
+	// Conjugate, only inverts the imaginary portion
+	quat<T> operator~ () const { return quat<T> (-x, -y, -z, w); }
 
-		//Quaternion multiplication
-		quat<T> operator * (const quat<T> val) const {
-			return quat<T>(w * val.x - x * val.w + y * val.z - z * val.y, 
-						   w * val.y - x * val.z + y * val.w + z * val.x, 
-						   w * val.z + x * val.y - y * val.x + z * val.w , 
-						   w * val.w - x * val.x - y * val.y - z * val.z);
-		}
+	// MAGNITUDE
+	T mag () const { return (T)std::sqrt (x * x + y * y + z * z + w * w); }
 
-		//EQUALITY
-		bool operator ==(const quat<T>& val) const {
-			return (cmpf(x, val.x) && cmpf(y, val.y) && cmpf(z, val.z) && cmpf(w, val.w));
-		}
+	T magSqrd (void) const { return (x * x + y * y + z * z + w * w); }
 
-		bool operator !=(const quat<T>& val) const {
-			return !(*this == val);
-		}
+	// Normalize
+	void norm ()
+	{
+		T mag = (*this).mag ();
+		x /= mag;
+		y /= mag;
+		z /= mag;
+		w /= mag;
+	}
 
-		//Negation
-		quat<T> operator-() const{
-			return quat<T>(-x, -y, -z, -w);
-		}
+	// normalizes a given quaternion
+	quat<T>& norm (quat<T>& val) const
+	{
+		T mag = val.mag ();
+		val.x /= mag;
+		val.y /= mag;
+		val.z /= mag;
+		val.w /= mag;
+		return (val);
+	}
 
-		//Conjugate, only inverts the imaginary portion
-		quat<T> operator~() const {
-			return quat<T>(-x, -y, -z, w);
-		}
+	// Gets an inverse quaternion of this one
+	quat<T> inverse ()
+	{
+		T mag = (*this).magSqrd ();
+		return quat<T> (-x / mag, -y / mag, -z / mag, w / mag);
+	}
 
-		//MAGNITUDE
-		T mag() const {
-			return (T)std::sqrt(x*x + y*y + z*z + w*w);
-		}
+	vec3<T> rotate (const vec3<T> vecIN)
+	{
 
-		T magSqrd(void) const {
-			return (x*x + y*y + z*z + w*w);
-		}
+		return (((*this) * quat<T> (vecIN, 0)) * inverse ()).getImag ();
+	}
 
-		//Normalize
-		void norm() {
-			T mag = (*this).mag();
-			x /= mag;
-			y /= mag;
-			z /= mag;
-			w /= mag;
-		}
+	static vec3<T> rotate (const vec3<T> vecIN, quat<T> quatIN)
+	{
 
-		//normalizes a given quaternion
-		quat<T>& norm(quat<T>& val) const {
-			T mag = val.mag();
-			val.x /= mag;
-			val.y /= mag;
-			val.z /= mag;
-			val.w /= mag;
-			return (val);
-		}
+		return ((quatIN * quat<T> (vecIN, 0)) * quatIN.inverse ()).getImag ();
+	}
 
-		//Gets an inverse quaternion of this one 
-		quat<T> inverse() {
-			T mag = (*this).magSqrd();
-			return quat<T>(-x / mag, -y / mag, -z / mag, w / mag);
-		}
+	// axisangles - Creates a rotation which rotates angle degrees around axis.
+	static quat<T> axisAngles (vec3<T> axis, T degrees)
+	{
+		double angleRad = degToRad (degrees);
+		double sin_anlge_div2 = std::sin (angleRad / 2);
+		double cos_anlge_div2 = std::cos (angleRad / 2);
+		return quat<T> (axis * sin_anlge_div2, cos_anlge_div2);
+	}
 
-		vec3<T> rotate(const vec3<T> vecIN) {
+	static quat<T> axisAngles (T x, T y, T z, T degrees)
+	{
+		return axisAngles (vec3<T> (x, y, z), degrees);
+	}
 
-			return (((*this)*quat<T>(vecIN, 0)) * inverse()).getImag();
-		}
+	// Returns a rotation that rotates z degrees around the z axis, x degrees around the x axis, and y degrees around the y axis(in that order).
+	static quat<T> fromEulerAngles (T x, T y, T z)
+	{
+		return quat<T> (axisAngles (vec3<T> (1, 0, 0), x) * axisAngles (vec3<T> (0, 1, 0), y) *
+		                axisAngles (vec3<T> (0, 0, 1), z));
+	}
 
-		static vec3<T> rotate(const vec3<T> vecIN, quat<T> quatIN) {
-						
-			return ((quatIN*quat<T>(vecIN, 0)) * quatIN.inverse()).getImag();
-		}
+	static vec3<T> axis (quat<T> const& x)
+	{
+		T tmp1 = static_cast<T> (1) - x.w * x.w;
+		if (tmp1 <= static_cast<T> (0)) return vec3<T> (0, 0, 1);
+		T tmp2 = static_cast<T> (1) / sqrt (tmp1);
+		return vec3<T> (x.x * tmp2, x.y * tmp2, x.z * tmp2);
+	}
 
-		//axisangles - Creates a rotation which rotates angle degrees around axis.
-		static quat<T> axisAngles(vec3<T> axis, T degrees) {
-			double angleRad = degToRad(degrees);
-			double sin_anlge_div2 = std::sin(angleRad / 2);
-			double cos_anlge_div2 = std::cos(angleRad / 2);
-			return quat<T>(axis*sin_anlge_div2, cos_anlge_div2);
-		}
+	// Lerp TODO
+	// quat<T> lerp(T factor, const quat<T>& val) const
+	//{
+	//	return quat<T>((*this).getImag().lerp(factor,val), (1 - factor) * w + factor * val.w);
+	//}
 
-		static quat<T> axisAngles(T x, T y, T z, T degrees) {
-			return axisAngles(vec3<T>(x,y,z) , degrees);
-		}
+	constexpr static quat<T> identity{};
+};
 
-		//Returns a rotation that rotates z degrees around the z axis, x degrees around the x axis, and y degrees around the y axis(in that order).
-		static quat<T> fromEulerAngles(T x, T y, T z) {
-			return quat<T>(axisAngles(vec3<T>(1,0,0), x) * axisAngles(vec3<T>(0, 1, 0), y) * axisAngles(vec3<T>(0, 0, 1), z));
-		}
 
-		static vec3<T> axis(quat<T> const & x)
-		{
-			T tmp1 = static_cast<T>(1) - x.w * x.w;
-			if (tmp1 <= static_cast<T>(0))
-				return vec3<T>(0, 0, 1);
-			T tmp2 = static_cast<T>(1) / sqrt(tmp1);
-			return vec3<T>(x.x * tmp2, x.y * tmp2, x.z * tmp2);
-		}
+using quatf = quat<float>;
+using quatd = quat<double>;
 
-		//Lerp TODO
-		//quat<T> lerp(T factor, const quat<T>& val) const
-		//{
-		//	return quat<T>((*this).getImag().lerp(factor,val), (1 - factor) * w + factor * val.w);
-		//}
-
-		//put to output
-		friend std::ostream& operator<<(std::ostream &strm, const quat<T> &q) {
-			return strm << "[(" << q.x << ", " << q.y << ", " << q.z << "), " << q.w << "]";
-		}
-
-		//To string
-		std::string toString() const {
-			std::ostringstream stream;
-			stream << *this;
-			return stream.str();
-		}
-	};
-
-	typedef quat<float> quatf;
-	typedef quat<double> quatd;
-
-	static const quat<float> QUAT_IDENTITY(0, 0, 0, 1);
-
-	static const quat<float> QUAT_X_90(std::sqrt(0.5), 0, 0, std::sqrt(0.5));
-	static const quat<float> QUAT_X_180(1, 0, 0, 0);
-	static const quat<float> QUAT_X_270(-std::sqrt(0.5), 0, 0, std::sqrt(0.5));
-
-	static const quat<float> QUAT_Y_90(0, std::sqrt(0.5), 0, std::sqrt(0.5));
-	static const quat<float> QUAT_Y_180(0, 1, 0, 0);
-	static const quat<float> QUAT_Y_270(0, -std::sqrt(0.5), 0, std::sqrt(0.5));
-
-	static const quat<float> QUAT_Z_90(0, 0, std::sqrt(0.5), std::sqrt(0.5));
-	static const quat<float> QUAT_Z_180(0, 0, 1, 0);
-	static const quat<float> QUAT_Z_270(0, 0, -std::sqrt(0.5), std::sqrt(0.5));
-
-}
-
-#endif // !QUATERNION_HEADER
+} // namespace cml
