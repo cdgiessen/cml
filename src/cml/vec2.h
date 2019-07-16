@@ -6,52 +6,53 @@
 namespace cml
 {
 
-template <typename T = float> class alignas (sizeof (T) * 2) vec2
+template <typename T = float> class alignas (8) vec2
 {
 	public:
 	T x = 0.f;
 	T y = 0.f;
 
-	constexpr vec2 () {}
+	constexpr vec2 () noexcept {}
 
-	constexpr vec2 (T x, T y) : x (x), y (y) {}
+	constexpr vec2 (T fill) noexcept : x (fill), y (fill) {}
 
-	T const* ptr () { return &x; }
+	constexpr vec2 (T x, T y) noexcept : x (x), y (y) {}
+
+	T const* ptr () const { return &x; }
 
 	// returns constant address to the data
 	static T const* ptr (vec2<T> const& vec) { return &(vec.x); }
 
 	// ADDITIONS
 
-	vec2<T> operator+ (const vec2<T> val) const { return vec2<T> (x + val.x, y + val.y); }
+	vec2<T> operator+ (vec2<T> const& val) const { return vec2<T> (x + val.x, y + val.y); }
 
-	void operator+= (const vec2<T> val)
+	void operator+= (vec2<T> const& val)
 	{
 		x += val.x;
 		y += val.y;
 	}
 
-	// scalar
-	vec2<T> operator+ (const T val) const { return vec2<T> (x + val, y + val); }
+	vec2<T> operator+ (T const val) const { return vec2<T> (x + val, y + val); }
 
 	// SUBTRACTIONS
 
-	vec2<T> operator- (const vec2<T> val) const { return vec2<T> (x - val.x, y - val.y); }
+	vec2<T> operator- (vec2<T> const& val) const { return vec2<T> (x - val.x, y - val.y); }
 
-	void operator-= (const vec2<T> val)
+	void operator-= (vec2<T> const& val)
 	{
 		x -= val.x;
 		y -= val.y;
 	}
 
 	// scalar
-	vec2<T> operator- (const T val) const { return vec2<T> (x - val, y - val); }
+	vec2<T> operator- (T const val) const { return vec2<T> (x - val, y - val); }
 
 	// MULTIPLICATION
 
-	vec2<T> operator* (const T val) const { return vec2<T> (x * val, y * val); }
+	vec2<T> operator* (T const val) const { return vec2<T> (x * val, y * val); }
 
-	void operator*= (const T val)
+	void operator*= (T const val)
 	{
 		x *= val;
 		y *= val;
@@ -59,9 +60,9 @@ template <typename T = float> class alignas (sizeof (T) * 2) vec2
 
 	// DIVISION
 
-	vec2<T> operator/ (const T val) const { return vec2<T> (x / val, y / val); }
+	vec2<T> operator/ (T const val) const { return vec2<T> (x / val, y / val); }
 
-	void operator/= (const T val)
+	void operator/= (T const val)
 	{
 		x /= val;
 		y /= val;
@@ -72,48 +73,38 @@ template <typename T = float> class alignas (sizeof (T) * 2) vec2
 	vec2<T> operator- () const { return vec2<T> (-x, -y); }
 
 	// EQUALITY
-	bool operator== (const vec2& val) const { return x == val.x && y == val.y; }
+	bool operator== (vec2 const& val) const { return x == val.x && y == val.y; }
 
-	bool operator!= (const vec2& val) const { return !(*this == val); }
-
-	// DOT
-	T dot (const vec2<T>& a, const vec2<T>& b) const { return a.x * b.x + a.y * b.y; }
+	bool operator!= (vec2 const& val) const { return !(*this == val); }
 
 	// MAGNITUDE
-	T mag (void) const { return (T)std::sqrt (x * x + y * y); }
+	T mag () const { return (T)std::sqrt (x * x + y * y); }
 
-	T magSqrd (void) const { return (x * x + y * y); }
+	static T mag (vec2<T> const& v) { return v.mag (); }
+
+	// Magnitude w/o sqrt
+	T mag_sqrt () const { return (x * x + y * y); }
+
+	static T mag_sqrt (vec2<T> const& v) { return v.mag_sqrt (); }
+
 
 	// NORMALIZE
 
 	void norm ()
 	{
-		T mag = (*this).mag ();
+		T mag = mag ();
 		x /= mag;
 		y /= mag;
 	}
 
-	void norm (vec2<T>& val)
+	static vec2<T> normalize (vec2<T>& val)
 	{
+		vec2<T> out = val;
 		T mag = val.mag ();
-		val.x /= mag;
-		val.y /= mag;
+		out.x /= mag;
+		out.y /= mag;
+		return out;
 	}
-
-	// LERP
-	vec2<T> lerp (const T fact, const vec2<T>& val) const
-	{
-		return (*this) + (val - (*this)) * fact;
-	}
-
-	// PROJECTION
-	vec2<T> proj (const vec2<T>& p, const vec2<T>& q)
-	{
-		return vec2<T> (q * (dot (p, q) / q.magSqrd ()));
-	}
-
-	// PERPINDICULAR
-	vec2<T> perp (const vec2<T>& p, const vec2<T>& q) { return vec2<T> (p - proj (p, q)); }
 
 	static const vec2<T> one;
 	static const vec2<T> zero;
@@ -129,6 +120,80 @@ template <typename T> const vec2<T> vec2<T>::left = { -1, 0 };
 template <typename T> const vec2<T> vec2<T>::up = { 0, 1 };
 template <typename T> const vec2<T> vec2<T>::down = { 0, -1 };
 
+template <typename T> vec2<T> operator+ (T const& val, vec2<T> const& v)
+{
+	return vec2<T> (val + v.x, val + v.y);
+}
+template <typename T> vec2<T> operator- (T const& val, vec2<T> const& v)
+{
+	return vec2<T> (val - v.x, val - v.y);
+}
+template <typename T> vec2<T> operator* (T const& val, vec2<T> const& v)
+{
+	return vec2<T> (val * v.x, val * v.y);
+}
+template <typename T> vec2<T> operator/ (T const& val, vec2<T> const& v)
+{
+	return vec2<T> (val / v.x, val / v.y);
+}
+
+template <typename T> vec2<T> operator+ (T& val, vec2<T>& v)
+{
+	return vec2<T> (val + v.x, val + v.y);
+}
+template <typename T> vec2<T> operator- (T& val, vec2<T>& v)
+{
+	return vec2<T> (val - v.x, val - v.y);
+}
+template <typename T> vec2<T> operator* (T& val, vec2<T>& v)
+{
+	return vec2<T> (val * v.x, val * v.y);
+}
+template <typename T> vec2<T> operator/ (T& val, vec2<T>& v)
+{
+	return vec2<T> (val / v.x, val / v.y);
+}
+
+// DOT PRODUCT
+
+template <typename T> constexpr T dot (vec2<T> const& a, vec2<T> const& b)
+{
+	return a.x * b.x + a.y * b.y;
+}
+
+// LINEAR INTERPOLATION
+
+template <typename T>
+constexpr vec2<T> lerp (vec2<T> const& a, vec2<T> const& b, vec2<T> const& fact)
+{
+	return vec2<T>{ (static_cast<T> (1.0) - fact.x) * a.x + fact.x * b.x,
+		(static_cast<T> (1.0) - fact.y) * a.y + fact.y * b.y };
+}
+
+template <typename T> constexpr vec2<T> lerp (vec2<T> const& a, vec2<T> const& b, T const& fact)
+{
+	return vec2<T>{ (static_cast<T> (1.0) - fact.x) * a.x + fact * b.x,
+		(static_cast<T> (1.0) - fact) * a.y + fact.y * b.y };
+}
+
+// PROJECTION
+
+template <typename T> constexpr vec2<T> proj (vec2<T> const& p, vec2<T> const& q)
+{
+	return (q * (dot (p, q) / q.mag_sqrt ()));
+}
+
+// PERPINDICULAR
+
+template <typename T> constexpr vec2<T> perp (vec2<T> const& p, vec2<T> const& q)
+{
+	return (p - proj (p, q));
+}
+
+// CLAMP
+
+template <typename T> vec2<T> clamp (vec2<T> min, vec2<T> max, vec2<T> value) {}
+template <typename T> vec2<T> clamp (vec2<T> min, vec2<T> max, T value) {}
 
 
 using vec2f = vec2<float>;

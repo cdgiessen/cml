@@ -5,48 +5,42 @@
 #include <iostream>
 #include <string>
 
-int main ()
+void test_vector ()
 {
+	std::cout << "\n";
+	cml::vec2 a{ 2, 3 };
+	cml::vec3 b{ 2, 3, 4 };
+	cml::vec4 c{ 2, 3, 4, 5 };
 
 	cml::vec3f v1 (2.0f, 3.0f, 2.5f);
-	std::cout << "v1 = 2.0f, 3.0f, 2.5f  == " << v1 << std::endl;
+	std::cout << "v1 = 2.0f, 3.0f, 2.5f  == " << v1 << "\n";
 
 	cml::vec3f v2 (1.0f, 1.0f, 1.0f);
-	std::cout << "v2 = 1.0f, 1.0f, 1.0f  == " << v2 << std::endl;
+	std::cout << "v2 = 1.0f, 1.0f, 1.0f  == " << v2 << "\n";
 
 	v2 = v1;
-	std::cout << "v2 = v1 " << v2 << std::endl;
+	std::cout << "v2 = v1 " << v2 << "\n";
 
 	cml::vec3f v3 = v1 + v2;
-	std::cout << "v3 = v1 + v2  == " << v3 << std::endl;
+	std::cout << "v3 = v1 + v2  == " << v3 << "\n";
 
 	v3 = cml::vec3f::zero;
-	std::cout << "reset v3 to ZERO v3 = " << v3 << std::endl;
+	std::cout << "reset v3 to ZERO v3 = " << v3 << "\n";
+}
 
-	std::cout << "Cross of " << cml::vec3f (3, -3, 1) << " and " << cml::vec3f (4, 9, 2)
-	          << " == " << cml::vec3f::cross (cml::vec3f (3, -3, 1), cml::vec3f (4, 9, 2)) << std::endl;
-	std::cout << "Should equal [-15, -2, 39]" << std::endl;
+void test_matrix ()
+{
+	std::cout << "\n";
+	cml::vec4f vec4val (1, 2, 3, 4);
+	auto matA = cml::mat4f (4, 0, 3, 2, 5, 3, 5, 4, 1, 6, 0, 6, 8, 1, 9, 1);
+	auto matB = cml::mat4f (1, 0, 3, 2, 5, 3, 5, 0, 1, 6, 7, 6, 0, 1, 2, 1);
 
-	std::cout << std::endl;
+	std::cout << "matA*vec3val" << matA * vec4val << "\n";
+	std::cout << "vec3val * matA" << vec4val * matA << "\n";
 
-	cml::mat4<float> matA;
-	matA.setScaleFactor (5);
-	matA.setToTranslation (cml::vec3<float> (1, 2, 3));
-	std::cout << "matA" << matA << std::endl;
+	std::cout << "Following should equal\n[23,40,89,15,20,39,66,16,21,30,87,14,22,52,74,17]\n";
+	std::cout << "matA * matB = \n" << matA * matB << "\n";
 
-	cml::mat4<float> matB;
-	matB.addTranslation (cml::vec3<float> (0.5f, 0.1f, 1.5f));
-	std::cout << "matB" << matA + matB << std::endl;
-
-	cml::vec3f vec3val (1, 2, 3);
-	std::cout << "matA*vec3val" << matA * vec3val << std::endl;
-	// std::cout << "vec3val * matA" << vec3val * matA << std::endl;
-
-	matA = cml::mat4f (4, 0, 3, 2, 5, 3, 5, 4, 1, 6, 0, 6, 8, 1, 9, 1);
-	matB = cml::mat4f (1, 0, 3, 2, 5, 3, 5, 0, 1, 6, 7, 6, 0, 1, 2, 1);
-	std::cout << "Following should equal [[23,40,89,15],[20,39,66,16],[21,30,87,14],[22,52,74,17]] "
-	          << std::endl;
-	std::cout << "matA * matB = " << matA * matB << std::endl;
 
 	cml::mat4f matC (1, 1, 2, 2, 2, 2, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1);
 	cml::mat4f matD (2, 1, 1, 2, 2, 1, 1, 2, 1, 2, 2, 1, 1, 2, 2, 1);
@@ -54,46 +48,129 @@ int main ()
 
 	matD = matC - matD;
 
-	std::cout << "matC" << matC << std::endl;
+	std::cout << "matC" << matC << "\n";
 
-	std::cout << "matD" << matD << std::endl;
+	std::cout << "matD" << matD << "\n";
 
-	std::cout << "matDet det = " << matDet.det () << std::endl;
+	std::cout << "matDet det = " << matDet.det () << "\n";
 
-	std::cout << "matC * v1 = " << matC * v1 << std::endl;
+	cml::vec3f a{ 0, 2, -3 };
+	std::cout << "matC * v1 = " << matC * to_vec4 (a) << "\n";
 
-	std::cout << "matA get col 2  == " << matA.getCol (2) << std::endl;
+	std::cout << "matA get col 2  == " << matA.get_col (2) << "\n";
 
-	std::cout << "matA get row 3  == " << matA.getRow (3) << std::endl;
+	std::cout << "matA get row 3  == " << matA.get_row (3) << "\n";
+}
 
-	// cml::mat4<float> matIden;
-	// std::cout << "is matrix an identity matrix == " << matIden.isIdentity() << std::endl;
-	// std::cout << "matIden" << std::endl;
-
-	// std::cout << std::endl;
-	// std::cout << "Constant vec3 ZERO " << std::endl;
-	// std::cout << "Constant vec3 ONE " << std::endl;
-	// std::cout << "Constant vec3 RIGHT " << std::endl;
-	// std::cout << "Constant vec3 LEFT " << std::endl;
-	// std::cout << "Constant vec3 UP " << std::endl;
-	// std::cout << "Constant vec3 DOWN "<< std::endl;
-	// std::cout << "Constant vec3 FOWARD " << std::endl;
-	// std::cout << "Constant vec3 BACK "  << std::endl;
-
-	std::cout << std::endl;
-	std::cout << "Quaternion identity" << cml::quatf::identity << std::endl;
+void test_quaternion ()
+{
+	std::cout << "\n";
+	std::cout << "Quaternion identity" << cml::quatf::identity << "\n";
 
 	cml::quatf quatA = cml::quatf::fromEulerAngles (30, 0, 180);
-	std::cout << "QuatA = Rotation 30 around x, 0 around y, 180 around z" << quatA << std::endl;
-	std::cout << "Mag of quatA " << quatA.mag () << std::endl;
+	std::cout << "QuatA = Rotation 30 around x, 0 around y, 180 around z" << quatA << "\n";
+	std::cout << "Mag of quatA " << quatA.mag () << "\n";
+}
 
-	cml::vec3f vecToRotate (1, 0, 0);
+void test_transform ()
+{
+	std::cout << "\n";
 
-	cml::vec3f vec1 = cml::vec3f::forward;
+	cml::mat4 matA;
+	matA.scale (5);
+	matA.set_translation (cml::vec3<float> (1, 2, 3));
+	std::cout << "matA" << matA << "\n";
+
+	cml::mat4f matB;
+	matB.translate (cml::vec3<float> (0.5, 0.1, 1.5));
+	matB.scale ({ 3, 1, 1 });
+	std::cout << "matA + matB" << matA + matB << "\n";
+
 
 	// std::cout << "vector " << vec1 << " rotated around " << cml::QUAT_X_90 << " is "
-	//           << cml::quatf::rotate (vec1, cml::QUAT_X_90) << std::endl;
+	//           << cml::quatf::rotate (vec1, cml::QUAT_X_90) << "\n";
+}
 
-	std::cout << "Press any key to continue..." << std::endl;
-	std::getchar ();
+void test_constants ()
+{
+	cml::mat4<float> matIden;
+	std::cout << "is matrix an identity matrix == " << matIden.isIdentity () << "\n";
+	std::cout << "matIden"
+	          << "\n";
+	std::cout << "\n";
+	std::cout << "vec2 constants:\n ";
+	std::cout << "ZERO " << cml::vec2f::zero << "\n";
+	std::cout << "ONE " << cml::vec2f::one << "\n";
+	std::cout << "RIGHT " << cml::vec2f::right << "\n";
+	std::cout << "LEFT " << cml::vec2f::left << "\n";
+	std::cout << "UP " << cml::vec2f::up << "\n";
+	std::cout << "DOWN " << cml::vec2f::down << "\n";
+
+	std::cout << "\n";
+	std::cout << "vec3 constants:\n";
+	std::cout << "ZERO " << cml::vec3f::zero << "\n";
+	std::cout << "ONE " << cml::vec3f::one << "\n";
+	std::cout << "RIGHT " << cml::vec3f::right << "\n";
+	std::cout << "LEFT " << cml::vec3f::left << "\n";
+	std::cout << "UP " << cml::vec3f::up << "\n";
+	std::cout << "DOWN " << cml::vec3f::down << "\n";
+	std::cout << "FOWARD " << cml::vec3f::forward << "\n";
+	std::cout << "BACK " << cml::vec3f::back << "\n";
+
+	std::cout << "\n";
+	std::cout << "vec4 constants:\n";
+	std::cout << "ZERO " << cml::vec4f::zero << "\n";
+	std::cout << "ONE " << cml::vec4f::one << "\n";
+	std::cout << "RIGHT " << cml::vec4f::right << "\n";
+	std::cout << "LEFT " << cml::vec4f::left << "\n";
+	std::cout << "UP " << cml::vec4f::up << "\n";
+	std::cout << "DOWN " << cml::vec4f::down << "\n";
+	std::cout << "FOWARD " << cml::vec4f::forward << "\n";
+	std::cout << "BACK " << cml::vec4f::back << "\n";
+	std::cout << "W_POSITIVE " << cml::vec4f::w_positive << "\n";
+	std::cout << "W_NEGATIVE " << cml::vec4f::w_negative << "\n";
+}
+
+void test_common ()
+{
+	std::cout << "\n";
+	float half = 0.5f;
+	float quarter = 0.25f;
+	float ninety = 0.9f;
+
+	cml::vec2f a2{ -2, 3 };
+	cml::vec2f b2{ 2, -3 };
+	cml::vec2 c2{ 0.25f, 0.75f };
+
+	cml::vec3f a3{ 2, 3, 4 };
+	cml::vec3f b3{ -2, 1, 3 };
+
+	cml::vec4f a4{ 2, 3, 4, 1 };
+	cml::vec4f b4{ -2, 1, 3, 2 };
+
+	std::cout << "Dot product2 = " << dot (a2, b2) << "\n";
+	std::cout << "Dot product3 = " << dot (a3, b3) << "\n";
+	std::cout << "Dot product3 = " << dot (a4, b4) << "\n";
+
+	std::cout << "Cross of " << cml::vec3f (3, -3, 1) << " and " << cml::vec3f (4, 9, 2)
+	          << " == " << cml::cross (cml::vec3f (3, -3, 1), cml::vec3f (4, 9, 2)) << "\n";
+	std::cout << "Should equal [-15, -2, 39]\n";
+
+	std::cout << "Lerp " << cml::lerp (a2, b2, c2) << "\n";
+	std::cout << "Lerp " << cml::lerp (a3, b3, half) << "\n";
+	std::cout << "Lerp " << cml::lerp (a4, b4, ninety) << "\n";
+}
+
+int main ()
+{
+	test_vector ();
+	test_matrix ();
+	test_quaternion ();
+	test_transform ();
+	test_constants ();
+	test_common ();
+
+
+	// std::cout << "Press any key to continue..." << "\n";
+	// std::getchar ();
 }

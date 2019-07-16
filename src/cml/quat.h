@@ -30,7 +30,7 @@ Operators
 namespace cml
 {
 
-template <typename T> class alignas (16) quat
+template <typename T = float> class alignas (16) quat
 {
 	private:
 	vec3<T> imag;
@@ -107,9 +107,9 @@ template <typename T> class alignas (16) quat
 	quat<T> operator~ () const { return quat<T> (-imag, real); }
 
 	// MAGNITUDE
-	T mag () const { return (T)std::sqrt (imag.magSqrd () + real * real); }
+	T mag () const { return (T)std::sqrt (imag.mag_sqrt () + real * real); }
 
-	T magSqrd (void) const { return (imag.magSqrd () + real * real); }
+	T magSqrd (void) const { return (imag.mag_sqrt () + real * real); }
 
 	// Normalize
 	void norm ()
@@ -150,7 +150,7 @@ template <typename T> class alignas (16) quat
 	// axisangles - Creates a rotation which rotates angle degrees around axis.
 	static quat<T> axisAngles (vec3<T> axis, T degrees)
 	{
-		double angleRad = degToRad (degrees);
+		double angleRad = radians (degrees);
 		double sin_anlge_div2 = std::sin (angleRad / 2);
 		double cos_anlge_div2 = std::cos (angleRad / 2);
 		return quat<T> (axis * sin_anlge_div2, cos_anlge_div2);

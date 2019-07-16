@@ -6,7 +6,7 @@
 namespace cml
 {
 
-template <typename T = float> class vec3
+template <typename T = float> class alignas (16) vec3
 {
 	public:
 	T x = 0.f;
@@ -16,10 +16,12 @@ template <typename T = float> class vec3
 	// Default Constuctor
 	constexpr vec3 () : x (0), y (0), z (0) {}
 
+	constexpr vec3 (T fill) noexcept : x (fill), y (fill), z (fill) {}
+
 	// Initial value constructor
 	constexpr vec3 (T x, T y, T z) : x (x), y (y), z (z) {}
 
-	T* ptr () { return &x; }
+	T* ptr () const { return &x; }
 
 	static T const* ptr (vec3<T> const& vec) { return &(vec.x); }
 
@@ -38,7 +40,6 @@ template <typename T = float> class vec3
 		z += val.z;
 	}
 
-	// scalar
 	vec3<T> operator+ (T const val) const { return vec3<T> (x + val, y + val, z + val); }
 
 	// SUBTRACTOINS
@@ -55,7 +56,6 @@ template <typename T = float> class vec3
 		z -= val.z;
 	}
 
-	// scalar
 	vec3<T> operator- (T const val) const { return vec3<T> (x - val, y - val, z - val); }
 
 	void operator-= (T const val)
@@ -79,9 +79,9 @@ template <typename T = float> class vec3
 
 	// DIVISION
 
-	vec3<T> operator/ (const T val) const { return vec3<T> (x / val, y / val, z / val); }
+	vec3<T> operator/ (T const val) const { return vec3<T> (x / val, y / val, z / val); }
 
-	void operator/= (const T val)
+	void operator/= (T const val)
 	{
 		x /= val;
 		y /= val;
@@ -94,28 +94,23 @@ template <typename T = float> class vec3
 
 
 	// EQUALITY
-	bool operator== (const vec3& val) const { return x == val.x && y == val.y && z == val.z; }
+	bool operator== (vec3 const& val) const { return x == val.x && y == val.y && z == val.z; }
 
-	bool operator!= (const vec3& val) const { return !(*this == val); }
+	bool operator!= (vec3 const& val) const { return !(*this == val); }
 
-
-	// DOT
-	static T dot (const vec3<T>& a, const vec3<T>& b) { return a.x * b.x + a.y * b.y + a.z * b.z; }
-
-	// CROSS
-	static vec3<T> cross (const vec3<T>& a, const vec3<T>& b)
-	{
-		return vec3<T> (a.y * b.z - b.y * a.z, a.z * b.x - b.z * a.x, a.x * b.y - b.x * a.y);
-	}
 
 	// MAGNITUDE
-	T mag (void) const { return (T)std::sqrt (x * x + y * y + z * z); }
+	T mag () const { return (T)std::sqrt (x * x + y * y + z * z); }
 
-	T magSqrd (void) const { return (x * x + y * y + z * z); }
+	static T mag (vec3<T> const& v) { return v.mag (); }
+
+	// Magnitude w/o sqrt
+	T mag_sqrt () const { return (x * x + y * y + z * z); }
+
+	static T mag_sqrt (vec3<T> const& v) { return v.mag_sqrt (); }
+
 
 	// NORMALIZE
-
-	// normalizes this vector
 	vec3<T> norm ()
 	{
 		T mag = (*this).mag ();
@@ -125,30 +120,15 @@ template <typename T = float> class vec3
 		return *this;
 	}
 
-	// normalizes a given vector
-	vec3<T>& norm (vec3<T>& val) const
+	static vec3<T> normalize (vec3<T>& val)
 	{
+		vec3<T> out = val;
 		T mag = val.mag ();
-		val.x /= mag;
-		val.y /= mag;
-		val.z /= mag;
-		return (val);
+		out.x /= mag;
+		out.y /= mag;
+		out.z /= mag;
+		return out;
 	}
-
-	// LERP
-	vec3<T> lerp (const T fact, const vec3<T>& val) const
-	{
-		return (*this) + (val - (*this)) * fact;
-	}
-
-	// PROJECTION
-	vec3<T> proj (const vec3<T>& p, const vec3<T>& q) const
-	{
-		return vec3<T> (q * (dot (p, q) / q.magSqrd ()));
-	}
-
-	// PERPINDICULAR
-	vec3<T> perp (const vec3<T>& p, const vec3<T>& q) const { return vec3<T> (p - proj (p, q)); }
 
 	// ANGLE between p and q
 	// T angle(const vec3<T>& p, const vec3<T>& q) const {
@@ -172,6 +152,69 @@ template <typename T> const vec3<T> vec3<T>::up = { 0, 1, 0 };
 template <typename T> const vec3<T> vec3<T>::down = { 0, -1, 0 };
 template <typename T> const vec3<T> vec3<T>::forward = { 0, 0, 1 };
 template <typename T> const vec3<T> vec3<T>::back = { 0, 0, -1 };
+
+template <typename T> vec3<T> operator+ (T const& val, vec3<T> const& v)
+{
+	return vec3<T> (val + v.x, val + v.y, val + v.z);
+}
+template <typename T> vec3<T> operator- (T const& val, vec3<T> const& v)
+{
+	return vec3<T> (val - v.x, val - v.y, val - v.z);
+}
+template <typename T> vec3<T> operator* (T const& val, vec3<T> const& v)
+{
+	return vec3<T> (val * v.x, val * v.y, val * v.z);
+}
+template <typename T> vec3<T> operator/ (T const& val, vec3<T> const& v)
+{
+	return vec3<T> (val / v.x, val / v.y, val / v.z);
+}
+
+// DOT PRODUCT
+
+template <typename T> constexpr T dot (vec3<T> const& a, vec3<T> const& b)
+{
+	return a.x * b.x + a.y * b.y + a.z * b.z;
+}
+
+// CROSS PRODUCT
+
+template <typename T> constexpr vec3<T> cross (vec3<T> const& a, vec3<T> const& b)
+{
+	return vec3<T> (a.y * b.z - b.y * a.z, a.z * b.x - b.z * a.x, a.x * b.y - b.x * a.y);
+}
+
+// LINEAR INTERPOLATION
+
+template <typename T>
+constexpr vec3<T> lerp (vec3<T> const& a, vec3<T> const& b, vec3<T> const& fact)
+{
+	return vec3<T> ((static_cast<T> (1.0) - fact.x) * a.x + fact.x * b.x,
+	    (static_cast<T> (1.0) - fact.y) * a.y + fact.y * b.y,
+	    (static_cast<T> (1.0) - fact.z) * a.z + fact.z * b.z);
+}
+
+template <typename T> constexpr vec3<T> lerp (vec3<T> const& a, vec3<T> const& b, T const& fact)
+{
+	return vec3<T> ((static_cast<T> (1.0) - fact) * a.x + fact * b.x,
+	    (static_cast<T> (1.0) - fact) * a.y + fact * b.y,
+	    (static_cast<T> (1.0) - fact) * a.z + fact * b.z);
+}
+
+// PROJECTION
+
+template <typename T> constexpr vec3<T> proj (vec3<T> const& p, vec3<T> const& q)
+{
+	return (q * (dot (p, q) / q.mag_sqrt ()));
+}
+
+// PERPINDICULAR
+
+template <typename T> constexpr vec3<T> perp (vec3<T> const& p, vec3<T> const& q)
+{
+	return (p - proj (p, q));
+}
+
 
 using vec3f = vec3<float>;
 using vec3i = vec3<int>;
