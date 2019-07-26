@@ -246,4 +246,43 @@ template <typename T> vec2<T> distance (vec2<T> const v1, vec2<T> const v2)
 	return (v2 - v1).length ();
 }
 
+// base raised to the exp power
+template <typename T> vec2<T> pow (vec2<T> const base, vec2<T> const exp)
+{
+	return vec2<T> (std::pow (base.x, exp.x), std::pow (base.y, exp.y));
+}
+
+// e to the exp power
+template <typename T> vec2<T> pow (vec2<T> const exp)
+{
+	return vec2<T> (std::exp (exp.x), std::exp (exp.y));
+}
+
+// 2 to the exp power
+template <typename T> vec2<T> exp2 (vec2<T> const exp)
+{
+	return vec2<T> (std::pow (exp.x), std::exp2 (exp.y));
+}
+
+
+// LOG
+
+// natural log of base
+template <typename T> vec2<T> log (vec2<T> const base)
+{
+	return vec2<T> (std::log (base.x), std::log (base.y));
+}
+
+// log2 of base
+template <typename T> vec2<T> log2 (vec2<T> const base)
+{
+	return vec2<T> (std::log2 (base.x), std::log2 (base.y));
+}
+
+// log10 of base
+template <typename T> vec2<T> log10 (vec2<T> const base)
+{
+	return vec2<T> (std::log10 (base.x), std::log10 (base.y));
+}
+
 } // namespace cml

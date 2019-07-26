@@ -54,25 +54,25 @@ template <typename T> T max (T const a, T const b) { return std::max (a, b); }
 
 // POW
 
-// base raised to the exponent power
+// base raised to the exp power
 template <typename T> T pow (T const base, T const exp) { return std::pow (base, exp); }
 
-// e to the base power
-template <typename T> T pow (T const base) { return std::pow (base); }
+// e to the exp power
+template <typename T> T exp (T const exp) { return std::exp (exp); }
 
-// e to the base power
-template <typename T> T pow2 (T const base) { return std::pow (base, 2.0); }
+// 2 to the exp power
+template <typename T> T exp2 (T const exp) { return std::exp2 (exp); }
 
 
 // LOG
 
-// natural log of e
+// natural log of base
 template <typename T> T log (T const base) { return std::log (base); }
 
-// natural log of base
+// log2 of base
 template <typename T> T log2 (T const base) { return std::log2 (base); }
 
-// natural log of base
+// log10 of base
 template <typename T> T log10 (T const base) { return std::log10 (base); }
 
 
