@@ -64,6 +64,14 @@ template <typename T = float> class alignas (8) vec2
 		y *= val;
 	}
 
+	vec2<T> operator* (vec2<T> const val) const { return vec2<T> (x * val.x, y * val.y); }
+
+	void operator*= (vec2<T> const val)
+	{
+		x *= val.x;
+		y *= val.y;
+	}
+
 	// DIVISION
 
 	vec2<T> operator/ (T const val) const { return vec2<T> (x / val, y / val); }
@@ -72,6 +80,14 @@ template <typename T = float> class alignas (8) vec2
 	{
 		x /= val;
 		y /= val;
+	}
+
+	vec2<T> operator/ (vec2<T> const val) const { return vec2<T> (x / val.x, y / val.y); }
+
+	void operator/= (vec2<T> const val)
+	{
+		x /= val.x;
+		y /= val.y;
 	}
 
 	// NEGATION
@@ -227,11 +243,5 @@ template <typename T> vec2<T> distance (vec2<T> const v1, vec2<T> const v2)
 {
 	return (v2 - v1).length ();
 }
-
-
-
-using vec2f = vec2<float>;
-using vec2i = vec2<int>;
-using vec2d = vec2<double>;
 
 } // namespace cml

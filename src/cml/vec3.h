@@ -82,6 +82,18 @@ template <typename T = float> class alignas (16) vec3
 		z *= val;
 	}
 
+	vec3<T> operator* (vec3<T> const val) const
+	{
+		return vec3<T> (x * val.x, y * val.y, z * val.z);
+	}
+
+	void operator*= (vec3<T> const val)
+	{
+		x *= val.x;
+		y *= val.y;
+		z *= val.z;
+	}
+
 	// DIVISION
 
 	vec3<T> operator/ (T const val) const { return vec3<T> (x / val, y / val, z / val); }
@@ -91,6 +103,18 @@ template <typename T = float> class alignas (16) vec3
 		x /= val;
 		y /= val;
 		z /= val;
+	}
+
+	vec3<T> operator/ (vec3<T> const val) const
+	{
+		return vec3<T> (x / val.x, y / val.y, z / val.z);
+	}
+
+	void operator/= (vec3<T> const val)
+	{
+		x /= val.x;
+		y /= val.y;
+		z /= val.z;
 	}
 
 	// NEGATION
@@ -254,7 +278,4 @@ template <typename T> vec3<T> distance (vec3<T> const v1, vec3<T> const v2)
 	return (v2 - v1).length ();
 }
 
-using vec3f = vec3<float>;
-using vec3i = vec3<int>;
-using vec3d = vec3<double>;
 } // namespace cml

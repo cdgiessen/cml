@@ -11,6 +11,18 @@
 
 namespace cml
 {
+using vec2i = vec2<int>;
+using vec2f = vec2<float>;
+using vec2d = vec2<double>;
+
+using vec3i = vec3<int>;
+using vec3f = vec3<float>;
+using vec3d = vec3<double>;
+
+using vec4i = vec4<int>;
+using vec4f = vec4<float>;
+using vec4d = vec4<double>;
+
 template <typename T> vec2<T> to_vec2 (vec3<T> v) { return vec2<T> (v.x, v.y); }
 template <typename T> vec2<T> to_vec2 (vec4<T> v) { return vec2<T> (v.x, v.y); }
 

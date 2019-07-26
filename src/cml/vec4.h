@@ -85,6 +85,19 @@ template <typename T = float> class alignas (16) vec4
 		w *= val;
 	}
 
+	vec4<T> operator* (vec4<T> const val) const
+	{
+		return vec4<T> (x * val.x, y * val.y, z * val.z, w * val.w);
+	}
+
+	void operator*= (vec4<T> const val)
+	{
+		x *= val.x;
+		y *= val.y;
+		z *= val.z;
+		w *= val.w;
+	}
+
 	// DIVISION
 
 	vec4<T> operator/ (const T val) const { return vec4<T> (x / val, y / val, z / val, w / val); }
@@ -95,6 +108,19 @@ template <typename T = float> class alignas (16) vec4
 		y /= val;
 		z /= val;
 		w /= val;
+	}
+
+	vec4<T> operator/ (vec4<T> const val) const
+	{
+		return vec4<T> (x / val.x, y / val.y, z / val.z, w / val.w);
+	}
+
+	void operator/= (vec4<T> const val)
+	{
+		x /= val.x;
+		y /= val.y;
+		z /= val.z;
+		w /= val.w;
 	}
 
 	// NEGATION
@@ -258,11 +284,5 @@ template <typename T> vec4<T> distance (vec4<T> const v1, vec4<T> const v2)
 {
 	return (v2 - v1).length ();
 }
-
-
-using vec4f = vec4<float>;
-using vec4i = vec4<int>;
-using vec4d = vec4<double>;
-
 
 } // namespace cml
