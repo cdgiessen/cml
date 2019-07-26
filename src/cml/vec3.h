@@ -191,7 +191,7 @@ template <typename T> vec3<T> operator/ (T const& val, vec3<T> const& v)
 
 // NORMALIZE
 
-template <typename T> vec3<T> normalize (vec3<T>& val)
+template <typename T> vec3<T> normalize (vec3<T> const& val)
 {
 	vec3<T> out = val;
 	T mag = val.mag ();

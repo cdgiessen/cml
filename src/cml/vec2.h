@@ -169,7 +169,7 @@ template <typename T> vec2<T> operator/ (T& val, vec2<T>& v)
 
 // NORMALIZE
 
-template <typename T> vec2<T> normalize (vec2<T>& val)
+template <typename T> vec2<T> normalize (vec2<T> const& val)
 {
 	vec2<T> out = val;
 	T mag = val.mag ();

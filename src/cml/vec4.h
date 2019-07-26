@@ -200,7 +200,7 @@ template <typename T> vec4<T> operator/ (T const& val, vec4<T> const& v)
 
 // NORMALIZE
 
-template <typename T> vec4<T> normalize (vec4<T>& val)
+template <typename T> vec4<T> normalize (vec4<T> const& val)
 {
 	vec4<T> out = val;
 	T mag = val.mag ();
