@@ -131,7 +131,7 @@ template <typename T = float> class alignas (16) vec3
 	// LENGTH
 	T length () const { return (T)std::sqrt (x * x + y * y + z * z); }
 
-	static T length (vec3<T> const& v) { return v.mag (); }
+	static T length (vec3<T> const& v) { return v.length (); }
 
 	// Magnitude w/o sqrt
 	T mag_sqrt () const { return (x * x + y * y + z * z); }
@@ -142,7 +142,7 @@ template <typename T = float> class alignas (16) vec3
 	// NORMALIZE
 	vec3<T> norm ()
 	{
-		T mag = (*this).mag ();
+		T mag = (*this).length ();
 		x /= mag;
 		y /= mag;
 		z /= mag;
@@ -194,7 +194,7 @@ template <typename T> vec3<T> operator/ (T const& val, vec3<T> const& v)
 template <typename T> vec3<T> normalize (vec3<T> const& val)
 {
 	vec3<T> out = val;
-	T mag = val.mag ();
+	T mag = val.length ();
 	out.x /= mag;
 	out.y /= mag;
 	out.z /= mag;

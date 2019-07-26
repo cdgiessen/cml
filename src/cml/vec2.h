@@ -102,7 +102,7 @@ template <typename T = float> class alignas (8) vec2
 	// LENGTH
 	T length () const { return (T)std::sqrt (x * x + y * y); }
 
-	static T length (vec2<T> const& v) { return v.mag (); }
+	static T length (vec2<T> const& v) { return v.length (); }
 
 	// Magnitude w/o sqrt
 	T mag_sqrt () const { return (x * x + y * y); }
@@ -114,7 +114,7 @@ template <typename T = float> class alignas (8) vec2
 
 	void norm ()
 	{
-		T mag = mag ();
+		T mag = length ();
 		x /= mag;
 		y /= mag;
 	}
@@ -172,7 +172,7 @@ template <typename T> vec2<T> operator/ (T& val, vec2<T>& v)
 template <typename T> vec2<T> normalize (vec2<T> const& val)
 {
 	vec2<T> out = val;
-	T mag = val.mag ();
+	T mag = val.length ();
 	out.x /= mag;
 	out.y /= mag;
 	return out;
