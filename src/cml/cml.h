@@ -29,51 +29,58 @@ template <typename T> constexpr T lerp (T const& a, T const& b, T const& fact)
 
 // CLAMP
 
-template <typename T> T clamp (T min, T max, T value) {}
+template <typename T> T clamp (T const min, T const max, T const value)
+{
+	return value > min ? (value < max ? value : max) : min;
+}
 
 // MIN/MAX
 
-template <typename T> T min (T a, T b) { return std::min (a, b); }
-template <typename T> T max (T a, T b) { return std::max (a, b); }
+template <typename T> T min (T const a, T const b) { return std::min (a, b); }
+
+template <typename T> T max (T const a, T const b) { return std::max (a, b); }
 
 // POW
 
-
 // base raised to the exponent power
-template <typename T> T pow (T base, T exp) { return std::pow (base, exp); }
+template <typename T> T pow (T const base, T const exp) { return std::pow (base, exp); }
 
 // e to the base power
-template <typename T> T pow (T base) { return std::pow (base); }
+template <typename T> T pow (T const base) { return std::pow (base); }
 
 // e to the base power
-template <typename T> T pow2 (T base) { return std::pow2 (base, 2.0); }
+template <typename T> T pow2 (T const base) { return std::pow (base, 2.0); }
 
 
 // LOG
 
 // natural log of e
-template <typename T> T log (T base) { return std::log (base); }
+template <typename T> T log (T const base) { return std::log (base); }
 
 // natural log of base
-template <typename T> T log2 (T base) { return std::log2 (base); }
+template <typename T> T log2 (T const base) { return std::log2 (base); }
 
 // natural log of base
-template <typename T> T log10 (T base) { return std::log10 (base); }
+template <typename T> T log10 (T const base) { return std::log10 (base); }
 
 
 // MIX
 
-template <typename T> T mix (T x, T y, double amount) { return lerp (x, y, amount); }
+template <typename T, typename U> T mix (T const x, T const y, U const amount)
+{
+	return lerp (x, y, amount);
+}
 
 // TRIG
 
-template <typename T> T sin (T val) { return std::sin (val); }
-template <typename T> T cos (T val) { return std::cos (val); }
-template <typename T> T tan (T val) { return std::tan (val); }
-template <typename T> T asin (T val) { return std::sin (val); }
-template <typename T> T acos (T val) { return std::cos (val); }
-template <typename T> T atan (T val) { return std::tan (val); }
+template <typename T> T sin (T const val) { return std::sin (val); }
+template <typename T> T cos (T const val) { return std::cos (val); }
+template <typename T> T tan (T const val) { return std::tan (val); }
+template <typename T> T asin (T const val) { return std::sin (val); }
+template <typename T> T acos (T const val) { return std::cos (val); }
+template <typename T> T atan (T const val) { return std::tan (val); }
 
-
+// DISTANCE
+template <typename T> T distance (T const v1, T const v2) { return std::abs (v2 - v1); }
 
 } // namespace cml

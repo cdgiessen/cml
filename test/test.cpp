@@ -159,6 +159,23 @@ void test_common ()
 	std::cout << "Lerp " << cml::lerp (a2, b2, c2) << "\n";
 	std::cout << "Lerp " << cml::lerp (a3, b3, half) << "\n";
 	std::cout << "Lerp " << cml::lerp (a4, b4, ninety) << "\n";
+
+	float x = cml::min (2.f, 3.f);
+	auto mi = cml::min (a2, b2);
+	auto ma = cml::max (a2, b2);
+	auto cfl = cml::clamp (-2, 2, -3);
+	auto cfm = cml::clamp (-2, 2, 0);
+	auto cfh = cml::clamp (-2, 2, 3);
+
+	auto clf = cml::clamp (a4, b4, 3.5f);
+	auto clv = cml::clamp (a2, b2, c2);
+
+	std::cout << "float min :" << x << "\n";
+	std::cout << "v min :" << mi << "\n";
+	std::cout << "v max :" << ma << "\n";
+	std::cout << "f clamp: l:" << cfl << " m:" << cfm << " h:" << cfh << "\n";
+	std::cout << "v clamp f:" << clf << "\n";
+	std::cout << "v clamp v:" << clv << "\n";
 }
 
 int main ()

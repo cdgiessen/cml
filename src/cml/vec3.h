@@ -25,6 +25,11 @@ template <typename T = float> class alignas (16) vec3
 
 	static T const* ptr (vec3<T> const& vec) { return &(vec.x); }
 
+	T get (int i) const
+	{
+		assert (i >= 0 && i <= 2);
+		return *(&x + i);
+	}
 
 	// ADDITIONS
 
@@ -99,10 +104,10 @@ template <typename T = float> class alignas (16) vec3
 	bool operator!= (vec3 const& val) const { return !(*this == val); }
 
 
-	// MAGNITUDE
-	T mag () const { return (T)std::sqrt (x * x + y * y + z * z); }
+	// LENGTH
+	T length () const { return (T)std::sqrt (x * x + y * y + z * z); }
 
-	static T mag (vec3<T> const& v) { return v.mag (); }
+	static T length (vec3<T> const& v) { return v.mag (); }
 
 	// Magnitude w/o sqrt
 	T mag_sqrt () const { return (x * x + y * y + z * z); }
@@ -215,6 +220,39 @@ template <typename T> constexpr vec3<T> perp (vec3<T> const& p, vec3<T> const& q
 	return (p - proj (p, q));
 }
 
+// CLAMP
+
+template <typename T> vec3<T> clamp (vec3<T> min, vec3<T> max, vec3<T> value)
+{
+	return vec3<T> (value.x > min.x ? (value.x < max.x ? value.x : max.x) : min.x,
+	    value.y > min.y ? (value.y < max.y ? value.y : max.y) : min.y,
+	    value.z > min.z ? (value.z < max.z ? value.z : max.z) : min.z);
+}
+template <typename T> vec3<T> clamp (vec3<T> min, vec3<T> max, T value)
+{
+	return vec3<T> (value > min.x ? (value < max.x ? value : max.x) : min.x,
+	    value > min.y ? (value < max.y ? value : max.y) : min.y,
+	    value > min.z ? (value < max.z ? value : max.z) : min.z);
+}
+
+// MIN/MAX
+
+template <typename T> vec3<T> min (vec3<T> const a, vec3<T> const b)
+{
+	return vec3<T> (std::min (a.x, b.x), std::min (a.y, b.y), std::min (a.z, b.z));
+}
+
+template <typename T> vec3<T> max (vec3<T> const a, vec3<T> const b)
+{
+	return vec3<T> (std::max (a.x, b.x), std::max (a.y, b.y), std::max (a.z, b.z));
+}
+
+// DISTANCE
+
+template <typename T> vec3<T> distance (vec3<T> const v1, vec3<T> const v2)
+{
+	return (v2 - v1).length ();
+}
 
 using vec3f = vec3<float>;
 using vec3i = vec3<int>;

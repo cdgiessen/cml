@@ -23,6 +23,12 @@ template <typename T = float> class alignas (8) vec2
 	// returns constant address to the data
 	static T const* ptr (vec2<T> const& vec) { return &(vec.x); }
 
+	T get (int i) const
+	{
+		assert (i >= 0 && i <= 1);
+		return *(&x + i);
+	}
+
 	// ADDITIONS
 
 	vec2<T> operator+ (vec2<T> const& val) const { return vec2<T> (x + val.x, y + val.y); }
@@ -77,10 +83,10 @@ template <typename T = float> class alignas (8) vec2
 
 	bool operator!= (vec2 const& val) const { return !(*this == val); }
 
-	// MAGNITUDE
-	T mag () const { return (T)std::sqrt (x * x + y * y); }
+	// LENGTH
+	T length () const { return (T)std::sqrt (x * x + y * y); }
 
-	static T mag (vec2<T> const& v) { return v.mag (); }
+	static T length (vec2<T> const& v) { return v.mag (); }
 
 	// Magnitude w/o sqrt
 	T mag_sqrt () const { return (x * x + y * y); }
@@ -172,7 +178,7 @@ constexpr vec2<T> lerp (vec2<T> const& a, vec2<T> const& b, vec2<T> const& fact)
 
 template <typename T> constexpr vec2<T> lerp (vec2<T> const& a, vec2<T> const& b, T const& fact)
 {
-	return vec2<T>{ (static_cast<T> (1.0) - fact.x) * a.x + fact * b.x,
+	return vec2<T>{ (static_cast<T> (1.0) - fact) * a.x + fact * b.x,
 		(static_cast<T> (1.0) - fact) * a.y + fact.y * b.y };
 }
 
@@ -192,8 +198,36 @@ template <typename T> constexpr vec2<T> perp (vec2<T> const& p, vec2<T> const& q
 
 // CLAMP
 
-template <typename T> vec2<T> clamp (vec2<T> min, vec2<T> max, vec2<T> value) {}
-template <typename T> vec2<T> clamp (vec2<T> min, vec2<T> max, T value) {}
+template <typename T> vec2<T> clamp (vec2<T> min, vec2<T> max, vec2<T> value)
+{
+	return vec2<T> (value.x > min.x ? (value.x < max.x ? value.x : max.x) : min.x,
+	    value.y > min.y ? (value.y < max.y ? value.y : max.y) : min.y);
+}
+template <typename T> vec2<T> clamp (vec2<T> min, vec2<T> max, T value)
+{
+	return vec2<T> (value > min.x ? (value < max.x ? value : max.x) : min.x,
+	    value > min.y ? (value < max.y ? value : max.y) : min.y);
+}
+
+// MIN/MAX
+
+template <typename T> vec2<T> min (vec2<T> const a, vec2<T> const b)
+{
+	return vec2<T> (std::min (a.x, b.x), std::min (a.y, b.y));
+}
+
+template <typename T> vec2<T> max (vec2<T> const a, vec2<T> const b)
+{
+	return vec2<T> (std::max (a.x, b.x), std::max (a.y, b.y));
+}
+
+// DISTANCE
+
+template <typename T> vec2<T> distance (vec2<T> const v1, vec2<T> const v2)
+{
+	return (v2 - v1).length ();
+}
+
 
 
 using vec2f = vec2<float>;

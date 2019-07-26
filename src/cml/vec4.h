@@ -31,6 +31,12 @@ template <typename T = float> class alignas (16) vec4
 
 	static T const* ptr (vec4<T> const& vec) { return &(vec.x); }
 
+	T get (int i) const
+	{
+		assert (i >= 0 && i <= 3);
+		return *(&x + i);
+	}
+
 	// ADDITIONS
 
 	vec4<T> operator+ (const vec4<T> rhs) const
@@ -105,10 +111,10 @@ template <typename T = float> class alignas (16) vec4
 	bool operator!= (const vec4<T>& val) const { return !(*this == val); }
 
 
-	// MAGNITUDE
-	T mag () const { return (T)std::sqrt (x * x + y * y + z * z + w * w); }
+	// LENGTH
+	T length () const { return (T)std::sqrt (x * x + y * y + z * z + w * w); }
 
-	static T mag (vec4<T> const& v) { return v.mag (); }
+	static T length (vec4<T> const& v) { return v.mag (); }
 
 	// Magnitude w/o sqrt
 	T mag_sqrt () const { return (x * x + y * y + z * z + w * w); }
@@ -214,6 +220,43 @@ template <typename T> constexpr vec4<T> proj (vec4<T> const& p, vec4<T> const& q
 template <typename T> constexpr vec4<T> perp (vec4<T> const& p, vec4<T> const& q)
 {
 	return (p - proj (p, q));
+}
+
+
+// CLAMP
+
+template <typename T> vec4<T> clamp (vec4<T> min, vec4<T> max, vec4<T> value)
+{
+	return vec4<T> (value.x > min.x ? (value.x < max.x ? value.x : max.x) : min.x,
+	    value.y > min.y ? (value.y < max.y ? value.y : max.y) : min.y,
+	    value.z > min.z ? (value.z < max.z ? value.z : max.z) : min.z,
+	    value.w > min.w ? (value.w < max.w ? value.w : max.w) : min.w);
+}
+template <typename T> vec4<T> clamp (vec4<T> min, vec4<T> max, T value)
+{
+	return vec4<T> (value > min.x ? (value < max.x ? value : max.x) : min.x,
+	    value > min.y ? (value < max.y ? value : max.y) : min.y,
+	    value > min.z ? (value < max.z ? value : max.z) : min.z,
+	    value > min.w ? (value < max.w ? value : max.w) : min.w);
+}
+
+// MIN/MAX
+
+template <typename T> vec4<T> min (vec4<T> const a, vec4<T> const b)
+{
+	return vec4<T> (std::min (a.x, b.x), std::min (a.y, b.y), std::min (a.z, b.z), std::min (a.w, b.w));
+}
+
+template <typename T> vec4<T> max (vec4<T> const a, vec4<T> const b)
+{
+	return vec4<T> (std::max (a.x, b.x), std::max (a.y, b.y), std::max (a.z, b.z), std::max (a.w, b.w));
+}
+
+// DISTANCE
+
+template <typename T> vec4<T> distance (vec4<T> const v1, vec4<T> const v2)
+{
+	return (v2 - v1).length ();
 }
 
 

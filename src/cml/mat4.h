@@ -85,6 +85,11 @@ template <typename T = float> class alignas (64) mat4
 
 	T const* ptr () { return &(data[0]); }
 
+	T get (int i) const
+	{
+		assert (i >= 0 && i <= 15);
+		return data[i];
+	}
 
 	// Resets matrix to identity
 	void set_identity () { data = identity_data; }
