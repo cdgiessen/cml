@@ -159,17 +159,6 @@ template <typename T = float> class alignas (16) vec4
 		w /= mag;
 	}
 
-	static vec4<T> normalize (vec4<T>& val)
-	{
-		vec4<T> out = val;
-		T mag = val.mag ();
-		out.x /= mag;
-		out.y /= mag;
-		out.z /= mag;
-		out.w /= mag;
-		return out;
-	}
-
 	static const vec4<T> one;
 	static const vec4<T> zero;
 	static const vec4<T> right;
@@ -207,6 +196,19 @@ template <typename T> vec4<T> operator* (T const& val, vec4<T> const& v)
 template <typename T> vec4<T> operator/ (T const& val, vec4<T> const& v)
 {
 	return vec4<T> (val / v.x, val / v.y, val / v.z, val / v.w);
+}
+
+// NORMALIZE
+
+template <typename T> vec4<T> normalize (vec4<T>& val)
+{
+	vec4<T> out = val;
+	T mag = val.mag ();
+	out.x /= mag;
+	out.y /= mag;
+	out.z /= mag;
+	out.w /= mag;
+	return out;
 }
 
 // DOT PRODUCT

@@ -149,16 +149,6 @@ template <typename T = float> class alignas (16) vec3
 		return *this;
 	}
 
-	static vec3<T> normalize (vec3<T>& val)
-	{
-		vec3<T> out = val;
-		T mag = val.mag ();
-		out.x /= mag;
-		out.y /= mag;
-		out.z /= mag;
-		return out;
-	}
-
 	// ANGLE between p and q
 	// T angle(const vec3<T>& p, const vec3<T>& q) const {
 	//	return acos(dot(norm(p), norm(q)));
@@ -198,6 +188,19 @@ template <typename T> vec3<T> operator/ (T const& val, vec3<T> const& v)
 {
 	return vec3<T> (val / v.x, val / v.y, val / v.z);
 }
+
+// NORMALIZE
+
+template <typename T> vec3<T> normalize (vec3<T>& val)
+{
+	vec3<T> out = val;
+	T mag = val.mag ();
+	out.x /= mag;
+	out.y /= mag;
+	out.z /= mag;
+	return out;
+}
+
 
 // DOT PRODUCT
 
