@@ -41,11 +41,24 @@ template <typename T = float> class alignas (64) mat4
 
 	// Copy from array
 	constexpr mat4 (T const val[16]) noexcept
+	: data{ val[0],
+		  val[4],
+		  val[8],
+		  val[12],
+		  val[1],
+		  val[5],
+		  val[9],
+		  val[13],
+		  val[2],
+		  val[6],
+		  val[10],
+		  val[14],
+		  val[3],
+		  val[7],
+		  val[11],
+		  val[15] }
+
 	{
-		for (int i = 0; i < 16; i++)
-		{
-			data[i] = val[i];
-		}
 	}
 
 	constexpr mat4 (T v00,
@@ -64,16 +77,16 @@ template <typename T = float> class alignas (64) mat4
 	    T const v31,
 	    T const v32,
 	    T const v33) noexcept
-	: data{ v00, v01, v02, v03, v10, v11, v12, v13, v20, v21, v22, v23, v30, v31, v32, v33 }
+	: data{ v00, v10, v20, v30, v01, v11, v21, v31, v02, v12, v22, v32, v03, v13, v23, v33 }
 	{
 	}
 
-	mat4 (vec4<T> const a, vec4<T> const b, vec4<T> const c, vec4<T> const d)
+	mat4 (vec4<T> const row_a, vec4<T> const row_b, vec4<T> const row_c, vec4<T> const row_d)
 	{
-		set_row (0, a);
-		set_row (1, b);
-		set_row (2, c);
-		set_row (3, d);
+		set_row (0, row_a);
+		set_row (1, row_b);
+		set_row (2, row_c);
+		set_row (3, row_d);
 	}
 
 	mat4 (mat3<T> const rot, vec3<T> const trans)
@@ -89,7 +102,7 @@ template <typename T = float> class alignas (64) mat4
 
 	T get (int i) const
 	{
-		assert (i >= 0 && i <= 15);
+		assert (i >= 0 && i < 16);
 		return data[i];
 	}
 
@@ -107,23 +120,19 @@ template <typename T = float> class alignas (64) mat4
 	}
 
 	// get at
-	T& at (int const x, int const y)
+	T& at (int const row, int const col)
 	{
-		assert (x >= 0 && x < 4 && y >= 0 && y < 4);
-		return data[x * 4 + y];
+		assert (row >= 0 && row < 4 && col >= 0 && col < 4);
+		return data[col * 4 + row];
 	}
 
-	T const& at (int const x, int const y) const
+	T const& at (int const row, int const col) const
 	{
-		assert (x >= 0 && x < 4 && y >= 0 && y < 4);
-		return data[x * 4 + y];
+		assert (row >= 0 && row < 4 && col >= 0 && col < 4);
+		return data[col * 4 + row];
 	}
 
-	void set (int const x, int const y, const T value)
-	{
-		assert (x >= 0 && x < 4 && y >= 0 && y < 4);
-		data[x * 4 + y] = value;
-	}
+	void set (int const row, int const col, T const value) { at (row, col) = value; }
 
 	vec4<T> get_row (int const x) const
 	{
@@ -184,7 +193,7 @@ template <typename T = float> class alignas (64) mat4
 	}
 
 	// SCALAR ADDITION
-	mat4<T> operator+ (vec4<T> const& val) const
+	mat4<T> operator+ (T const& val) const
 	{
 		mat4<T> out;
 		for (int i = 0; i < 16; i++)
@@ -248,7 +257,7 @@ template <typename T = float> class alignas (64) mat4
 				T n = 0;
 				for (int k = 0; k < 4; k++)
 				{
-					n += val.at (i, k) * at (k, j);
+					n += at (i, k) * val.at (k, j);
 				}
 				out.at (i, j) = n;
 			}
@@ -256,7 +265,7 @@ template <typename T = float> class alignas (64) mat4
 		return out;
 	}
 
-	// SCALAR ADDITION
+	// SCALAR DIVISION
 	mat4<T> operator/ (T const val) const
 	{
 		mat4<T> out;

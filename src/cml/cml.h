@@ -34,10 +34,7 @@ template <typename T> vec2<T> to_vec2 (vec4<T> v) { return vec2<T> (v.x, v.y); }
 // TO VEC3
 
 template <typename T> vec3<T> to_vec3 (vec2<T> v, T z = (T)0.0) { return vec3<T> (v.x, v.y, z); }
-template <typename T> vec3<T> to_vec3 (vec4<T> v, T w = (T)0.0)
-{
-	return vec3<T> (v.x, v.y, v.z, w);
-}
+template <typename T> vec3<T> to_vec3 (vec4<T> v) { return vec3<T> (v.x, v.y, v.z); }
 
 // TO VEC4
 

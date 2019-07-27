@@ -38,8 +38,12 @@ void test_matrix ()
 	std::cout << "matA*vec3val" << matA * vec4val << "\n";
 	std::cout << "vec3val * matA" << vec4val * matA << "\n";
 
-	std::cout << "Following should equal\n[23,40,89,15,20,39,66,16,21,30,87,14,22,52,74,17]\n";
-	std::cout << "matA * matB = \n" << matA * matB << "\n";
+	// float m4_arr[16] = { 23, 40, 89, 15, 20, 39, 66, 16, 21, 30, 87, 14, 22, 52, 74, 17 };
+	float m4_arr[16] = { 7, 20, 37, 28, 25, 43, 73, 44, 31, 24, 45, 8, 22, 58, 94, 71 };
+	auto mat_in = cml::mat4f (m4_arr);
+	std::cout << "mat4 matrix multi of matA * matB = \n";
+	std::cout << "Following should equal\n" << mat_in << "\n";
+	std::cout << matA * matB << "\n";
 
 
 	cml::mat4f matC (1, 1, 2, 2, 2, 2, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1);
@@ -52,7 +56,7 @@ void test_matrix ()
 
 	std::cout << "matD" << matD << "\n";
 
-	std::cout << "matDet det = " << matDet.det () << "\n";
+	std::cout << "matDet det = " << matDet.det () << " which should equal -418\n";
 
 	cml::vec3f a{ 0, 2, -3 };
 	std::cout << "matC * v1 = " << matC * to_vec4 (a) << "\n";
@@ -60,6 +64,27 @@ void test_matrix ()
 	std::cout << "matA get col 2  == " << matA.get_col (2) << "\n";
 
 	std::cout << "matA get row 3  == " << matA.get_row (3) << "\n";
+
+	std::cout << "\n";
+
+
+	cml::mat3f m3a = { 10, 20, 10, 4, 5, 6, 2, 3, 5 };
+	cml::mat3f m3b = { 3, 2, 4, 3, 3, 9, 4, 4, 2 };
+	cml::mat3f m3_m_expect = { 130, 120, 240, 51, 47, 73, 35, 33, 45 };
+	std::cout << "mat3 mul\n";
+	std::cout << m3_m_expect << "\n";
+	std::cout << m3a * m3b << "\n";
+
+
+	cml::mat3f det_in{ 0.f, -3.f, -2.f, 1.f, -4.f, -2.f, -3.f, 4.f, 1.f };
+	std::cout << "mat3 det " << det_in.det () << " should equal 1\n";
+
+	cml::mat3f inverse_expect = { 0.2f, 0.2f, 0.f, -0.2f, 0.3f, 1.f, 0.2f, -0.3f, 0.f };
+	cml::mat3f inverse_input = { 3.f, 0.f, 2.f, 2.f, 0.f, -2.f, 0.f, 1.f, 1.f };
+	std::cout << "mat3 det " << inverse_input.det () << " should equal 10\n";
+	std::cout << " mat3 inverse\n";
+	std::cout << "expected out: " << inverse_expect << "\n";
+	std::cout << "inverse output: " << inverse_input.inverse () << "\n";
 }
 
 void test_quaternion ()

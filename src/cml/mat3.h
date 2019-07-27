@@ -23,6 +23,7 @@ create TRS (translation, rotation, and scaling)
 
 */
 
+// temp!
 
 namespace cml
 {
@@ -33,25 +34,29 @@ template <typename T = float> class mat3
 	static constexpr float identity_data[9]{ 1, 0, 0, 0, 1, 0, 0, 0, 1 };
 
 	public:
-	T data[16]; // Stored in column major order
+	T data[9]; // Stored in column major order
 
 	// Identity matrix constructor
-	mat3 () : data{ 1, 0, 0, 0, 1, 0, 0, 0, 1 } {}
+	constexpr mat3 () : data{ 1, 0, 0, 0, 1, 0, 0, 0, 1 } {}
 
 	// copy from array
-	mat3 (T const val[9])
+	constexpr mat3 (T const val[9])
+	: data{ val[0], val[3], val[6], val[1], val[4], val[7], val[2], val[5], val[8] }
 	{
-		for (int i = 0; i < 9; i++)
-		{
-			data[i] = val[i];
-		}
 	}
 
 	// Constructor for values
 	constexpr mat3 (
 	    T const v00, T const v01, T const v02, T const v10, T const v11, T const v12, T const v20, T const v21, T const v22) noexcept
-	: data{ v00, v01, v02, v10, v11, v12, v20, v21, v22 }
+	: data{ v00, v10, v20, v01, v11, v21, v02, v12, v22 }
 	{
+	}
+
+	constexpr mat3 (vec3<T> const row_a, vec3<T> const row_b, vec3<T> const row_c)
+	{
+		set_row (0, row_a);
+		set_row (1, row_b);
+		set_row (2, row_c);
 	}
 
 	// returns constant address to the data
@@ -75,10 +80,12 @@ template <typename T = float> class mat3
 	}
 
 	// Get at
-	T& at (int x, int y) { return data[x * 3 + y]; }
+	T& at (int row, int col) { return data[col * 3 + row]; }
 
 	// Const get at
-	const T& at (int x, int y) const { return data[x * 3 + y]; }
+	const T& at (int row, int col) const { return data[col * 3 + row]; }
+
+	void set (int const row, int const col, T const val) const { at (row, col) = val; }
 
 	vec3<T> get_row (int x) const
 	{
@@ -103,6 +110,84 @@ template <typename T = float> class mat3
 		at (i, 0) = val.x;
 		at (i, 1) = val.y;
 		at (i, 2) = val.z;
+	}
+
+	// MATRIX ADDITION
+
+	mat3<T> operator+ (mat3<T> const& val) const
+	{
+		mat3<T> out;
+		for (int i = 0; i < 9; i++)
+			out.data[i] = data[i] + val.data[i];
+		return out;
+	}
+
+	// SCALAR ADDITION
+	mat3<T> operator+ (vec3<T> const& val) const
+	{
+		mat3<T> out;
+		for (int i = 0; i < 9; i++)
+			out.data[i] = data[i] + val;
+		return out;
+	}
+
+	// MATRIX SUBTRACTION
+
+	mat3<T> operator- (mat3<T> const& val) const
+	{
+		mat3<T> out;
+		for (int i = 0; i < 9; i++)
+			out.data[i] = data[i] - val.data[i];
+		return out;
+	}
+
+	// SCALAR SUBTRACTION
+	mat3<T> operator- (T const val) const
+	{
+		mat3<T> out;
+		for (int i = 0; i < 9; i++)
+			out.data[i] = data[i] - val;
+		return out;
+	}
+
+	// SCALAR MULTIPLICATION
+	mat3<T> operator* (T const val) const
+	{
+		mat3<T> out;
+		for (int i = 0; i < 9; i++)
+			out.data[i] = data[i] * val;
+		return out;
+	}
+
+	// VECTOR MULTIPLICATION
+	vec3<T> operator* (const vec3<T>& val)
+	{
+		return vec3<T> (data[0] * val.x + data[3] * val.y + data[6] * val.z,
+		    data[1] * val.x + data[4] * val.y + data[7] * val.z,
+		    data[2] * val.x + data[5] * val.y + data[8] * val.z);
+	}
+
+	// MATRIX MULTIPLICATION
+	mat3<T> operator* (mat3<T> const& val) const
+	{
+		return mat3<T> (at (0, 0) * val.at (0, 0) + at (0, 1) * val.at (1, 0) + at (0, 2) * val.at (2, 0),
+		    at (0, 0) * val.at (0, 1) + at (0, 1) * val.at (1, 1) + at (0, 2) * val.at (2, 1),
+		    at (0, 0) * val.at (0, 2) + at (0, 1) * val.at (1, 2) + at (0, 2) * val.at (2, 2),
+		    at (1, 0) * val.at (0, 0) + at (1, 1) * val.at (1, 0) + at (1, 2) * val.at (2, 0),
+		    at (1, 0) * val.at (0, 1) + at (1, 1) * val.at (1, 1) + at (1, 2) * val.at (2, 1),
+		    at (1, 0) * val.at (0, 2) + at (1, 1) * val.at (1, 2) + at (1, 2) * val.at (2, 2),
+		    at (2, 0) * val.at (0, 0) + at (2, 1) * val.at (1, 0) + at (2, 2) * val.at (2, 0),
+		    at (2, 0) * val.at (0, 1) + at (2, 1) * val.at (1, 1) + at (2, 2) * val.at (2, 1),
+		    at (2, 0) * val.at (0, 2) + at (2, 1) * val.at (1, 2) + at (2, 2) * val.at (2, 2));
+	}
+
+	// SCALAR DIVISION
+	mat3<T> operator/ (T const val) const
+	{
+		mat3<T> out;
+		for (int i = 0; i < 9; i++)
+			out.data[i] = data[i] / val;
+		return out;
 	}
 
 	// EQUALITY CHECK
@@ -150,29 +235,11 @@ template <typename T = float> class mat3
 		return ma * mb * mc;
 	}
 
-	// VECTOR MULTIPLICATION
-	vec3<T> operator* (const vec3<T>& val)
+	T det () const
 	{
-		return vec3<T> (data[0] * val.x + data[3] * val.y + data[6] * val.z,
-		    data[1] * val.x + data[4] * val.y + data[7] * val.z,
-		    data[2] * val.x + data[5] * val.y + data[8] * val.z);
-	}
-
-	// MATRIX MULTIPLICATION
-	mat3<T> operator* (const mat3<T> val) const
-	{
-		mat3<T> w;
-		for (int i = 0; i < 3; i++)
-		{
-			for (int j = 0; j < 3; j++)
-			{
-				T n = 0;
-				for (int k = 0; k < 3; k++)
-					n += val.at (i, k) * at (k, j);
-				w.at (i, j) = n;
-			}
-		}
-		return w;
+		return at (0, 0) * (at (1, 1) * at (2, 2) - at (1, 2) * at (2, 1)) -
+		       at (0, 1) * (at (1, 0) * at (2, 2) - at (1, 2) * at (2, 0)) +
+		       at (0, 2) * (at (1, 0) * at (2, 1) - at (1, 1) * at (2, 0));
 	}
 
 	// TRANSPOSE
@@ -188,6 +255,25 @@ template <typename T = float> class mat3
 		}
 		return out;
 	}
+
+	mat3<T> inverse () const
+	{
+		// m_row_col
+		T m00 = at (1, 1) * at (2, 2) - at (1, 2) * at (2, 1);
+		T m01 = at (1, 0) * at (2, 2) - at (1, 2) * at (2, 0);
+		T m02 = at (1, 0) * at (2, 1) - at (1, 1) * at (2, 0);
+
+		T m10 = at (0, 1) * at (2, 2) - at (0, 2) * at (2, 1);
+		T m11 = at (0, 0) * at (2, 2) - at (0, 2) * at (2, 0);
+		T m12 = at (0, 0) * at (2, 1) - at (0, 1) * at (2, 0);
+
+		T m20 = at (0, 1) * at (1, 2) - at (0, 2) * at (1, 1);
+		T m21 = at (0, 0) * at (1, 2) - at (0, 2) * at (1, 0);
+		T m22 = at (0, 0) * at (1, 1) - at (0, 1) * at (1, 0);
+
+		return mat3<T> (m00, -m01, m02, -m10, m11, -m12, m20, -m21, m22).transpose () / det ();
+	}
+
 
 	static const mat3<T> identity;
 };
