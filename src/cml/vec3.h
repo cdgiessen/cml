@@ -1,7 +1,6 @@
 #pragma once
 
-#include <cassert>
-#include <cmath>
+#include "common.h"
 
 namespace cml
 {
@@ -13,12 +12,10 @@ template <typename T = float> class alignas (16) vec3
 	T y = 0.f;
 	T z = 0.f;
 
-	// Default Constuctor
 	constexpr vec3 () : x (0), y (0), z (0) {}
 
 	constexpr vec3 (T fill) noexcept : x (fill), y (fill), z (fill) {}
 
-	// Initial value constructor
 	constexpr vec3 (T x, T y, T z) : x (x), y (y), z (z) {}
 
 	T* ptr () const { return &x; }
@@ -47,7 +44,7 @@ template <typename T = float> class alignas (16) vec3
 
 	vec3<T> operator+ (T const val) const { return vec3<T> (x + val, y + val, z + val); }
 
-	// SUBTRACTOINS
+	// SUBTRACTIONS
 
 	vec3<T> operator- (vec3<T> const val) const
 	{

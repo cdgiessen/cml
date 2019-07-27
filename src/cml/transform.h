@@ -2,8 +2,6 @@
 
 #include "mat3.h"
 #include "mat4.h"
-#include "vec3.h"
-#include "vec4.h"
 
 
 namespace cml
@@ -15,15 +13,15 @@ constexpr mat4<T> lookAt (const vec3<T>& eyePos, const vec3<T>& centerPos, vec3<
 
 	mat4<T> m;
 	vec3<T> forward = (centerPos - eyePos).norm ();
-	vec3<T> side = vec3<T>::cross (forward, upDir).norm ();
-	vec3<T> up = vec3<T>::cross (side, forward);
+	vec3<T> side = cross<T> (forward, upDir).norm ();
+	vec3<T> up = cross<T> (side, forward);
 
 	m.set_column (0, side);
 	m.set_column (1, up);
 	m.set_column (2, -forward);
-	m.at (3, 0) = -vec3<T>::dot (side, eyePos);
-	m.at (3, 1) = -vec3<T>::dot (up, eyePos);
-	m.at (3, 2) = vec3<T>::dot (forward, eyePos);
+	m.at (3, 0) = -dot<T> (side, eyePos);
+	m.at (3, 1) = -dot<T> (up, eyePos);
+	m.at (3, 2) = dot<T> (forward, eyePos);
 
 	return m;
 }

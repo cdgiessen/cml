@@ -1,6 +1,5 @@
 #pragma once
 
-#include "common.h"
 #include "vec3.h"
 
 /* stuff to do.

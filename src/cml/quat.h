@@ -1,5 +1,7 @@
 #pragma once
 
+#include "vec3.h"
+
 /*
 return euler angle representation (vec3)
 
@@ -24,8 +26,6 @@ Operators
 # + += - -= *
 # == != *(combine lhs with rhs)
 */
-
-#include "vec3.h"
 
 namespace cml
 {

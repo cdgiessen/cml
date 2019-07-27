@@ -1,10 +1,13 @@
 #pragma once
 
 #include "common.h"
+
 #include "mat3.h"
 #include "mat4.h"
 #include "quat.h"
+
 #include "transform.h"
+
 #include "vec2.h"
 #include "vec3.h"
 #include "vec4.h"
@@ -23,14 +26,46 @@ using vec4i = vec4<int>;
 using vec4f = vec4<float>;
 using vec4d = vec4<double>;
 
+// TO VEC2
+
 template <typename T> vec2<T> to_vec2 (vec3<T> v) { return vec2<T> (v.x, v.y); }
 template <typename T> vec2<T> to_vec2 (vec4<T> v) { return vec2<T> (v.x, v.y); }
 
-template <typename T> vec3<T> to_vec3 (vec2<T> v) { return vec3<T> (v.x, v.y, 0.0); }
-template <typename T> vec3<T> to_vec3 (vec4<T> v) { return vec3<T> (v.x, v.y, v.z, 0.0); }
+// TO VEC3
 
-template <typename T> vec4<T> to_vec4 (vec2<T> v) { return vec4<T> (v.x, v.y, 0.0, 0.0); }
-template <typename T> vec4<T> to_vec4 (vec3<T> v) { return vec4<T> (v.x, v.y, v.z, 0.0); }
+template <typename T> vec3<T> to_vec3 (vec2<T> v, T z = (T)0.0) { return vec3<T> (v.x, v.y, z); }
+template <typename T> vec3<T> to_vec3 (vec4<T> v, T w = (T)0.0)
+{
+	return vec3<T> (v.x, v.y, v.z, w);
+}
+
+// TO VEC4
+
+template <typename T> vec4<T> to_vec4 (vec2<T> v, T z = (T)0.0, T w = (T)0.0)
+{
+	return vec4<T> (v.x, v.y, z, w);
+}
+template <typename T> vec4<T> to_vec4 (vec3<T> v, T w = (T)0.0)
+{
+	return vec4<T> (v.x, v.y, v.z, w);
+}
+
+// TO MAT3
+
+template <typename T> mat3<T> to_mat3 (mat4<T> v)
+{
+	return mat3<T> (to_vec3<T> (v.get_row (0)), to_vec3<T> (v.get_row (1)), to_vec3<T> (v.get_row (2)));
+}
+
+// TO MAT4
+
+template <typename T> mat4<T> to_mat4 (mat3<T> v, vec4<T> trans = vec4<T>::w_positive)
+{
+	mat4<T> ret =
+	    mat4<T> (to_vec4<T> (v.get_row (0)), to_vec4<T> (v.get_row (1)), to_vec4<T> (v.get_row (2)));
+	ret.set_column (3, trans);
+	return ret;
+}
 
 // LINEAR INTERPOLATION
 

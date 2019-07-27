@@ -3,6 +3,8 @@
 #include "vec3.h"
 #include "vec4.h"
 
+#include "mat3.h"
+
 namespace cml
 {
 
@@ -173,7 +175,7 @@ template <typename T = float> class alignas (64) mat4
 
 	// MATRIX ADDITION
 
-	mat4<T> operator+ (mat4<T> const& val)
+	mat4<T> operator+ (mat4<T> const& val) const
 	{
 		mat4<T> out;
 		for (int i = 0; i < 16; i++)
@@ -182,7 +184,7 @@ template <typename T = float> class alignas (64) mat4
 	}
 
 	// SCALAR ADDITION
-	mat4<T> operator+ (vec4<T> const& val)
+	mat4<T> operator+ (vec4<T> const& val) const
 	{
 		mat4<T> out;
 		for (int i = 0; i < 16; i++)
@@ -192,7 +194,7 @@ template <typename T = float> class alignas (64) mat4
 
 	// MATRIX SUBTRACTION
 
-	mat4<T> operator- (mat4<T> const& val)
+	mat4<T> operator- (mat4<T> const& val) const
 	{
 		mat4<T> out;
 		for (int i = 0; i < 16; i++)
@@ -201,7 +203,7 @@ template <typename T = float> class alignas (64) mat4
 	}
 
 	// SCALAR SUBTRACTION
-	mat4<T> operator- (T const val)
+	mat4<T> operator- (T const val) const
 	{
 		mat4<T> out;
 		for (int i = 0; i < 16; i++)
@@ -210,7 +212,7 @@ template <typename T = float> class alignas (64) mat4
 	}
 
 	// SCALAR MULTIPLICATION
-	mat4<T> operator* (T const val)
+	mat4<T> operator* (T const val) const
 	{
 		mat4<T> out;
 		for (int i = 0; i < 16; i++)
@@ -227,7 +229,7 @@ template <typename T = float> class alignas (64) mat4
 	// }
 
 	// vec4 multiplication
-	vec4<T> operator* (vec4<T> const& val)
+	vec4<T> operator* (vec4<T> const& val) const
 	{
 		return vec4<T> (data[0] * val.x + data[4] * val.y + data[8] * val.z + data[12] * val.w,
 		    data[1] * val.x + data[5] * val.y + data[9] * val.z + data[13] * val.w,
@@ -236,7 +238,7 @@ template <typename T = float> class alignas (64) mat4
 	}
 
 	// MATRIX MULTIPLICATION
-	mat4<T> operator* (mat4<T> const& val)
+	mat4<T> operator* (mat4<T> const& val) const
 	{
 		mat4<T> out;
 		for (int i = 0; i < 4; i++)
@@ -255,7 +257,7 @@ template <typename T = float> class alignas (64) mat4
 	}
 
 	// SCALAR ADDITION
-	mat4<T> operator/ (T const val)
+	mat4<T> operator/ (T const val) const
 	{
 		mat4<T> out;
 		for (int i = 0; i < 16; i++)
@@ -289,7 +291,7 @@ template <typename T = float> class alignas (64) mat4
 		return out;
 	}
 
-	T det ()
+	T det () const
 	{
 		return at (0, 0) * at (1, 1) * at (2, 2) * at (3, 3) +
 		       at (0, 0) * at (2, 1) * at (3, 2) * at (1, 3) +
@@ -318,7 +320,7 @@ template <typename T = float> class alignas (64) mat4
 	}
 
 	// INVERSE
-	mat4<T> inverse ()
+	mat4<T> inverse () const
 	{
 		mat4<T> out;
 
@@ -418,7 +420,7 @@ template <typename T = float> class alignas (64) mat4
 		set (2, 2, at (2, 2) * s);
 		return *this;
 	}
-	constexpr mat4<T> scale (vec3<T> s)
+	constexpr mat4<T>& scale (vec3<T> s)
 	{
 		set (0, 0, at (0, 0) * s.x);
 		set (1, 1, at (1, 1) * s.y);

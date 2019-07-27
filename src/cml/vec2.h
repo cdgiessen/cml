@@ -1,7 +1,6 @@
 #pragma once
 
-#include <cassert>
-#include <cmath>
+#include "common.h"
 
 namespace cml
 {
