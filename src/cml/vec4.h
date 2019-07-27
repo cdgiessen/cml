@@ -278,7 +278,7 @@ template <typename T> vec4<T> max (vec4<T> const a, vec4<T> const b)
 
 // DISTANCE
 
-template <typename T> vec4<T> distance (vec4<T> const v1, vec4<T> const v2)
+template <typename T> T distance (vec4<T> const v1, vec4<T> const v2)
 {
 	return (v2 - v1).length ();
 }
