@@ -66,6 +66,24 @@ template <typename T> constexpr mat4<T> perspective (T fovy, T aspect, T zNear, 
 	return out;
 }
 
+template <typename T> constexpr mat4<T> infinitePerspective (T fovy, T aspect, T zNear)
+{
+	T const range = tan (fovy / T (2)) * zNear;
+
+	T left = -range * aspect;
+	T right = range * aspect;
+	T bottom = -range;
+	T top = range;
+
+	mat4<T> Result{ T (0) };
+	Result.at (0, 0) = (T (2) * zNear) / (right - left);
+	Result.at (1, 1) = (T (2) * zNear) / (top - bottom);
+	Result.at (2, 2) = -T (1);
+	Result.at (2, 3) = -T (1);
+	Result.at (3, 2) = -T (2) * zNear;
+	return Result;
+}
+
 template <typename T> mat4<T> ortho (T left, T right, T bottom, T top, T near, T far)
 {
 	mat4<T> out;
