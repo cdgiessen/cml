@@ -25,18 +25,18 @@ template <typename T = float> class alignas (64) mat4
 	static constexpr float identity_data[16]{ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 };
 
 	public:
-	T data[16]; // Stored in column major order
+	T data[16] = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 }; // Stored in column major order
 
 	// Identity matrix constructor
-	constexpr mat4 () noexcept : data{ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 } {}
+	constexpr mat4 () noexcept {}
 
-	// fill constructor
+	// fill diagonal constructor
 	constexpr mat4 (T const val) noexcept
 	{
-		for (int i = 0; i < 16; i++)
-		{
-			data[i] = val;
-		}
+		data[0] = val;
+		data[5] = val;
+		data[10] = val;
+		data[15] = val;
 	}
 
 	// Copy from array
