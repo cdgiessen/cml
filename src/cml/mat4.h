@@ -145,37 +145,37 @@ template <typename T = float> class alignas (64) mat4
 		return vec4<T> (at (0, y), at (1, y), at (2, y), at (3, y));
 	}
 
-	void set_row (int const i, vec3<T> const& val)
+	void set_row (int const x, vec3<T> const& val)
 	{
-		at (0, i) = val.x;
-		at (1, i) = val.y;
-		at (2, i) = val.z;
+		at (x, 0) = val.x;
+		at (x, 1) = val.y;
+		at (x, 2) = val.z;
 	}
 
-	void set_row (int i, vec4<T> const& val)
+	void set_row (int x, vec4<T> const& val)
 	{
-		at (0, i) = val.x;
-		at (1, i) = val.y;
-		at (2, i) = val.z;
-		at (3, i) = val.w;
+		at (x, 0) = val.x;
+		at (x, 1) = val.y;
+		at (x, 2) = val.z;
+		at (x, 3) = val.w;
 	}
 
-	void set_column (int i, vec3<T> const& val)
+	void set_col (int y, vec3<T> const& val)
 	{
-		at (i, 0) = val.x;
-		at (i, 1) = val.y;
-		at (i, 2) = val.z;
+		at (0, y) = val.x;
+		at (1, y) = val.y;
+		at (2, y) = val.z;
 	}
 
-	void set_column (int i, vec4<T> const& val)
+	void set_col (int y, vec4<T> const& val)
 	{
-		at (i, 0) = val.x;
-		at (i, 1) = val.y;
-		at (i, 2) = val.z;
-		at (i, 3) = val.w;
+		at (0, y) = val.x;
+		at (1, y) = val.y;
+		at (2, y) = val.z;
+		at (3, y) = val.w;
 	}
 
-	void set_mat3 (mat3<T> rot)
+	void set_mat3 (mat3<T> const& rot)
 	{
 		set_row (0, rot.get_row (0));
 		set_row (1, rot.get_row (2));
@@ -229,15 +229,8 @@ template <typename T = float> class alignas (64) mat4
 		return out;
 	}
 
-	// // VECTOR MULTIPLICATION
-	// vec3<T> operator* (vec3<T const& val)
-	// {
-	// 	return vec3<T> (data[0] * val.x + data[4] * val.y + data[8] * val.z,
-	// 	    data[1] * val.x + data[5] * val.y + data[9] * val.z,
-	// 	    data[2] * val.x + data[6] * val.y + data[10] * val.z);
-	// }
+	// VECTOR MULTIPLICATION
 
-	// vec4 multiplication
 	vec4<T> operator* (vec4<T> const& val) const
 	{
 		return vec4<T> (data[0] * val.x + data[4] * val.y + data[8] * val.z + data[12] * val.w,
@@ -402,23 +395,23 @@ template <typename T = float> class alignas (64) mat4
 
 	constexpr mat4<T>& set_translation (vec3<T> v)
 	{
-		set_column (3, v);
+		set_col (3, v);
 		return *this;
 	}
 	constexpr mat4<T>& set_translation (vec4<T> v)
 	{
-		set_column (3, v);
+		set_col (3, v);
 		return *this;
 	}
 
 	constexpr mat4<T>& translate (vec3<T> v)
 	{
-		set_row (3, vec4<T> (v.x, v.y, v.z, 0) + get_row (3));
+		set_col (3, vec4<T> (v.x, v.y, v.z, 0) + get_col (3));
 		return *this;
 	}
 	constexpr mat4<T>& translate (vec4<T> v)
 	{
-		set_row (3, v + get_row (3));
+		set_col (3, v + get_col (3));
 		return *this;
 	}
 

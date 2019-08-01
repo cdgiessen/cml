@@ -49,14 +49,14 @@ template <typename T> vec4<T> to_vec4 (vec3<T> v, T w = (T)0.0)
 
 // TO MAT3
 
-template <typename T> mat3<T> to_mat3 (mat4<T> v)
+template <typename T> mat3<T> to_mat3 (mat4<T> const& v)
 {
 	return mat3<T> (to_vec3<T> (v.get_row (0)), to_vec3<T> (v.get_row (1)), to_vec3<T> (v.get_row (2)));
 }
 
 // TO MAT4
 
-template <typename T> mat4<T> to_mat4 (mat3<T> v, vec4<T> trans = vec4<T>::w_positive)
+template <typename T> mat4<T> to_mat4 (mat3<T> const& v, vec4<T> trans = vec4<T>::w_positive)
 {
 	mat4<T> ret = mat4<T> (
 	    to_vec4<T> (v.get_row (0)), to_vec4<T> (v.get_row (1)), to_vec4<T> (v.get_row (2)), trans);
