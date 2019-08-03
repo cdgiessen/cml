@@ -5,7 +5,7 @@
 namespace cml
 {
 
-template <typename T = float> class alignas (8) vec2
+template <typename T = float> class alignas (2 * alignof (T)) vec2
 {
 	public:
 	T x = 0.f;

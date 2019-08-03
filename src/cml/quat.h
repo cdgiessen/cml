@@ -30,7 +30,7 @@ Operators
 namespace cml
 {
 
-template <typename T = float> class alignas (16) quat
+template <typename T = float> class alignas (4 * alignof (T)) quat
 {
 	private:
 	vec3<T> imag;

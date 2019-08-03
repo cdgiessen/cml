@@ -19,7 +19,7 @@ create scale matrix
 create TRS (translation, rotation, and scaling)
 */
 
-template <typename T = float> class alignas (64) mat4
+template <typename T = float> class alignas (16 * alignof (T)) mat4
 {
 	private:
 	static constexpr float identity_data[16]{ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 };
