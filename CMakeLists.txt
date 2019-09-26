@@ -4,12 +4,12 @@ project(CML VERSION 1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 
-if(MSVC)
-    target_compile_options(CML PRIVATE "/std:c++17")
-	target_compile_options(CML PRIVATE "/permissive-")
-endif(MSVC)
-
 add_library(cml INTERFACE)
+
+if(MSVC)
+    target_compile_options(cml INTERFACE "/std:c++17")
+	target_compile_options(cml INTERFACE "/permissive-")
+endif(MSVC)
 
 target_include_directories(cml INTERFACE "${PROJECT_SOURCE_DIR}/src")
 
