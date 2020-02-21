@@ -230,12 +230,12 @@ template <typename T> vec2<T> clamp (vec2<T> min, vec2<T> max, T value)
 
 template <typename T> vec2<T> min (vec2<T> const a, vec2<T> const b)
 {
-	return vec2<T> (std::min (a.x, b.x), std::min (a.y, b.y));
+	return vec2<T> (min (a.x, b.x), min (a.y, b.y));
 }
 
 template <typename T> vec2<T> max (vec2<T> const a, vec2<T> const b)
 {
-	return vec2<T> (std::max (a.x, b.x), std::max (a.y, b.y));
+	return vec2<T> (max (a.x, b.x), max (a.y, b.y));
 }
 
 // DISTANCE

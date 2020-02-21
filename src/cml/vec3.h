@@ -263,12 +263,12 @@ template <typename T> vec3<T> clamp (vec3<T> min, vec3<T> max, T value)
 
 template <typename T> vec3<T> min (vec3<T> const a, vec3<T> const b)
 {
-	return vec3<T> (std::min (a.x, b.x), std::min (a.y, b.y), std::min (a.z, b.z));
+	return vec3<T> (min (a.x, b.x), min (a.y, b.y), min (a.z, b.z));
 }
 
 template <typename T> vec3<T> max (vec3<T> const a, vec3<T> const b)
 {
-	return vec3<T> (std::max (a.x, b.x), std::max (a.y, b.y), std::max (a.z, b.z));
+	return vec3<T> (max (a.x, b.x), max (a.y, b.y), max (a.z, b.z));
 }
 
 // DISTANCE

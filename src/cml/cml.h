@@ -77,12 +77,6 @@ template <typename T> T clamp (T const min, T const max, T const value)
 	return value > min ? (value < max ? value : max) : min;
 }
 
-// MIN/MAX
-
-template <typename T> T min (T const a, T const b) { return std::min (a, b); }
-
-template <typename T> T max (T const a, T const b) { return std::max (a, b); }
-
 // POW
 
 // base raised to the exp power

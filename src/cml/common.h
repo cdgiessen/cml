@@ -16,4 +16,11 @@ template <typename T> inline T radians (T val) { return ((val * PI) / 180.0); }
 
 template <typename T> inline T degrees (T val) { return ((180.0 * val) / PI); }
 
+// MIN/MAX
+
+template <typename T> T min (T const a, T const b) { return a < b ? a : b; }
+
+template <typename T> T max (T const a, T const b) { return a > b ? a : b; }
+
+
 } // namespace cml

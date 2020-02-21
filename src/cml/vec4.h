@@ -268,12 +268,12 @@ template <typename T> vec4<T> clamp (vec4<T> min, vec4<T> max, T value)
 
 template <typename T> vec4<T> min (vec4<T> const a, vec4<T> const b)
 {
-	return vec4<T> (std::min (a.x, b.x), std::min (a.y, b.y), std::min (a.z, b.z), std::min (a.w, b.w));
+	return vec4<T> (min (a.x, b.x), min (a.y, b.y), min (a.z, b.z), min (a.w, b.w));
 }
 
 template <typename T> vec4<T> max (vec4<T> const a, vec4<T> const b)
 {
-	return vec4<T> (std::max (a.x, b.x), std::max (a.y, b.y), std::max (a.z, b.z), std::max (a.w, b.w));
+	return vec4<T> (max (a.x, b.x), max (a.y, b.y), max (a.z, b.z), max (a.w, b.w));
 }
 
 // DISTANCE
