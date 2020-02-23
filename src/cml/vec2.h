@@ -8,8 +8,8 @@ namespace cml
 template <typename T = float> class alignas (2 * alignof (T)) vec2
 {
 	public:
-	T x = 0.f;
-	T y = 0.f;
+	T x = static_cast<T> (0.0);
+	T y = static_cast<T> (0.0);
 
 	constexpr vec2 () noexcept {}
 
