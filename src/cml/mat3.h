@@ -62,10 +62,15 @@ template <typename T = float> class mat3
 	// returns constant address to the data
 	static T const* ptr (mat3<T> const& mat) { return &(mat.data[0]); }
 
-	T get (int i) const
+	T get (int index) const
 	{
-		assert (i >= 0 && i <= 8);
-		return data[i];
+		assert (index >= 0 && index <= 8);
+		return data[index];
+	}
+	void set (int index, T value)
+	{
+		assert (index >= 0 && index < 16);
+		data[index] = value;
 	}
 
 	// Resets matrix to identity

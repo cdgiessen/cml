@@ -27,6 +27,11 @@ template <typename T = float> class alignas (2 * alignof (T)) vec2
 		assert (i >= 0 && i <= 1);
 		return *(&x + i);
 	}
+	void set (int i, T val)
+	{
+		assert (i >= 0 && i <= 1);
+		*(&x + i) = val;
+	}
 
 	// ADDITIONS
 

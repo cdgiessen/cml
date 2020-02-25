@@ -48,6 +48,19 @@ template <typename T = float> class alignas (4 * alignof (T)) quat
 
 	T const* ptr () const { return &imag.x; }
 
+	T get (int i) const
+	{
+		assert (i >= 0 && i <= 3);
+		if (i == 4) return real;
+		return imag.get (i);
+	}
+	void set (int i, T val)
+	{
+		assert (i >= 0 && i <= 3);
+		if (i == 4) real = val;
+		return imag.set (i, val);
+	}
+
 	// Returns a vector of the imaginary part of a quaternion
 	vec3<T> getImag () const { return imag; }
 

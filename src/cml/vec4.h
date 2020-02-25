@@ -32,6 +32,11 @@ template <typename T = float> class alignas (4 * alignof (T)) vec4
 		assert (i >= 0 && i <= 3);
 		return *(&x + i);
 	}
+	void set (int i, T val)
+	{
+		assert (i >= 0 && i <= 3);
+		*(&x + i) = val;
+	}
 
 	// ADDITIONS
 
